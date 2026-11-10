@@ -704,7 +704,15 @@ main[data-level="master"] .sdk-level-pill { background: color-mix(in oklab, var(
 
 /* Spelsidan är fast: ingen scroll */
 .sdk-fixed { position: fixed; inset: 0; height: 100dvh; min-height: 0; overflow: hidden; overscroll-behavior: none; touch-action: manipulation; }
-.sdk-fixed .sdk-board { width: 100%; max-width: min(100%, max(200px, calc(100dvh - 350px - var(--safe-top) - env(safe-area-inset-bottom)))); margin-inline: auto; }
+.sdk-fixed .sdk-board { width: 100%; max-width: min(100%, max(200px, calc(100dvh - 280px - var(--safe-top) - env(safe-area-inset-bottom)))); margin-inline: auto; }
+/* Compact play screen: smaller header, tools and keys give the board more room. */
+.sdk-fixed .sdk-chip { height: 40px; border-radius: 12px; }
+.sdk-fixed .sdk-level-pill { min-height: 22px; font-size: 11px; }
+.sdk-fixed .sdk-tool { min-height: 38px; font-size: 10px; gap: 1px; }
+.sdk-fixed .sdk-tool svg { height: 18px; width: 18px; }
+.sdk-fixed .sdk-key { min-height: 46px; font-size: 24px; border-radius: 12px; }
+.sdk-fixed .sdk-key small { font-size: 9px; }
+.sdk-fixed .sdk-hint-tip { height: 26px; min-height: 26px; font-size: 10px; }
 
 /* Dark board (setting) */
 .sdk-board[data-dark="true"] {
