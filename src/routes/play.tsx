@@ -250,7 +250,7 @@ function PlayPage() {
           </div>
         </div>
 
-        <div ref={fitColRef} className="flex min-h-0 flex-1 flex-col justify-end gap-0">
+        <div ref={fitColRef} className="flex min-h-0 flex-1 flex-col justify-center gap-0">
         <p className="mb-0.5 text-center text-[11px] leading-none text-muted-foreground">
           {t("statBestTime")}: <span className="font-display font-bold tabular-nums text-gold">{bestMs != null ? formatTime(bestMs) : "–"}</span>
         </p>
