@@ -37,7 +37,7 @@ function StatsPage() {
         {s && (
           <section className="overflow-hidden rounded-2xl border border-border/40 bg-secondary/50 text-sm">
             <div className="grid grid-cols-[1fr_repeat(4,3.6rem)] gap-1 px-3 pb-1 pt-2 text-right text-[10px] text-muted-foreground">
-              <span />
+              <span className="text-left font-display text-[12px] font-bold text-foreground">{s.year}</span>
               <span>{t("statPlayed")}</span><span>{t("statWins")}</span><span>{t("statBestTime")}</span><span>{t("statAvgTime")}</span>
             </div>
             {LEVELS.map((l) => {

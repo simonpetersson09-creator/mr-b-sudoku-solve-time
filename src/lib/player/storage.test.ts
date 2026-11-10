@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { beforeEach, describe, expect, it } from "vitest";
 import { newGame, setValue } from "@/lib/sudoku/engine";
-import { MAX_SAVED_GAMES, addResult, emptyStats, listGames, loadGame, loadStats, recordFinish, removeGame, saveGame, selectGame, startNewGame } from "./storage";
+import { MAX_SAVED_GAMES, addResult, cleanStats, emptyStats, stockholmYear, listGames, loadGame, loadStats, recordFinish, removeGame, saveGame, selectGame, startNewGame } from "./storage";
 
 const solved = (seed: number) => {
   let g = newGame("easy", seed, "s" + seed);
@@ -56,5 +56,23 @@ describe("statistics per level", () => {
     const g = solved(8);
     recordFinish(g); recordFinish(g);
     expect(loadStats().easy.played).toBe(1);
+  });
+});
+
+describe("yearly stats", () => {
+  it("keeps 2026 stats during 2026", () => {
+    const s = { ...emptyStats(2026), easy: { played: 4, wins: 3, bestMs: 1000, totalMs: 9000 } };
+    expect(cleanStats(s, 2026).easy.played).toBe(4);
+  });
+  it("starts over when the year changes to 2027", () => {
+    const s = { ...emptyStats(2026), easy: { played: 4, wins: 3, bestMs: 1000, totalMs: 9000 }, lifetimePlayed: 4 };
+    const n = cleanStats(s, 2027);
+    expect(n.easy.played).toBe(0);
+    expect(n.easy.bestMs).toBeNull();
+    expect(n.year).toBe(2027);
+  });
+  it("uses Swedish time for the year boundary", () => {
+    expect(stockholmYear(new Date("2026-12-31T23:30:00Z"))).toBe(2027);
+    expect(stockholmYear(new Date("2026-12-31T22:30:00Z"))).toBe(2026);
   });
 });
