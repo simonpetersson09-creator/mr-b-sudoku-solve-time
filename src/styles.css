@@ -703,7 +703,7 @@ main[data-level="master"] .sdk-level-pill { background: color-mix(in oklab, var(
 @media (prefers-reduced-motion: reduce) { .sdk-board[data-lost="true"], .sdk-dot[data-on="true"] { animation: none; } }
 
 /* Board header: level on the left, mistakes on the right. */
-.sdk-board-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-inline: calc(-1 * max(16px, env(safe-area-inset-left))) calc(-1 * max(16px, env(safe-area-inset-right))); }
+.sdk-board-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .sdk-fel-pill { display: inline-flex; align-items: center; gap: 7px; min-height: 26px; padding: 0 12px; border-radius: 999px; background: color-mix(in oklab, var(--card) 92%, transparent); border: 1px solid var(--border); transition: border-color .25s, background-color .25s; }
 .sdk-fel-label { font-family: var(--font-display); font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted-foreground); }
 .sdk-fel-dots { display: flex; gap: 4px; }
@@ -713,6 +713,8 @@ main[data-level="master"] .sdk-level-pill { background: color-mix(in oklab, var(
 /* Spelsidan är fast: ingen scroll */
 .sdk-fixed { position: fixed; inset: 0; height: 100dvh; min-height: 0; overflow: hidden; overscroll-behavior: none; touch-action: manipulation; }
 .sdk-fixed .sdk-board { width: 100%; max-width: min(100%, max(200px, calc(100dvh - 312px - var(--safe-top) - env(safe-area-inset-bottom)))); margin-inline: auto; }
+/* The header row tracks the board exactly so its markers line up with the board's outer edges. */
+.sdk-fixed .sdk-board-head { width: 100%; max-width: min(100%, max(200px, calc(100dvh - 312px - var(--safe-top) - env(safe-area-inset-bottom)))); margin-inline: auto; }
 /* Compact play screen: smaller header, tools and keys give the board more room. */
 .sdk-fixed .sdk-chip { height: 40px; border-radius: 12px; }
 .sdk-fixed .sdk-level-pill { min-height: 22px; font-size: 11px; }
