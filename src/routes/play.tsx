@@ -262,9 +262,7 @@ function PlayPage() {
             </button>
           ))}
         </div>
-        {showHint != null && !paused && (
-          <p className="sdk-hint-tip" role="status"><Lightbulb className="h-3 w-3 shrink-0" />{t("hintTip", { digit: state.solution[showHint] })}</p>
-        )}
+        <p className="sdk-hint-tip" role="status" data-show={showHint != null && !paused}>{showHint != null && !paused && <><Lightbulb className="h-3 w-3 shrink-0" />{t("hintTip", { digit: state.solution[showHint] })}</>}</p>
 
         </div>
       </div>

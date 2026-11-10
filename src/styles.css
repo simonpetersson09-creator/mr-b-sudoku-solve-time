@@ -654,3 +654,8 @@ html::-webkit-scrollbar, body::-webkit-scrollbar, *::-webkit-scrollbar { display
 .lvl-btn:disabled { opacity: 0.45; filter: grayscale(0.6); cursor: not-allowed; }
 .lvl-lock { font-size: 10px; font-weight: 600; opacity: 0.9; }
 .sdk-hint-tip { display: flex; align-items: center; justify-content: center; gap: 6px; margin: 4px auto 0; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; text-align: center; color: var(--game-gold); background: color-mix(in oklab, var(--game-gold) 14%, transparent); border: 1px solid color-mix(in oklab, var(--game-gold) 45%, transparent); }
+.sdk-hint-tip { min-height: 22px; visibility: hidden; }
+.sdk-hint-tip[data-show="true"] { visibility: visible; }
+.sdk-hint-tip:not([data-show="true"]) { background: transparent; border-color: transparent; }
+.sdk-tool:disabled { opacity: .3; pointer-events: none; filter: grayscale(1); }
+.sdk-chip-btn .sdk-chip-label { letter-spacing: .02em; text-overflow: clip; }
