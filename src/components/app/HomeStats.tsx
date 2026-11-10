@@ -8,7 +8,7 @@ import { useTranslation } from "@/lib/i18n";
 /** Home "your numbers": totals, plus best time per level when expanded. */
 export function HomeStats() {
   const { t } = useTranslation();
-  const [expanded, setExpanded] = useState(true);
+  const [expanded, setExpanded] = useState(false);
   const [s, setS] = useState<Stats>(emptyStats);
   useEffect(() => setS(loadStats()), []);
 
