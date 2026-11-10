@@ -716,9 +716,12 @@ main[data-level="master"] .sdk-level-pill { background: color-mix(in oklab, var(
 
 /* Spelsidan är fast: ingen scroll */
 .sdk-fixed { position: fixed; inset: 0; height: 100dvh; min-height: 0; overflow: hidden; overscroll-behavior: none; touch-action: manipulation; }
-.sdk-fixed .sdk-board { width: 100%; max-width: min(100%, max(200px, calc(100dvh - 324px - var(--safe-top) - env(safe-area-inset-bottom)))); margin-inline: auto; }
+.sdk-fixed .sdk-board { width: 100%; max-width: min(100%, max(200px, calc(100dvh - 300px - var(--safe-top) - env(safe-area-inset-bottom)))); margin-inline: auto; }
 /* The header row tracks the board exactly so its markers line up with the board's outer edges. */
-.sdk-fixed .sdk-board-head { width: 100%; max-width: min(100%, max(200px, calc(100dvh - 324px - var(--safe-top) - env(safe-area-inset-bottom)))); margin-inline: auto; margin-bottom: 18px; }
+.sdk-fixed .sdk-board-head { width: 100%; max-width: min(100%, max(200px, calc(100dvh - 300px - var(--safe-top) - env(safe-area-inset-bottom)))); margin-inline: auto; margin-bottom: 18px; }
+/* Top bar: smaller buttons, pushed as high as the iPhone status bar allows. */
+.sdk-fixed .sdk-chip { height: 40px; border-radius: 12px; }
+.sdk-fixed .sdk-back { min-height: 40px; }
 /* Air around the board: away from the button rows above and below, and the tool row from the numbers. */
 .sdk-fixed .sdk-tools { margin-top: 18px; }
 .sdk-fixed .sdk-pad { margin-top: 18px; }

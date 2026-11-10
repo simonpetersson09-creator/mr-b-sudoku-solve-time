@@ -211,8 +211,8 @@ function PlayPage() {
   };
 
   return (
-    <main className="app-screen sdk-fixed flex flex-col" data-level={state.level} style={{ paddingTop: "calc(8px + var(--safe-top))", paddingBottom: "calc(20px + env(safe-area-inset-bottom))" }}>
-      <div className="mx-auto flex w-full max-w-md flex-1 flex-col gap-2">
+    <main className="app-screen sdk-fixed flex flex-col" data-level={state.level} style={{ paddingTop: "calc(4px + var(--safe-top))", paddingBottom: "calc(20px + env(safe-area-inset-bottom))" }}>
+      <div className="mx-auto flex w-full max-w-md flex-1 flex-col gap-1">
         <div className="flex items-center gap-2">
           <button onClick={() => navigate({ to: "/" })} aria-label={t("back")} className="sdk-back">
             <ArrowLeft className="h-4 w-4" /><span>{t("back")}</span>
