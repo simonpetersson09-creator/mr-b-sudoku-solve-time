@@ -97,12 +97,12 @@ function PlayPage() {
     setState((s) => (s && !paused ? fn(s) : s));
   }, [paused]);
 
-  const input = (d: number, at: number | null = selected, fromHint = false) => {
+  const input = (d: number, at: number | null = selected, fromHint = false, base: GameState | null = null) => {
     const selected = at;
     if (selected == null || !state) return;
     if (notesMode && !fromHint) { act((s) => toggleNote(s, selected, d)); void playLightHaptic(); setNotesMode(false); return; }
     if (paused) return;
-    const before = state;
+    const before = base ?? state;
     const next = setValue(before, selected, d, settings.autoRemoveNotes);
     setState(next);
     if (next === before) return;
@@ -137,17 +137,9 @@ function PlayPage() {
   const selValue = selected != null ? state.values[selected] : 0;
   const peers = selected != null ? new Set(PEERS[selected]) : new Set<number>();
 
-  // A hint is preceded by an interstitial ad (app only; skipped silently when none is available).
+  // A hint (after an optional interstitial) fills one good square directly; a short note explains why.
   const doHint = async () => {
-    if (hintBusy || state.finished || lost) return;
-    // Step 2: point out the square and explain why. Step 3: fill it in. Same hint, no extra cost.
-    if (activeHint) {
-      if (hintInfo!.step === 1) { setHintInfo({ info: activeHint, step: 2 }); setSelected(activeHint.cell); return; }
-      input(activeHint.digit, activeHint.cell, true);
-      setHintInfo(null);
-      return;
-    }
-    if (state.hints >= MAX_HINTS) return;
+    if (hintBusy || state.finished || lost || state.hints >= MAX_HINTS) return;
     const info = explainHint(state);
     if (info == null) return;
     setHintBusy(true);
@@ -157,16 +149,15 @@ function PlayPage() {
     setHintBusy(false);
     const r = markHint(state);
     if (r.cell == null) return;
-    setState(r.state);
+    setSelected(info.cell);
+    input(info.digit, info.cell, true, r.state);
     setHintInfo({ info, step: 1 });
+    window.setTimeout(() => setHintInfo((h) => (h?.info === info ? null : h)), 3500);
   };
-  // The hint stays until its square holds the right digit (typed by the player or filled by step 3).
-  const activeHint = hintInfo && state.values[hintInfo.info.cell] !== hintInfo.info.digit ? hintInfo.info : null;
-  if (hintInfo && !activeHint) queueMicrotask(() => setHintInfo(null));
-  const showHint = activeHint && hintInfo!.step === 2 ? activeHint.cell : null;
-  const hintZone = activeHint ? new Set(activeHint.unit) : null;
+  const activeHint = hintInfo?.info ?? null;
+  const showHint: number | null = null;
+  const hintZone = activeHint ? new Set([activeHint.cell]) : null;
   const hintText = !activeHint || paused ? null
-    : hintInfo!.step === 1 ? t(activeHint.kind === "wrong" ? "hintLookWrong" : "hintLook")
     : t(activeHint.kind === "wrong" ? "hintWhyWrong" : activeHint.kind === "naked" ? "hintWhyNaked" : activeHint.kind === "hidden" ? "hintWhyHidden" : "hintWhyFewest", { digit: activeHint.digit });
 
   const again = () => {
@@ -255,7 +246,7 @@ function PlayPage() {
           <button className="sdk-tool" onClick={() => { setHintInfo(null); act(undo); }} disabled={paused || !state.history.length || state.undosLeft <= 0} aria-label={`${t("undo")}: ${state.undosLeft}/${MAX_UNDOS}`}><Undo2 className="h-5 w-5" />{t("undo")}<span className="sdk-pips" aria-hidden="true">{Array.from({ length: MAX_UNDOS }, (_, i) => <span key={i} className="sdk-pip" data-on={i < state.undosLeft} />)}</span></button>
           <button className="sdk-tool" onClick={() => selected != null && act((s) => erase(s, selected))} disabled={paused}><Eraser className="h-5 w-5" />{t("eraseNotes")}</button>
           <button className="sdk-tool" aria-pressed={notesMode} onClick={() => setNotesMode((n) => !n)} disabled={paused}><Pencil className="h-5 w-5" />{t("notes")}</button>
-          <button className="sdk-tool relative" onClick={() => void doHint()} disabled={paused || hintBusy || (!activeHint && state.hints >= MAX_HINTS)} data-active={!!activeHint} aria-label={`${activeHint ? t(hintInfo!.step === 1 ? "hintMore" : "hintFill") : t("hint")}: ${MAX_HINTS - state.hints}/${MAX_HINTS}`}><Lightbulb className="h-5 w-5" />{activeHint ? t(hintInfo!.step === 1 ? "hintMore" : "hintFill") : t("hint")}<span className="sdk-pips" aria-hidden="true">{Array.from({ length: MAX_HINTS }, (_, i) => <span key={i} className="sdk-pip" data-on={i < MAX_HINTS - state.hints} />)}</span></button>
+          <button className="sdk-tool relative" onClick={() => void doHint()} disabled={paused || hintBusy || state.hints >= MAX_HINTS} aria-label={`${t("hint")}: ${MAX_HINTS - state.hints}/${MAX_HINTS}`}><Lightbulb className="h-5 w-5" />{t("hint")}<span className="sdk-pips" aria-hidden="true">{Array.from({ length: MAX_HINTS }, (_, i) => <span key={i} className="sdk-pip" data-on={i < MAX_HINTS - state.hints} />)}</span></button>
         </div>
 
         <div className="sdk-pad">
