@@ -9,8 +9,8 @@ const GAMES = NS + "games";
 const ACTIVE = NS + "active-game-id";
 const LEVEL = NS + "level";
 
-export interface Settings { name: string; haptics: boolean; showMistakes: boolean; highlightSame: boolean; autoRemoveNotes: boolean }
-const DEFAULT_SETTINGS: Settings = { name: "Spelare", haptics: true, showMistakes: true, highlightSame: true, autoRemoveNotes: true };
+export interface Settings { name: string; haptics: boolean; showMistakes: boolean; highlightSame: boolean; autoRemoveNotes: boolean; darkBoard: boolean }
+const DEFAULT_SETTINGS: Settings = { name: "Spelare", haptics: true, showMistakes: true, highlightSame: true, autoRemoveNotes: true, darkBoard: false };
 
 function read<T>(key: string, fallback: T): T {
   if (typeof window === "undefined") return fallback;

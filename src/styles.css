@@ -705,3 +705,27 @@ main[data-level="master"] .sdk-level-pill { background: color-mix(in oklab, var(
 /* Spelsidan är fast: ingen scroll */
 .sdk-fixed { position: fixed; inset: 0; height: 100dvh; min-height: 0; overflow: hidden; overscroll-behavior: none; touch-action: manipulation; }
 .sdk-fixed .sdk-board { width: 100%; max-width: min(100%, max(200px, calc(100dvh - 350px - var(--safe-top) - env(safe-area-inset-bottom)))); margin-inline: auto; }
+
+/* Dark board (setting) */
+.sdk-board[data-dark="true"] {
+  --board: oklch(0.24 0.03 200);
+  --board-ink: oklch(0.88 0.03 85);
+  --sdk-entry: oklch(0.78 0.11 220);
+  --sdk-wrong: oklch(0.72 0.18 25);
+  --sdk-wrong-bg: oklch(0.32 0.08 25);
+  --sdk-thick: oklch(0.8 0.1 85);
+  --sdk-given: oklch(0.93 0.03 85);
+  --sdk-thin: oklch(0.38 0.03 200);
+  --sdk-peer: oklch(0.29 0.04 200);
+  --sdk-same: oklch(0.38 0.07 85);
+  --sdk-selected: oklch(0.45 0.09 85);
+  --sdk-hint: oklch(0.36 0.08 150);
+}
+.sdk-board[data-dark="true"] .sdk-notes span { color: oklch(0.7 0.03 200); }
+
+/* New record */
+.sdk-record { animation: sdk-record-in .6s cubic-bezier(.2,1.4,.4,1) both; box-shadow: 0 0 24px color-mix(in oklch, var(--game-gold) 45%, transparent); }
+.sdk-record-trophy { animation: sdk-record-in .7s cubic-bezier(.2,1.6,.4,1) both, sdk-record-glow 1.8s ease-in-out .7s infinite; }
+@keyframes sdk-record-in { from { transform: scale(.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes sdk-record-glow { 50% { filter: drop-shadow(0 0 12px var(--game-gold)); transform: scale(1.06); } }
+@media (prefers-reduced-motion: reduce) { .sdk-record, .sdk-record-trophy { animation: none; } }

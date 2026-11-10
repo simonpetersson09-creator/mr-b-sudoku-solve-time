@@ -54,6 +54,7 @@ function PlayPage() {
   const holdTimer = useRef<number | null>(null);
   const held = useRef(false);
   const settings = useMemo(() => loadSettings(), []);
+  const [record, setRecord] = useState<number | null>(null);
   const stats = useMemo(() => loadStats(), []);
   const finishedDone = useRef(false);
 
@@ -90,6 +91,8 @@ function PlayPage() {
     if (!state?.finished || finishedDone.current) return;
     finishedDone.current = true;
     const before = loadProgress();
+    const prevBest = loadStats()[state.level].bestMs;
+    if (state.hints === 0 && prevBest != null && state.elapsedMs < prevBest) setRecord(prevBest);
     recordFinish(state);
     setUnlocked(newlyUnlocked(before, loadProgress()));
     reportLocalGame("finish", state);
@@ -231,7 +234,7 @@ function PlayPage() {
             <button onClick={() => setPaused(false)} className="flex flex-col items-center gap-2 rounded-xl p-4 active:scale-95"><Play className="h-12 w-12 text-gold" /><span className="font-display text-lg font-bold">{t("paused")}</span><span className="text-xs text-muted-foreground">{t("tapToResume")}</span></button>
           </div>
         ) : (
-          <div className="sdk-board" data-lost={lost} role="grid" aria-label={t("board")}>
+          <div className="sdk-board" data-dark={settings.darkBoard} data-lost={lost} role="grid" aria-label={t("board")}>
             {state.values.map((v, i) => {
               const r = Math.floor(i / 9), c = i % 9;
               const wrong = settings.showMistakes && isWrong(state, i);
@@ -318,21 +321,27 @@ function PlayPage() {
           </div>
         </div>
       )}
-      {celebrating && Array.from({ length: 28 }, (_, n) => <span key={n} className="sdk-confetti" style={{ left: `${(n * 37) % 100}%`, animationDelay: `${(n % 7) * 0.12}s` }} />)}
-      {state.finished && !celebrating && <ResultOverlay state={state} unlocked={unlocked} onAgain={again} onHome={() => navigate({ to: "/" })} />}
+      {celebrating && Array.from({ length: record != null ? 60 : 28 }, (_, n) => <span key={n} className="sdk-confetti" style={{ left: `${(n * 37) % 100}%`, animationDelay: `${(n % 7) * 0.12}s` }} />)}
+      {state.finished && !celebrating && <ResultOverlay state={state} record={record} unlocked={unlocked} onAgain={again} onHome={() => navigate({ to: "/" })} />}
     </main>
   );
 }
 
-function ResultOverlay({ state, unlocked, onAgain, onHome }: { state: GameState; unlocked: Level[]; onAgain: () => void; onHome: () => void }) {
+function ResultOverlay({ state, record, unlocked, onAgain, onHome }: { state: GameState; record: number | null; unlocked: Level[]; onAgain: () => void; onHome: () => void }) {
   const { t } = useTranslation();
   // Post-game interstitial (Yatzy rules): once per finished game.
   const { leaving, leave } = usePostMatchExit(`sudoku:${state.id}`, true, onHome);
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-background/80 p-4 backdrop-blur-sm">
       <div className="w-full max-w-[360px] rounded-2xl border bg-card p-5 text-center shadow-2xl">
-        <p className="text-4xl">🏆</p>
+        <p className={record != null ? "sdk-record-trophy text-5xl" : "text-4xl"}>{record != null ? "🥇" : "🏆"}</p>
         <h2 className="brand-title mt-1 text-2xl">{t("solvedTitle")}</h2>
+        {record != null && (
+          <div className="sdk-record mt-3 rounded-xl border border-gold/60 bg-gold/15 px-3 py-2">
+            <p className="font-display text-lg font-bold text-gold">{t("newRecord")}</p>
+            <p className="text-xs text-muted-foreground">{t("previousBest", { time: formatTime(record) })}</p>
+          </div>
+        )}
         <p className="mt-1 text-sm text-muted-foreground">{t(LEVEL_KEY[state.level])}</p>
         {unlocked.map((l) => (
           <p key={l} className="mt-3 rounded-xl border border-gold/40 bg-gold/10 px-3 py-2 text-sm font-semibold text-gold">🔓 {t("levelUnlocked", { level: t(LEVEL_KEY[l]) })}</p>
