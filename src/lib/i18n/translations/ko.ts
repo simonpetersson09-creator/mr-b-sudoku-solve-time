@@ -163,6 +163,7 @@ export const ko: Record<TranslationKey, string> = {
   erase: "지우기",
   notes: "메모",
   hint: "힌트",
+  hintTip: "{digit}을(를) 눌러 강조된 칸을 채우세요",
   solvedTitle: "완료!",
   gameOverTitle: "게임 종료",
   gameOverBody: "{n}번 틀렸습니다. 다시 시도해 보세요!",

@@ -163,6 +163,7 @@ export const gu: Record<TranslationKey, string> = {
   erase: "ભૂંસો",
   notes: "નોંધો",
   hint: "સંકેત",
+  hintTip: "ચિહ્નિત ખાનું ભરવા માટે {digit} દબાવો",
   solvedTitle: "ઉકેલાઈ ગયું!",
   gameOverTitle: "રમત પૂરી થઈ",
   gameOverBody: "તમે {n} ભૂલો કરી. ફરી પ્રયાસ કરો!",

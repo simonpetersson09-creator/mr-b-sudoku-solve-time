@@ -163,6 +163,7 @@ export const no: Record<TranslationKey, string> = {
   erase: "Slett",
   notes: "Notater",
   hint: "Hint",
+  hintTip: "Trykk på {digit} for å fylle inn den markerte ruten",
   solvedTitle: "Løst!",
   gameOverTitle: "Spillet er over",
   gameOverBody: "Du gjorde {n} feil. Prøv igjen!",

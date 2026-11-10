@@ -163,6 +163,7 @@ export const th: Record<TranslationKey, string> = {
   erase: "ลบ",
   notes: "บันทึก",
   hint: "คำใบ้",
+  hintTip: "แตะ {digit} เพื่อเติมช่องที่ไฮไลต์",
   solvedTitle: "ไขสำเร็จ!",
   gameOverTitle: "จบเกม",
   gameOverBody: "คุณทำผิด {n} ครั้ง ลองใหม่อีกครั้ง!",

@@ -163,6 +163,7 @@ export const te: Record<TranslationKey, string> = {
   erase: "చెరిపివేయి",
   notes: "నోట్స్",
   hint: "సూచన",
+  hintTip: "గుర్తించిన గడిని నింపడానికి {digit} నొక్కండి",
   solvedTitle: "పరిష్కరించారు!",
   gameOverTitle: "ఆట ముగిసింది",
   gameOverBody: "మీరు {n} తప్పులు చేశారు. మళ్లీ ప్రయత్నించండి!",

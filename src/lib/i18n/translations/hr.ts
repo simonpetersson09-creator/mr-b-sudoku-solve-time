@@ -146,6 +146,7 @@ export const hr: Record<TranslationKey, string> = {
   erase: "Obriši",
   notes: "Bilješke",
   hint: "Savjet",
+  hintTip: "Dodirnite {digit} da ispunite označeno polje",
   solvedTitle: "Riješeno!",
   gameOverTitle: "Kraj igre",
   gameOverBody: "Napravili ste {n} pogrešaka. Pokušajte ponovno!",

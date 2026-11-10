@@ -146,6 +146,7 @@ export const fi: Record<TranslationKey, string> = {
   erase: "Pyyhi",
   notes: "Muistiinpanot",
   hint: "Vihje",
+  hintTip: "Napauta {digit} täyttääksesi korostetun ruudun",
   solvedTitle: "Ratkaistu!",
   gameOverTitle: "Peli päättyi",
   gameOverBody: "Teit {n} virhettä. Yritä uudelleen!",

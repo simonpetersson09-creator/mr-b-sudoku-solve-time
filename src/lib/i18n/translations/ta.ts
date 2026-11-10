@@ -163,6 +163,7 @@ export const ta: Record<TranslationKey, string> = {
   erase: "அழி",
   notes: "குறிப்புகள்",
   hint: "குறிப்பு",
+  hintTip: "குறிக்கப்பட்ட கட்டத்தை நிரப்ப {digit} ஐ அழுத்தவும்",
   solvedTitle: "தீர்த்துவிட்டீர்கள்!",
   gameOverTitle: "விளையாட்டு முடிந்தது",
   gameOverBody: "நீங்கள் {n} தவறுகள் செய்தீர்கள். மீண்டும் முயற்சிக்கவும்!",

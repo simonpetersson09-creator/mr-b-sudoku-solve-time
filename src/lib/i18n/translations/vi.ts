@@ -163,6 +163,7 @@ export const vi: Record<TranslationKey, string> = {
   erase: "Xóa",
   notes: "Ghi chú",
   hint: "Gợi ý",
+  hintTip: "Nhấn {digit} để điền vào ô được đánh dấu",
   solvedTitle: "Đã giải xong!",
   gameOverTitle: "Trò chơi kết thúc",
   gameOverBody: "Bạn đã mắc {n} lỗi. Hãy thử lại!",

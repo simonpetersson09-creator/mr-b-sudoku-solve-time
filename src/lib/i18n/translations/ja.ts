@@ -163,6 +163,7 @@ export const ja: Record<TranslationKey, string> = {
   erase: "消す",
   notes: "メモ",
   hint: "ヒント",
+  hintTip: "{digit} をタップして強調されたマスに入力",
   solvedTitle: "クリア！",
   gameOverTitle: "ゲームオーバー",
   gameOverBody: "{n}回間違えました。もう一度挑戦してください！",

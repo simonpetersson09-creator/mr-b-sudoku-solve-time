@@ -163,6 +163,7 @@ export const kn: Record<TranslationKey, string> = {
   erase: "ಅಳಿಸಿ",
   notes: "ಟಿಪ್ಪಣಿಗಳು",
   hint: "ಸುಳಿವು",
+  hintTip: "ಗುರುತಿಸಿದ ಚೌಕವನ್ನು ತುಂಬಲು {digit} ಒತ್ತಿರಿ",
   solvedTitle: "ಬಿಡಿಸಿದ್ದೀರಿ!",
   gameOverTitle: "ಆಟ ಮುಗಿದಿದೆ",
   gameOverBody: "ನೀವು {n} ತಪ್ಪುಗಳನ್ನು ಮಾಡಿದ್ದೀರಿ. ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ!",

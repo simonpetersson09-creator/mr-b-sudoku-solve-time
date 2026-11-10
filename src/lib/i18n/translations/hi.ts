@@ -163,6 +163,7 @@ export const hi: Record<TranslationKey, string> = {
   erase: "मिटाएँ",
   notes: "नोट्स",
   hint: "संकेत",
+  hintTip: "चिह्नित खाने को भरने के लिए {digit} दबाएँ",
   solvedTitle: "हल हो गया!",
   gameOverTitle: "खेल समाप्त",
   gameOverBody: "आपने {n} गलतियाँ कीं। फिर से प्रयास करें!",

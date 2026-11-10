@@ -146,6 +146,7 @@ export const el: Record<TranslationKey, string> = {
   erase: "Σβήσιμο",
   notes: "Σημειώσεις",
   hint: "Βοήθεια",
+  hintTip: "Πάτησε {digit} για να συμπληρώσεις το επισημασμένο τετράγωνο",
   solvedTitle: "Λύθηκε!",
   gameOverTitle: "Τέλος παιχνιδιού",
   gameOverBody: "Έκανες {n} λάθη. Προσπάθησε ξανά!",

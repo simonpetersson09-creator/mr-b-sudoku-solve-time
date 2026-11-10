@@ -146,6 +146,7 @@ export const ca: Record<TranslationKey, string> = {
   erase: "Esborra",
   notes: "Notes",
   hint: "Pista",
+  hintTip: "Toca {digit} per omplir la casella destacada",
   solvedTitle: "Resolt!",
   gameOverTitle: "Fi de la partida",
   gameOverBody: "Has fet {n} errors. Torna-ho a provar!",

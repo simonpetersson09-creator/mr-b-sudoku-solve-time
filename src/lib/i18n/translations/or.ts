@@ -163,6 +163,7 @@ export const or: Record<TranslationKey, string> = {
   erase: "ଲିଭାନ୍ତୁ",
   notes: "ନୋଟ୍ସ",
   hint: "ସଙ୍କେତ",
+  hintTip: "ଚିହ୍ନିତ ଘର ପୂରଣ କରିବାକୁ {digit} ଦବାନ୍ତୁ",
   solvedTitle: "ସମାଧାନ ହେଲା!",
   gameOverTitle: "ଖେଳ ଶେଷ",
   gameOverBody: "ଆପଣ {n} ଟି ଭୁଲ୍ କରିଛନ୍ତି। ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ!",

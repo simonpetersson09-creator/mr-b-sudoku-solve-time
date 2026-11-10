@@ -146,6 +146,7 @@ export const ptBR: Record<TranslationKey, string> = {
   erase: "Apagar",
   notes: "Anotações",
   hint: "Dica",
+  hintTip: "Toque em {digit} para preencher a casa destacada",
   solvedTitle: "Resolvido!",
   gameOverTitle: "Fim de jogo",
   gameOverBody: "Você cometeu {n} erros. Tente novamente!",

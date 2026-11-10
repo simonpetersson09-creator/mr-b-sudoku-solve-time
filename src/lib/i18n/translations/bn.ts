@@ -163,6 +163,7 @@ export const bn: Record<TranslationKey, string> = {
   erase: "মুছুন",
   notes: "নোট",
   hint: "ইঙ্গিত",
+  hintTip: "চিহ্নিত ঘরটি পূরণ করতে {digit} চাপুন",
   solvedTitle: "সমাধান হয়েছে!",
   gameOverTitle: "খেলা শেষ",
   gameOverBody: "আপনি {n}টি ভুল করেছেন। আবার চেষ্টা করুন!",

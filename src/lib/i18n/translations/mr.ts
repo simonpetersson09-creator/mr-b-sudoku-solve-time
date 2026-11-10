@@ -163,6 +163,7 @@ export const mr: Record<TranslationKey, string> = {
   erase: "खोडा",
   notes: "टिपा",
   hint: "इशारा",
+  hintTip: "चिन्हांकित चौकोन भरण्यासाठी {digit} दाबा",
   solvedTitle: "सोडवले!",
   gameOverTitle: "खेळ संपला",
   gameOverBody: "तुम्ही {n} चुका केल्या. पुन्हा प्रयत्न करा!",

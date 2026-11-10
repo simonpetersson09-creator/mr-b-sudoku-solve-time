@@ -176,6 +176,7 @@ export const sv = {
   erase: "Radera",
   notes: "Anteckningar",
   hint: "Ledtråd",
+  hintTip: "Tryck på {digit} för att fylla i den markerade rutan",
   solvedTitle: "Löst!",
   gameOverTitle: "Spelet är slut",
   gameOverBody: "Du gjorde {n} fel. Försök igen!",

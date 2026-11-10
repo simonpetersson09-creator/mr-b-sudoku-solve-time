@@ -163,6 +163,7 @@ export const uk: Record<TranslationKey, string> = {
   erase: "Стерти",
   notes: "Нотатки",
   hint: "Підказка",
+  hintTip: "Натисніть {digit}, щоб заповнити виділену клітинку",
   solvedTitle: "Розв’язано!",
   gameOverTitle: "Кінець гри",
   gameOverBody: "Ви припустилися {n} помилок. Спробуйте ще раз!",

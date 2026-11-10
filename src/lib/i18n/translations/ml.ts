@@ -163,6 +163,7 @@ export const ml: Record<TranslationKey, string> = {
   erase: "മായ്ക്കുക",
   notes: "കുറിപ്പുകൾ",
   hint: "സൂചന",
+  hintTip: "അടയാളപ്പെടുത്തിയ കള്ളം പൂരിപ്പിക്കാൻ {digit} അമർത്തുക",
   solvedTitle: "പൂർത്തിയായി!",
   gameOverTitle: "കളി കഴിഞ്ഞു",
   gameOverBody: "നിങ്ങൾ {n} തെറ്റുകൾ വരുത്തി. വീണ്ടും ശ്രമിക്കുക!",

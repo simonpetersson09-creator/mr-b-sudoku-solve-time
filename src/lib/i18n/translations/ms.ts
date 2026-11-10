@@ -163,6 +163,7 @@ export const ms: Record<TranslationKey, string> = {
   erase: "Padam",
   notes: "Nota",
   hint: "Petunjuk",
+  hintTip: "Ketik {digit} untuk mengisi petak yang diserlahkan",
   solvedTitle: "Selesai!",
   gameOverTitle: "Permainan Tamat",
   gameOverBody: "Anda telah melakukan {n} kesilapan. Cuba lagi!",

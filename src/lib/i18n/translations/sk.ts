@@ -146,6 +146,7 @@ export const sk: Record<TranslationKey, string> = {
   erase: "Vymazať",
   notes: "Poznámky",
   hint: "Pomôcka",
+  hintTip: "Ťuknite na {digit} a vyplňte zvýraznené pole",
   solvedTitle: "Vyriešené!",
   gameOverTitle: "Koniec hry",
   gameOverBody: "Urobili ste {n} chýb. Skúste to znova!",

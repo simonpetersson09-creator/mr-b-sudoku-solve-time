@@ -146,6 +146,7 @@ export const it: Record<TranslationKey, string> = {
   erase: "Cancella",
   notes: "Note",
   hint: "Suggerimento",
+  hintTip: "Tocca {digit} per riempire la casella evidenziata",
   solvedTitle: "Risolto!",
   gameOverTitle: "Partita terminata",
   gameOverBody: "Hai fatto {n} errori. Riprova!",

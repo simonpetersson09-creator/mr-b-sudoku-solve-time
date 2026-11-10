@@ -151,7 +151,8 @@ function PlayPage() {
     setSelected(r.cell);
     setHintCell(r.cell);
   };
-  // The hint mark stays until that cell holds its correct digit.
+  // The hint mark stays until that cell holds its correct digit; once filled (or undone) it is gone.
+  if (hintCell != null && state.values[hintCell] === state.solution[hintCell]) queueMicrotask(() => setHintCell(null));
   const showHint = hintCell != null && state.values[hintCell] !== state.solution[hintCell] ? hintCell : null;
 
   const again = () => {
@@ -240,12 +241,15 @@ function PlayPage() {
         )}
 
         <div className="flex gap-1">
-          <button className="sdk-tool" onClick={() => act(undo)} disabled={paused || !state.history.length || state.undosLeft <= 0} aria-label={`${t("undo")}: ${state.undosLeft}/${MAX_UNDOS}`}><Undo2 className="h-5 w-5" />{t("undo")}<span className="sdk-pips" aria-hidden="true">{Array.from({ length: MAX_UNDOS }, (_, i) => <span key={i} className="sdk-pip" data-on={i < state.undosLeft} />)}</span></button>
+          <button className="sdk-tool" onClick={() => { setHintCell(null); act(undo); }} disabled={paused || !state.history.length || state.undosLeft <= 0} aria-label={`${t("undo")}: ${state.undosLeft}/${MAX_UNDOS}`}><Undo2 className="h-5 w-5" />{t("undo")}<span className="sdk-pips" aria-hidden="true">{Array.from({ length: MAX_UNDOS }, (_, i) => <span key={i} className="sdk-pip" data-on={i < state.undosLeft} />)}</span></button>
           <button className="sdk-tool" onClick={() => selected != null && act((s) => erase(s, selected))} disabled={paused}><Eraser className="h-5 w-5" />{t("erase")}</button>
           <button className="sdk-tool" aria-pressed={notesMode} onClick={() => setNotesMode((n) => !n)} disabled={paused}><Pencil className="h-5 w-5" />{t("notes")}</button>
           <button className="sdk-tool relative" onClick={() => void doHint()} disabled={paused || hintBusy}><Lightbulb className="h-5 w-5" />{t("hint")}{state.hints > 0 && <span className="sdk-badge">{state.hints}</span>}</button>
         </div>
 
+        {showHint != null && !paused && (
+          <p className="sdk-hint-tip" role="status"><Lightbulb className="h-4 w-4 shrink-0" />{t("hintTip", { digit: state.solution[showHint] })}</p>
+        )}
         <div className="sdk-pad">
           {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((d) => (
             <button

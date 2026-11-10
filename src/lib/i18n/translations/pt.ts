@@ -163,6 +163,7 @@ export const pt: Record<TranslationKey, string> = {
   erase: "Apagar",
   notes: "Notas",
   hint: "Ajuda",
+  hintTip: "Toque em {digit} para preencher a casa destacada",
   solvedTitle: "Resolvido!",
   gameOverTitle: "Fim de jogo",
   gameOverBody: "Você cometeu {n} erros. Tente novamente!",

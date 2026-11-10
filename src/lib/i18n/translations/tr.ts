@@ -163,6 +163,7 @@ export const tr: Record<TranslationKey, string> = {
   erase: "Sil",
   notes: "Notlar",
   hint: "İpucu",
+  hintTip: "İşaretli kareyi doldurmak için {digit} tuşuna dokun",
   solvedTitle: "Çözüldü!",
   gameOverTitle: "Oyun Bitti",
   gameOverBody: "{n} hata yaptın. Tekrar dene!",

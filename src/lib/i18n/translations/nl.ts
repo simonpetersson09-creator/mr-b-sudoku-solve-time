@@ -146,6 +146,7 @@ export const nl: Record<TranslationKey, string> = {
   erase: "Wissen",
   notes: "Notities",
   hint: "Hint",
+  hintTip: "Tik op {digit} om het gemarkeerde vak in te vullen",
   solvedTitle: "Opgelost!",
   gameOverTitle: "Spel afgelopen",
   gameOverBody: "Je hebt {n} fouten gemaakt. Probeer het opnieuw!",

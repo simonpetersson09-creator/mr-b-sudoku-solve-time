@@ -163,6 +163,7 @@ export const pa: Record<TranslationKey, string> = {
   erase: "ਮਿਟਾਓ",
   notes: "ਨੋਟਸ",
   hint: "ਇਸ਼ਾਰਾ",
+  hintTip: "ਨਿਸ਼ਾਨਬੱਧ ਖਾਨਾ ਭਰਨ ਲਈ {digit} ਦਬਾਓ",
   solvedTitle: "ਹੱਲ ਹੋ ਗਈ!",
   gameOverTitle: "Fim de jogo",
   gameOverBody: "Você cometeu {n} erros. Tente novamente!",

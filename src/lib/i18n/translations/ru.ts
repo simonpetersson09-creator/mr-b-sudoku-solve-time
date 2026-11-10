@@ -163,6 +163,7 @@ export const ru: Record<TranslationKey, string> = {
   erase: "Стереть",
   notes: "Заметки",
   hint: "Подсказка",
+  hintTip: "Нажмите {digit}, чтобы заполнить выделенную клетку",
   solvedTitle: "Решено!",
   gameOverTitle: "Игра окончена",
   gameOverBody: "Вы допустили {n} ошибок. Попробуйте снова!",

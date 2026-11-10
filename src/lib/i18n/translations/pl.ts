@@ -146,6 +146,7 @@ export const pl: Record<TranslationKey, string> = {
   erase: "Usuń",
   notes: "Notatki",
   hint: "Podpowiedź",
+  hintTip: "Dotknij {digit}, aby wypełnić zaznaczone pole",
   solvedTitle: "Rozwiązane!",
   gameOverTitle: "Koniec gry",
   gameOverBody: "Popełniłeś {n} błędów. Spróbuj ponownie!",

@@ -146,6 +146,7 @@ export const hu: Record<TranslationKey, string> = {
   erase: "Törlés",
   notes: "Jegyzetek",
   hint: "Tipp",
+  hintTip: "Koppints a(z) {digit} gombra a kiemelt mező kitöltéséhez",
   solvedTitle: "Megoldva!",
   gameOverTitle: "Játék vége",
   gameOverBody: "{n} hibát vétettél. Próbáld újra!",

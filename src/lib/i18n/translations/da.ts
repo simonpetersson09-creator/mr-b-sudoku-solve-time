@@ -163,6 +163,7 @@ export const da: Record<TranslationKey, string> = {
   erase: "Slet",
   notes: "Noter",
   hint: "Tip",
+  hintTip: "Tryk på {digit} for at udfylde det markerede felt",
   solvedTitle: "Løst!",
   gameOverTitle: "Spillet er slut",
   gameOverBody: "Du lavede {n} fejl. Prøv igen!",

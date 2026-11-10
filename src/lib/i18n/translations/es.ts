@@ -163,6 +163,7 @@ export const es: Record<TranslationKey, string> = {
   erase: "Borrar",
   notes: "Notas",
   hint: "Pista",
+  hintTip: "Toca {digit} para rellenar la casilla resaltada",
   solvedTitle: "¡Resuelto!",
   gameOverTitle: "Fin del juego",
   gameOverBody: "Cometiste {n} errores. ¡Inténtalo de nuevo!",
