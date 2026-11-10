@@ -172,11 +172,7 @@ function PlayPage() {
           <button onClick={() => navigate({ to: "/" })} aria-label={t("back")} className="sdk-back">
             <ArrowLeft className="h-4 w-4" /><span>{t("back")}</span>
           </button>
-          <div className="grid flex-1 grid-cols-[1.2fr_1.2fr_1fr_1fr] gap-1.5">
-            <div className="sdk-chip">
-              <span className="sdk-chip-label">{t("level")}</span>
-              <span className="sdk-chip-value text-gold">{t(LEVEL_KEY[state.level])}</span>
-            </div>
+          <div className="grid flex-1 grid-cols-3 gap-1.5">
             <div className="sdk-chip" data-bad={state.mistakes > 0}>
               <span className="sdk-chip-label">{t("mistakes")}</span>
               <span className="sdk-chip-value">
@@ -195,7 +191,8 @@ function PlayPage() {
         </div>
 
         <div className="flex flex-1 flex-col justify-center gap-3">
-        <p className="text-center font-display text-3xl font-bold tabular-nums tracking-wider" aria-label={t("time")}>{formatTime(state.elapsedMs)}</p>
+        <div className="flex justify-center"><span className="sdk-level-pill">{t(LEVEL_KEY[state.level])}</span></div>
+        <p className="-mt-1 text-center font-display text-3xl font-bold tabular-nums tracking-wider" aria-label={t("time")}>{formatTime(state.elapsedMs)}</p>
         <p className="-mt-3 text-center text-xs text-muted-foreground">
           {t("statBestTime")}: <span className="font-display font-bold tabular-nums text-gold">{stats[state.level].bestMs != null ? formatTime(stats[state.level].bestMs!) : "–"}</span>
         </p>

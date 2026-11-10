@@ -670,3 +670,4 @@ html::-webkit-scrollbar, body::-webkit-scrollbar, *::-webkit-scrollbar { display
 .sdk-key[data-done="true"] { opacity: .45; transform: none; color: var(--muted-foreground); background: var(--card); border-color: color-mix(in oklab, var(--primary) 50%, var(--border)); box-shadow: none; }
 .sdk-key[data-done="true"] small { color: var(--primary); }
 .sdk-key:disabled[data-done="true"] { opacity: .45; }
+.sdk-level-pill { display: inline-flex; align-items: center; min-height: 26px; padding: 0 14px; border-radius: 999px; background: color-mix(in oklab, var(--game-gold) 14%, var(--card)); border: 1px solid color-mix(in oklab, var(--game-gold) 45%, var(--border)); color: var(--game-gold); font-family: var(--font-display); font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
