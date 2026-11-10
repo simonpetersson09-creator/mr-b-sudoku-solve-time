@@ -37,6 +37,8 @@ function PlayPage() {
   const { t } = useTranslation();
   const [state, setState] = useState<GameState | null>(null);
   const [selected, setSelected] = useState<number | null>(null);
+  // Same-digit highlighting only when a digit already on the board is tapped on purpose.
+  const [sameDigit, setSameDigit] = useState<number | null>(null);
   const [notesMode, setNotesMode] = useState(false);
   const [paused, setPaused] = useState(false);
   const [hintInfo, setHintInfo] = useState<{ info: HintInfo; step: 1 | 2 } | null>(null);
@@ -101,6 +103,7 @@ function PlayPage() {
   const input = (d: number, at: number | null = selected, fromHint = false, base: GameState | null = null) => {
     const selected = at;
     if (selected == null || !state) return;
+    setSameDigit(null);
     if (notesMode && !fromHint) { act((s) => toggleNote(s, selected, d)); void playLightHaptic(); setNotesMode(false); return; }
     if (paused) return;
     const before = base ?? state;
@@ -138,7 +141,7 @@ function PlayPage() {
     if (/^[1-9]$/.test(e.key)) { input(Number(e.key)); return; }
     if (e.key === "Backspace" || e.key === "Delete" || e.key === "0") { if (selected != null) act((s) => erase(s, selected)); return; }
     const move: Record<string, number> = { ArrowUp: -9, ArrowDown: 9, ArrowLeft: -1, ArrowRight: 1 };
-    if (e.key in move) { e.preventDefault(); setSelected((c) => { const n = (c ?? 40) + move[e.key]; return n >= 0 && n < 81 ? n : c; }); }
+    if (e.key in move) { e.preventDefault(); setSameDigit(null); setSelected((c) => { const n = (c ?? 40) + move[e.key]; return n >= 0 && n < 81 ? n : c; }); }
   }, [state, paused, selected, notesMode]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => { window.addEventListener("keydown", onKey); return () => window.removeEventListener("keydown", onKey); }, [onKey]);
 
@@ -156,7 +159,6 @@ function PlayPage() {
   if (!state) return <main className="app-screen" />;
 
   const counts = digitCounts(state);
-  const selValue = selected != null ? state.values[selected] : 0;
   const peers = selected != null ? new Set(PEERS[selected]) : new Set<number>();
 
   // A hint (after an optional interstitial) fills one good square directly; a short note explains why.
@@ -189,7 +191,7 @@ function PlayPage() {
     finishedDone.current = false;
     setUnlocked([]);
     reportLocalGame("start", g);
-    setSelected(null); setNotesMode(false); setPaused(false);
+    setSelected(null); setNotesMode(false); setPaused(false); setSameDigit(null);
     setState(g);
   };
 
@@ -241,7 +243,7 @@ function PlayPage() {
                   data-given={isGiven(state, i)}
                   data-selected={selected === i}
                   data-peer={selected != null && selected !== i && peers.has(i)}
-                  data-same={holdDigit != null ? v === holdDigit : settings.highlightSame && selValue !== 0 && v === selValue && selected !== i}
+                  data-same={holdDigit != null ? v === holdDigit : settings.highlightSame && sameDigit !== null && v === sameDigit && selected !== i}
                   data-flash={flash.has(i)}
                   data-pop={popCell?.i === i}
                   data-shake={shakeCell?.i === i}
@@ -251,7 +253,7 @@ function PlayPage() {
                   data-hint={showHint === i} data-hint-zone={hintZone?.has(i) || undefined} data-hinted={(hinted.has(i) && v === state.solution[i]) || undefined}
                   aria-label={t("cellLabel", { row: r + 1, col: c + 1 }) + (v ? `: ${v}` : "") + (showHint === i ? ` (${t("hint")}: ${state.solution[i]})` : "")}
                   className="sdk-cell"
-                  onClick={() => setSelected(i)}
+                  onClick={() => { setSelected(i); setSameDigit(v !== 0 ? v : null); }}
                 >
                   {showHint === i && <span className="sdk-hint-digit" aria-hidden="true">{state.solution[i]}</span>}
                   {v ? v : state.notes[i] ? (
@@ -266,7 +268,7 @@ function PlayPage() {
         )}
 
         <div className="flex gap-1">
-          <button className="sdk-tool" onClick={() => { setHintInfo(null); act(undo); }} disabled={paused || !state.history.length || state.undosLeft <= 0} aria-label={`${t("undo")}: ${state.undosLeft}/${MAX_UNDOS}`}><Undo2 className="h-5 w-5" />{t("undo")}<span className="sdk-pips" aria-hidden="true">{Array.from({ length: MAX_UNDOS }, (_, i) => <span key={i} className="sdk-pip" data-on={i < state.undosLeft} />)}</span></button>
+          <button className="sdk-tool" onClick={() => { setHintInfo(null); setSameDigit(null); act(undo); }} disabled={paused || !state.history.length || state.undosLeft <= 0} aria-label={`${t("undo")}: ${state.undosLeft}/${MAX_UNDOS}`}><Undo2 className="h-5 w-5" />{t("undo")}<span className="sdk-pips" aria-hidden="true">{Array.from({ length: MAX_UNDOS }, (_, i) => <span key={i} className="sdk-pip" data-on={i < state.undosLeft} />)}</span></button>
           <button className="sdk-tool" onClick={() => selected != null && act((s) => erase(s, selected))} disabled={paused}><Eraser className="h-5 w-5" />{t("eraseNotes")}</button>
           <button className="sdk-tool" aria-pressed={notesMode} onClick={() => setNotesMode((n) => !n)} disabled={paused}><Pencil className="h-5 w-5" />{t("notes")}</button>
           <button className="sdk-tool relative" onClick={() => void doHint()} disabled={paused || hintBusy || state.hints >= MAX_HINTS} aria-label={`${t("hint")}: ${MAX_HINTS - state.hints}/${MAX_HINTS}`}><Lightbulb className="h-5 w-5" />{t("hint")}<span className="sdk-pips" aria-hidden="true">{Array.from({ length: MAX_HINTS }, (_, i) => <span key={i} className="sdk-pip" data-on={i < MAX_HINTS - state.hints} />)}</span></button>
