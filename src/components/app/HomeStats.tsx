@@ -18,7 +18,7 @@ export function HomeStats() {
   const played = LEVELS.reduce((n, l) => n + s[l].played, 0);
   const wins = LEVELS.reduce((n, l) => n + s[l].wins, 0);
   const bests = LEVELS.map((l) => s[l].bestMs).filter((x): x is number => x != null);
-  const card = "flex flex-col items-center gap-0.5 py-2 sm:py-2.5 px-1.5 rounded-2xl bg-secondary/60 border border-border/50";
+  const card = "flex min-h-[63px] flex-col items-center justify-center gap-0.5 py-2 sm:py-2.5 px-1.5 rounded-2xl bg-secondary/60 border border-border/50";
 
   return (
     <div className="relative w-full max-w-md space-y-2.5 px-5 pb-6 pt-4">
@@ -48,11 +48,17 @@ export function HomeStats() {
             const best = s[l].bestMs != null ? formatTime(s[l].bestMs) : "–";
             if (wide) {
               return (
-                <div key={l} className={`${SPAN_CLS[span - 1]} flex items-center justify-between gap-3 rounded-2xl border border-border/50 bg-secondary/60 px-3 py-2`}>
+                <div key={l} className={`${SPAN_CLS[span - 1]} flex min-h-[63px] items-center justify-between gap-3 rounded-2xl border border-border/50 bg-secondary/60 px-3 py-2`}>
                   <span className="text-[9px] font-semibold uppercase tracking-wider text-gold">{t(LEVEL_KEY[l])}</span>
-                  <span className="flex items-baseline gap-2">
-                    <span className="font-display text-sm font-bold leading-none tabular-nums">{best}</span>
-                    <span className="text-[9px] text-muted-foreground tabular-nums">{s[l].played}</span>
+                  <span className="flex items-center gap-4">
+                    <span className="flex flex-col items-end gap-0.5">
+                      <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">{t("statBestTime")}</span>
+                      <span className="font-display text-sm font-bold leading-none tabular-nums">{best}</span>
+                    </span>
+                    <span className="flex flex-col items-end gap-0.5">
+                      <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">{t("statPlayed")}</span>
+                      <span className="font-display text-sm font-bold leading-none tabular-nums">{s[l].played}</span>
+                    </span>
                   </span>
                 </div>
               );
