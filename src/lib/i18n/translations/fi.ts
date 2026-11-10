@@ -26,6 +26,9 @@ export const fi: Record<TranslationKey, string> = {
   statsTitle: "Tilastot",
   statWins: "Voitot",
   statPerfect: "Virheetön",
+  statPerfectInfo: "Ratkaistu ilman virheitä ja ilman vihjeitä.",
+  statPerfectInfoLabel: "Mitä Virheetön tarkoittaa?",
+
   resetStats: "Nollaa tilastot",
   signIn: "Kirjaudu sisään",
   playerName: "Pelaajanimi",

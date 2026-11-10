@@ -26,6 +26,9 @@ export const ca: Record<TranslationKey, string> = {
   statsTitle: "Estadístiques",
   statWins: "Victòries",
   statPerfect: "Impecable",
+  statPerfectInfo: "Resolt sense cap error i sense pistes.",
+  statPerfectInfoLabel: "Què significa Impecable?",
+
   resetStats: "Restableix les estadístiques",
   signIn: "Inicia la sessió",
   playerName: "Nom de jugador",

@@ -35,6 +35,9 @@ export const tr: Record<TranslationKey, string> = {
   statsTitle: "İstatistikler",
   statWins: "Galibiyetler",
   statPerfect: "Hatasız",
+  statPerfectInfo: "Hata yapmadan ve ipucu kullanmadan çözüldü.",
+  statPerfectInfoLabel: "Hatasız ne demek?",
+
   resetStats: "İstatistikleri sıfırla",
 
   signIn: "Giriş yap",

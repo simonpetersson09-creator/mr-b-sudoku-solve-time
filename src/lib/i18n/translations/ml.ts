@@ -35,6 +35,9 @@ export const ml: Record<TranslationKey, string> = {
   statsTitle: "സ്ഥിതിവിവരക്കണക്ക്",
   statWins: "വിജയങ്ങൾ",
   statPerfect: "പിഴവുകളില്ല",
+  statPerfectInfo: "പിഴവുകളും കൂടാതെ സൂചനകളും കൂടാതെ പരിഹരിച്ചത്.",
+  statPerfectInfoLabel: "പിഴവുകളില്ല എന്നർഥം?",
+
   resetStats: "സ്ഥിതിവിവരക്കണക്ക് പുനഃസജ്ജമാക്കൂ",
 
   signIn: "ലോഗിൻ",

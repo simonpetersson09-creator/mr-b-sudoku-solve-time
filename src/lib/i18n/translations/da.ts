@@ -35,6 +35,9 @@ export const da: Record<TranslationKey, string> = {
   statsTitle: "Statistik",
   statWins: "Sejre",
   statPerfect: "Fejlfri",
+  statPerfectInfo: "Løst helt uden fejl og uden ledetråd.",
+  statPerfectInfoLabel: "Hvad betyder Fejlfri?",
+
   resetStats: "Nulstil statistik",
 
   signIn: "Log ind",

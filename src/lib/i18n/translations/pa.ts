@@ -35,6 +35,9 @@ export const pa: Record<TranslationKey, string> = {
   statsTitle: "ਅੰਕੜੇ",
   statWins: "ਜਿੱਤਾਂ",
   statPerfect: "ਗਲਤੀ ਰਹਿਤ",
+  statPerfectInfo: "ਬਿਨਾਂ ਗਲਤੀ ਅਤੇ ਬਿਨਾਂ ਸੁਝਾਅ ਦੇ ਹੱਲ।",
+  statPerfectInfoLabel: "ਗਲਤੀ ਰਹਿਤ ਦਾ ਮਤਲਬ ਕੀ?",
+
   resetStats: "ਅੰਕੜੇ ਰੀਸੈਟ ਕਰੋ",
 
   signIn: "ਲੌਗ ਇਨ",

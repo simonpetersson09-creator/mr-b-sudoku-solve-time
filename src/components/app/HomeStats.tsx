@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ChevronDown, Grid3x3, ShieldCheck } from "lucide-react";
 import { LEVELS } from "@/lib/sudoku/engine";
 import { LEVEL_KEY, formatTime } from "@/lib/sudoku/format";
@@ -14,8 +14,22 @@ const SPAN_CLS = ["col-span-1", "col-span-2", "col-span-3"];
 export function HomeStats() {
   const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
+  const [infoOpen, setInfoOpen] = useState(false);
+  const infoBtnRef = useRef<HTMLButtonElement>(null);
+  const infoBoxRef = useRef<HTMLDivElement>(null);
   const [s, setS] = useState<Stats>(emptyStats);
   useEffect(() => setS(loadStats()), []);
+
+  // The explanation closes when you tap anywhere outside it.
+  useEffect(() => {
+    if (!infoOpen) return;
+    const onDown = (e: Event) => {
+      const n = e.target as Node;
+      if (!infoBtnRef.current?.contains(n) && !infoBoxRef.current?.contains(n)) setInfoOpen(false);
+    };
+    document.addEventListener("pointerdown", onDown);
+    return () => document.removeEventListener("pointerdown", onDown);
+  }, [infoOpen]);
 
   const played = LEVELS.reduce((n, l) => n + s[l].played, 0);
   const perfect = LEVELS.reduce((n, l) => n + s[l].perfect, 0);
@@ -39,13 +53,36 @@ export function HomeStats() {
       </button>
       <div className="grid grid-cols-2 gap-2">
         {[
-          { label: t("statGamesShort"), value: String(played), icon: Grid3x3 },
-          { label: t("statPerfect"), value: String(perfect), icon: ShieldCheck },
+          { label: t("statGamesShort"), value: String(played), icon: Grid3x3, info: null as string | null },
+          { label: t("statPerfect"), value: String(perfect), icon: ShieldCheck, info: t("statPerfectInfo") },
         ].map((stat) => (
-          <div key={stat.label} className={card}>
+          <div key={stat.label} className={`${card} relative`}>
             <stat.icon className="h-3 w-3 text-primary/70" />
             <span className="font-display text-lg font-black leading-none tabular-nums text-foreground sm:text-xl">{stat.value}</span>
-            <span className="max-w-full truncate text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">{stat.label}</span>
+            <span className="flex items-center gap-1">
+              <span className="max-w-full truncate text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">{stat.label}</span>
+              {stat.info && (
+                <button
+                  ref={infoBtnRef}
+                  type="button"
+                  aria-label={t("statPerfectInfoLabel")}
+                  aria-expanded={infoOpen}
+                  onClick={() => setInfoOpen((v) => !v)}
+                  className="grid h-4 w-4 shrink-0 place-items-center rounded-full border border-gold/70 text-[9px] font-black leading-none text-gold"
+                >
+                  !
+                </button>
+              )}
+            </span>
+            {stat.info && infoOpen && (
+              <div
+                ref={infoBoxRef}
+                role="tooltip"
+                className="absolute left-1/2 top-full z-30 mt-1.5 w-44 -translate-x-1/2 rounded-xl border border-border/60 bg-popover p-2 text-center text-[10px] leading-snug text-popover-foreground shadow-lg"
+              >
+                {stat.info}
+              </div>
+            )}
           </div>
         ))}
       </div>

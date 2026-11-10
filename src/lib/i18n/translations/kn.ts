@@ -35,6 +35,9 @@ export const kn: Record<TranslationKey, string> = {
   statsTitle: "ಅಂಕಿಅಂಶಗಳು",
   statWins: "ಗೆಲುವುಗಳು",
   statPerfect: "ದೋಷರಹಿತ",
+  statPerfectInfo: "ದೋಷವಿಲ್ಲದೆ ಮತ್ತು ಸುಳಿವಿಲ್ಲದೆ ಪರಿಹರಿಸಿ.",
+  statPerfectInfoLabel: "ದೋಷರಹಿತ ಅರ್ಥ ಏನು?",
+
   resetStats: "ಅಂಕಿಅಂಶಗಳನ್ನು ಮರುಹೊಂದಿಸಿ",
 
   signIn: "ಲಾಗ್ ಇನ್",

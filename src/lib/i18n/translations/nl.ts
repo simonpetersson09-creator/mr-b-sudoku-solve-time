@@ -26,6 +26,9 @@ export const nl: Record<TranslationKey, string> = {
   statsTitle: "Statistieken",
   statWins: "Overwinningen",
   statPerfect: "Foutloos",
+  statPerfectInfo: "Opgelost zonder fouten en zonder tips.",
+  statPerfectInfoLabel: "Wat betekent Foutloos?",
+
   resetStats: "Statistieken resetten",
   signIn: "Inloggen",
   playerName: "Spelersnaam",

@@ -35,6 +35,9 @@ export const te: Record<TranslationKey, string> = {
   statsTitle: "గణాంకాలు",
   statWins: "విజయాలు",
   statPerfect: "దోషరహితం",
+  statPerfectInfo: "తప్పులు లేకుండా, సూచనలు లేకుండా పరిష్కరించడం.",
+  statPerfectInfoLabel: "దోషరహితం అంటే ఏమిటి?",
+
   resetStats: "గణాంకాలను రీసెట్ చేయి",
 
   signIn: "లాగిన్",

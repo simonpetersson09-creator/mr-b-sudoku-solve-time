@@ -40,6 +40,9 @@ export const sv = {
   statsTitle: "Statistik",
   statWins: "Vinster",
   statPerfect: "Felfritt",
+  statPerfectInfo: "Löst helt utan fel och utan ledtråd.",
+  statPerfectInfoLabel: "Vad betyder Felfritt?",
+
   resetStats: "Nollställ statistik",
 
   // Inloggning

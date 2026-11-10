@@ -35,6 +35,9 @@ export const pt: Record<TranslationKey, string> = {
   statsTitle: "Estatísticas",
   statWins: "Vitórias",
   statPerfect: "Sem erros",
+  statPerfectInfo: "Resolvido sem erros e sem pistas.",
+  statPerfectInfoLabel: "O que significa Sem erros?",
+
   resetStats: "Repor estatísticas",
 
   signIn: "Iniciar sessão",

@@ -35,6 +35,9 @@ export const or: Record<TranslationKey, string> = {
   statsTitle: "ପରିସଂଖ୍ୟାନ",
   statWins: "ବିଜୟ",
   statPerfect: "ତ୍ରୁଟିମୁକ୍ତ",
+  statPerfectInfo: "ତ୍ରୁଟି ବିନା ଏବଂ ସଙ୍କେତ ବିନା ସମାଧାନ।",
+  statPerfectInfoLabel: "ତ୍ରୁଟିମୁକ୍ତ ଅର୍ଥ କ'ଣ?",
+
   resetStats: "ପରିସଂଖ୍ୟାନ ରିସେଟ୍",
 
   signIn: "ଲଗ୍ ଇନ୍",

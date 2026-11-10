@@ -26,6 +26,9 @@ export const sk: Record<TranslationKey, string> = {
   statsTitle: "Štatistiky",
   statWins: "Výhry",
   statPerfect: "Bez chýb",
+  statPerfectInfo: "Vyriešené bez chýb a bez napovedí.",
+  statPerfectInfoLabel: "Čo znamená Bez chýb?",
+
   resetStats: "Vynulovať štatistiky",
   signIn: "Prihlásiť sa",
   playerName: "Meno hráča",

@@ -26,6 +26,9 @@ export const sl: Record<TranslationKey, string> = {
   statsTitle: "Statistika",
   statWins: "Zmage",
   statPerfect: "Brez napak",
+  statPerfectInfo: "Rešeno brez napak in brez namigov.",
+  statPerfectInfoLabel: "Kaj pomeni Brez napak?",
+
   resetStats: "Ponastavi statistiko",
   signIn: "Prijavi se",
   playerName: "Ime igralca",

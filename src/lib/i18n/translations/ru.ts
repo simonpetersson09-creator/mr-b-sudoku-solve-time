@@ -35,6 +35,9 @@ export const ru: Record<TranslationKey, string> = {
   statsTitle: "Статистика",
   statWins: "Победы",
   statPerfect: "Без ошибок",
+  statPerfectInfo: "Решено без ошибок и без подсказок.",
+  statPerfectInfoLabel: "Что значит Без ошибок?",
+
   resetStats: "Сбросить статистику",
 
   signIn: "Войти",

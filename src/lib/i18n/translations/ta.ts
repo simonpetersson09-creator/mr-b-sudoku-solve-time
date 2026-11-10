@@ -35,6 +35,9 @@ export const ta: Record<TranslationKey, string> = {
   statsTitle: "புள்ளிவிவரம்",
   statWins: "வெற்றிகள்",
   statPerfect: "பிழையிலா",
+  statPerfectInfo: "பிழைகளும் இல்லாமல் குறிகளும் இல்லாமல் தீர்த்தது.",
+  statPerfectInfoLabel: "பிழையிலா என்றால் என்ன?",
+
   resetStats: "புள்ளிவிவரத்தை மீட்டமை",
 
   signIn: "உள்நுழை",

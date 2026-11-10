@@ -35,6 +35,9 @@ export const mr: Record<TranslationKey, string> = {
   statsTitle: "आकडेवारी",
   statWins: "विजय",
   statPerfect: "त्रुटीरहित",
+  statPerfectInfo: "चूक नव्हता आणि सूचना नव्हता सोडवले.",
+  statPerfectInfoLabel: "त्रुटीरहित म्हणजे काय?",
+
   resetStats: "आकडेवारी रीसेट करा",
 
   signIn: "लॉग इन",

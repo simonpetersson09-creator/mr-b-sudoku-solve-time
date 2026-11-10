@@ -26,6 +26,9 @@ export const el: Record<TranslationKey, string> = {
   statsTitle: "Στατιστικά",
   statWins: "Νίκες",
   statPerfect: "Άψογα",
+  statPerfectInfo: "Ελύθηκε χωρίς λάθη και χωρίς υποδείξεις.",
+  statPerfectInfoLabel: "Τι σημαίνει Άψογα;",
+
   resetStats: "Μηδενισμός στατιστικών",
   signIn: "Σύνδεση",
   playerName: "Όνομα παίκτη",

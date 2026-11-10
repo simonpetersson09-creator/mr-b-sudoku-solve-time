@@ -35,6 +35,9 @@ export const ko: Record<TranslationKey, string> = {
   statsTitle: "통계",
   statWins: "승리",
   statPerfect: "무결점",
+  statPerfectInfo: "실수도 힌트도 없이 푼 것.",
+  statPerfectInfoLabel: "무결점이란?",
+
   resetStats: "통계 초기화",
 
   signIn: "로그인",

@@ -35,6 +35,9 @@ export const id: Record<TranslationKey, string> = {
   statsTitle: "Statistik",
   statWins: "Kemenangan",
   statPerfect: "Tanpa salah",
+  statPerfectInfo: "Diselesaikan tanpa kesalahan dan tanpa petunjuk.",
+  statPerfectInfoLabel: "Apa arti Tanpa salah?",
+
   resetStats: "Atur ulang statistik",
 
   signIn: "Masuk",

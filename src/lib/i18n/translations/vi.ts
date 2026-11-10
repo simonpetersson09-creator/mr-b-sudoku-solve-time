@@ -35,6 +35,9 @@ export const vi: Record<TranslationKey, string> = {
   statsTitle: "Thống kê",
   statWins: "Thắng",
   statPerfect: "Không lỗi",
+  statPerfectInfo: "Giải được mà không sai và không dùng gợi ý.",
+  statPerfectInfoLabel: "Không lỗi là gì?",
+
   resetStats: "Đặt lại thống kê",
 
   signIn: "Đăng nhập",

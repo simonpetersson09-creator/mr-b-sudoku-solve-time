@@ -26,6 +26,9 @@ export const pl: Record<TranslationKey, string> = {
   statsTitle: "Statystyki",
   statWins: "Zwycięstwa",
   statPerfect: "Bez błędów",
+  statPerfectInfo: "Rozwiązane bez błędów i bez podpowiedzi.",
+  statPerfectInfoLabel: "Co oznacza Bez błędów?",
+
   resetStats: "Wyzeruj statystyki",
   signIn: "Zaloguj się",
   playerName: "Nazwa gracza",

@@ -35,6 +35,9 @@ export const ja: Record<TranslationKey, string> = {
   statsTitle: "統計",
   statWins: "勝利数",
   statPerfect: "完全",
+  statPerfectInfo: "ミスもヒントもなしで解いた数。",
+  statPerfectInfoLabel: "「完全」とは？",
+
   resetStats: "統計をリセット",
 
   signIn: "ログイン",

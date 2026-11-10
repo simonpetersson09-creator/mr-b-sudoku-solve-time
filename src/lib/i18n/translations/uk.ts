@@ -35,6 +35,9 @@ export const uk: Record<TranslationKey, string> = {
   statsTitle: "Статистика",
   statWins: "Перемоги",
   statPerfect: "Без помилок",
+  statPerfectInfo: "Розв'язано без помилок і без підказок.",
+  statPerfectInfoLabel: "Що означає Без помилок?",
+
   resetStats: "Скинути статистику",
 
   signIn: "Увійти",

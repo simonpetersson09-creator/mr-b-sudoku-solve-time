@@ -35,6 +35,9 @@ export const th: Record<TranslationKey, string> = {
   statsTitle: "สถิติ",
   statWins: "ชนะ",
   statPerfect: "ไร้ข้อผิดพลาด",
+  statPerfectInfo: "แก้ได้โดยไม่มีข้อผิดพลาดและไม่ต้องใช้คำใบ้",
+  statPerfectInfoLabel: "ไร้ข้อผิดพลาดหมายความว่าอะไร",
+
   resetStats: "รีเซ็ตสถิติ",
 
   signIn: "เข้าสู่ระบบ",
