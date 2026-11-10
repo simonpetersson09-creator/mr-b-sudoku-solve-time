@@ -679,3 +679,25 @@ html::-webkit-scrollbar, body::-webkit-scrollbar, *::-webkit-scrollbar { display
 .sdk-hint-tip > span { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
 .sdk-cell[data-hinted="true"] { color: var(--game-gold); font-weight: 800; }
+
+/* Level accent: same teal/gold base, a subtle accent that deepens with the level. */
+main[data-level] { --level-accent: var(--game-gold); }
+main[data-level="easy"] { --level-accent: hsl(145 55% 48%); }
+main[data-level="medium"] { --level-accent: hsl(205 70% 56%); }
+main[data-level="hard"] { --level-accent: hsl(36 78% 55%); }
+main[data-level="expert"] { --level-accent: hsl(18 75% 55%); }
+main[data-level="ultra"] { --level-accent: hsl(345 65% 56%); }
+main[data-level="impossible"] { --level-accent: hsl(275 45% 62%); }
+main[data-level="master"] { --level-accent: hsl(42 60% 42%); }
+main[data-level] .sdk-level-pill { color: var(--level-accent); background: color-mix(in oklab, var(--level-accent) 14%, var(--card)); border-color: color-mix(in oklab, var(--level-accent) 50%, var(--border)); }
+main[data-level] .sdk-board { box-shadow: 0 0 0 1px color-mix(in oklab, var(--level-accent) 35%, transparent), 0 10px 30px -12px color-mix(in oklab, var(--level-accent) 45%, transparent); }
+main[data-level="master"] .sdk-level-pill { background: color-mix(in oklab, var(--level-accent) 30%, var(--background)); }
+
+/* Elegant mistake sequence */
+.sdk-cell[data-shake="true"] { animation: sdk-shake .4s ease-in-out, sdk-red-flash .7s ease-out; }
+@keyframes sdk-red-flash { 0%, 30% { background: color-mix(in oklab, var(--destructive) 55%, transparent); } }
+.sdk-dot[data-on="true"] { animation: sdk-dot-on .5s ease-out; }
+@keyframes sdk-dot-on { 0% { transform: scale(.4); box-shadow: 0 0 0 0 color-mix(in oklab, var(--destructive) 70%, transparent); } 60% { transform: scale(1.5); box-shadow: 0 0 0 6px transparent; } 100% { transform: scale(1.1); } }
+.sdk-board[data-lost="true"] { animation: sdk-board-out 1.5s ease-in forwards; pointer-events: none; }
+@keyframes sdk-board-out { to { opacity: .25; filter: grayscale(1) blur(1px); transform: scale(.97); } }
+@media (prefers-reduced-motion: reduce) { .sdk-board[data-lost="true"], .sdk-dot[data-on="true"] { animation: none; } }
