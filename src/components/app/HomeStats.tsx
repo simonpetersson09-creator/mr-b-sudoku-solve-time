@@ -5,6 +5,9 @@ import { LEVEL_KEY, formatTime } from "@/lib/sudoku/format";
 import { emptyStats, loadStats, type Stats } from "@/lib/player/storage";
 import { useTranslation } from "@/lib/i18n";
 
+/** How many grid columns a level card takes: written out so Tailwind keeps the classes. */
+const SPAN_CLS = ["col-span-1", "col-span-2", "col-span-3"];
+
 /** Home "your numbers": totals, plus best time per level when expanded. */
 export function HomeStats() {
   const { t } = useTranslation();
@@ -38,13 +41,30 @@ export function HomeStats() {
       </div>
       {expanded && (
         <div className="grid grid-cols-3 gap-2">
-          {LEVELS.map((l) => (
-            <div key={l} className={card}>
-              <span className="max-w-full truncate text-[9px] font-semibold uppercase tracking-wider text-gold">{t(LEVEL_KEY[l])}</span>
-              <span className="font-display text-sm font-bold leading-none tabular-nums">{s[l].bestMs != null ? formatTime(s[l].bestMs!) : "–"}</span>
-              <span className="text-[9px] text-muted-foreground tabular-nums">{s[l].played}</span>
-            </div>
-          ))}
+          {LEVELS.map((l, i) => {
+            // The last level fills the rest of its row, so it never sits alone as a narrow card.
+            const span = 3 - ((LEVELS.length - 1) % 3);
+            const wide = i === LEVELS.length - 1 && span > 1;
+            const best = s[l].bestMs != null ? formatTime(s[l].bestMs) : "–";
+            if (wide) {
+              return (
+                <div key={l} className={`${SPAN_CLS[span - 1]} flex items-center justify-between gap-3 rounded-2xl border border-border/50 bg-secondary/60 px-3 py-2`}>
+                  <span className="text-[9px] font-semibold uppercase tracking-wider text-gold">{t(LEVEL_KEY[l])}</span>
+                  <span className="flex items-baseline gap-2">
+                    <span className="font-display text-sm font-bold leading-none tabular-nums">{best}</span>
+                    <span className="text-[9px] text-muted-foreground tabular-nums">{s[l].played}</span>
+                  </span>
+                </div>
+              );
+            }
+            return (
+              <div key={l} className={card}>
+                <span className="max-w-full truncate text-[9px] font-semibold uppercase tracking-wider text-gold">{t(LEVEL_KEY[l])}</span>
+                <span className="font-display text-sm font-bold leading-none tabular-nums">{best}</span>
+                <span className="text-[9px] text-muted-foreground tabular-nums">{s[l].played}</span>
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
