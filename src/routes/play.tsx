@@ -165,10 +165,19 @@ function PlayPage() {
             <ArrowLeft className="h-5 w-5 text-muted-foreground" />
           </button>
           <div className="grid flex-1 grid-cols-3 gap-2">
-            <span className="sdk-chip text-gold">{t(LEVEL_KEY[state.level])}</span>
-            <span className="sdk-chip" data-bad={state.mistakes > 0}>{t("mistakesN", { n: `${state.mistakes}/${MAX_MISTAKES}` })}</span>
-            <button onClick={() => setPaused((p) => !p)} disabled={state.finished} aria-label={paused ? t("resume") : t("pause")} className="sdk-chip active:scale-95 disabled:opacity-40">
-              {paused ? <Play className="h-5 w-5" /> : <Pause className="h-5 w-5" />}
+            <div className="sdk-chip">
+              <span className="sdk-chip-label">{t("level")}</span>
+              <span className="sdk-chip-value text-gold">{t(LEVEL_KEY[state.level])}</span>
+            </div>
+            <div className="sdk-chip" data-bad={state.mistakes > 0}>
+              <span className="sdk-chip-label">{t("mistakes")}</span>
+              <span className="sdk-chip-value">
+                {Array.from({ length: MAX_MISTAKES }, (_, k) => <span key={k} className="sdk-dot" data-on={k < state.mistakes} />)}
+              </span>
+            </div>
+            <button onClick={() => setPaused((p) => !p)} disabled={state.finished} aria-label={paused ? t("resume") : t("pauseMenu")} className="sdk-chip sdk-chip-btn" data-active={paused}>
+              <span className="sdk-chip-label">{paused ? t("resume") : t("pauseMenu")}</span>
+              <span className="sdk-chip-value">{paused ? <Play className="h-4 w-4" /> : <><Pause className="h-4 w-4" /><span className="opacity-40">·</span><CircleX className="h-4 w-4" /></>}</span>
             </button>
           </div>
         </div>

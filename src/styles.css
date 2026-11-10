@@ -524,11 +524,20 @@ html::-webkit-scrollbar, body::-webkit-scrollbar, *::-webkit-scrollbar { display
 @keyframes sdk-flash { 0% { background: var(--sudoku-cell-bg, transparent); } 35% { background: color-mix(in oklab, var(--game-gold) 55%, transparent); } 100% { } }
 .sdk-key { -webkit-touch-callout: none; user-select: none; }
 .sdk-chip {
-  display: flex; height: 44px; min-width: 0; align-items: center; justify-content: center; padding: 0 8px;
-  border-radius: 12px; border: 1px solid var(--border); background: color-mix(in oklab, var(--secondary) 60%, transparent);
-  font-family: var(--font-display); font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  display: flex; height: 48px; min-width: 0; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 0 6px;
+  border-radius: 14px; border: 1px solid color-mix(in oklab, var(--game-gold) 18%, var(--border));
+  background: linear-gradient(180deg, color-mix(in oklab, var(--secondary) 85%, transparent), color-mix(in oklab, var(--secondary) 45%, transparent));
+  box-shadow: inset 0 1px 0 color-mix(in oklab, var(--foreground) 6%, transparent), 0 4px 12px -6px color-mix(in oklab, var(--background) 80%, transparent);
+  transition: transform .1s, border-color .2s;
 }
-.sdk-chip[data-bad="true"] { color: var(--destructive); border-color: color-mix(in oklab, var(--destructive) 40%, transparent); }
+.sdk-chip-label { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 9px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted-foreground); }
+.sdk-chip-value { display: flex; align-items: center; gap: 5px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font-display); font-size: 14px; font-weight: 700; line-height: 1; }
+.sdk-dot { width: 9px; height: 9px; border-radius: 999px; border: 1.5px solid color-mix(in oklab, var(--muted-foreground) 60%, transparent); transition: background .25s, border-color .25s, transform .25s; }
+.sdk-dot[data-on="true"] { background: var(--destructive); border-color: var(--destructive); transform: scale(1.1); }
+.sdk-chip[data-bad="true"] { border-color: color-mix(in oklab, var(--destructive) 35%, var(--border)); }
+.sdk-chip-btn:active { transform: scale(.95); }
+.sdk-chip-btn:disabled { opacity: .4; }
+.sdk-chip-btn[data-active="true"] { border-color: var(--game-gold); color: var(--game-gold); }
 .sdk-end {
   display: flex; min-height: 44px; align-items: center; justify-content: center; gap: 8px;
   border-radius: 12px; border: 1px solid color-mix(in oklab, var(--destructive) 30%, transparent);
