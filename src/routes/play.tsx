@@ -247,9 +247,6 @@ function PlayPage() {
           <button className="sdk-tool relative" onClick={() => void doHint()} disabled={paused || hintBusy}><Lightbulb className="h-5 w-5" />{t("hint")}{state.hints > 0 && <span className="sdk-badge">{state.hints}</span>}</button>
         </div>
 
-        {showHint != null && !paused && (
-          <p className="sdk-hint-tip" role="status"><Lightbulb className="h-4 w-4 shrink-0" />{t("hintTip", { digit: state.solution[showHint] })}</p>
-        )}
         <div className="sdk-pad">
           {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((d) => (
             <button
@@ -265,6 +262,9 @@ function PlayPage() {
             </button>
           ))}
         </div>
+        {showHint != null && !paused && (
+          <p className="sdk-hint-tip" role="status"><Lightbulb className="h-3 w-3 shrink-0" />{t("hintTip", { digit: state.solution[showHint] })}</p>
+        )}
 
         </div>
       </div>
