@@ -47,6 +47,7 @@ function PlayPage() {
   const [popCell, setPopCell] = useState<{ i: number; k: number } | null>(null);
   const [shakeCell, setShakeCell] = useState<{ i: number; k: number } | null>(null);
   const [celebrating, setCelebrating] = useState(false);
+  const [hinted, setHinted] = useState<Set<number>>(new Set());
   const [holdDigit, setHoldDigit] = useState<number | null>(null);
   const holdTimer = useRef<number | null>(null);
   const held = useRef(false);
@@ -151,6 +152,7 @@ function PlayPage() {
     if (r.cell == null) return;
     input(info.digit, info.cell, true, r.state);
     setSelected(null);
+    setHinted((h) => new Set(h).add(info.cell));
     setHintInfo({ info, step: 1 });
     window.setTimeout(() => setHintInfo((h) => (h?.info === info ? null : h)), 3500);
   };
@@ -225,7 +227,7 @@ function PlayPage() {
                   data-wave={celebrating}
                   style={{ ["--d" as string]: r + c }}
                   data-wrong={wrong}
-                  data-hint={showHint === i} data-hint-zone={hintZone?.has(i) || undefined}
+                  data-hint={showHint === i} data-hint-zone={hintZone?.has(i) || undefined} data-hinted={(hinted.has(i) && v === state.solution[i]) || undefined}
                   aria-label={t("cellLabel", { row: r + 1, col: c + 1 }) + (v ? `: ${v}` : "") + (showHint === i ? ` (${t("hint")}: ${state.solution[i]})` : "")}
                   className="sdk-cell"
                   onClick={() => setSelected(i)}

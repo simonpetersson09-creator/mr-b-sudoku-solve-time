@@ -677,3 +677,5 @@ html::-webkit-scrollbar, body::-webkit-scrollbar, *::-webkit-scrollbar { display
 .sdk-tool[data-active="true"] { color: var(--game-gold); }
 .sdk-hint-tip { height: 32px; min-height: 32px; white-space: normal; line-height: 1.15; border-radius: 12px; padding: 3px 12px; }
 .sdk-hint-tip > span { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+.sdk-cell[data-hinted="true"] { color: var(--game-gold); font-weight: 800; }
