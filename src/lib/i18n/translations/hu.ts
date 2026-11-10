@@ -115,6 +115,8 @@ export const hu: Record<TranslationKey, string> = {
   levelMedium: "Közepes",
   levelHard: "Nehéz",
   levelExpert: "Szakértő",
+  levelUltra: "Ultramester",
+  levelImpossible: "Lehetetlen",
   rules: "Szabályok",
   gameHelp: "Játéksúgó",
   showMistakes: "Hibák megjelenítése",

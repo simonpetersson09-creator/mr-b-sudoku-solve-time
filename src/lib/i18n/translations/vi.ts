@@ -132,6 +132,8 @@ export const vi: Record<TranslationKey, string> = {
   levelMedium: "Trung bình",
   levelHard: "Khó",
   levelExpert: "Chuyên gia",
+  levelUltra: "Siêu chuyên gia",
+  levelImpossible: "Bất khả thi",
   rules: "Luật chơi",
   gameHelp: "Trợ giúp",
   showMistakes: "Hiện lỗi",

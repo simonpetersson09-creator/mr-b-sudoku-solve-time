@@ -132,6 +132,8 @@ export const or: Record<TranslationKey, string> = {
   levelMedium: "ମଧ୍ୟମ",
   levelHard: "କଠିନ",
   levelExpert: "ବିଶେଷଜ୍ଞ",
+  levelUltra: "ଅତି ନିପୁଣ",
+  levelImpossible: "ଅସମ୍ଭବ",
   rules: "ନିୟମ",
   gameHelp: "ଖେଳ ସହାୟତା",
   showMistakes: "ଭୁଲ ଦେଖାନ୍ତୁ",

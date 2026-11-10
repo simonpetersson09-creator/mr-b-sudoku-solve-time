@@ -37,7 +37,7 @@ export function HomeStats() {
         ))}
       </div>
       {expanded && (
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-3 gap-2">
           {LEVELS.map((l) => (
             <div key={l} className={card}>
               <span className="max-w-full truncate text-[9px] font-semibold uppercase tracking-wider text-gold">{t(LEVEL_KEY[l])}</span>

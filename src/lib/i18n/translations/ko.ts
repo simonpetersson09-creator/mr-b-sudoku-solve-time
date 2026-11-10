@@ -132,6 +132,8 @@ export const ko: Record<TranslationKey, string> = {
   levelMedium: "보통",
   levelHard: "어려움",
   levelExpert: "전문가",
+  levelUltra: "울트라 전문가",
+  levelImpossible: "불가능",
   rules: "규칙",
   gameHelp: "게임 도움말",
   showMistakes: "실수 표시",

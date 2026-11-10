@@ -132,6 +132,8 @@ export const pa: Record<TranslationKey, string> = {
   levelMedium: "ਦਰਮਿਆਨਾ",
   levelHard: "ਔਖਾ",
   levelExpert: "ਮਾਹਰ",
+  levelUltra: "ਅਲਟਰਾ ਮਾਹਰ",
+  levelImpossible: "ਅਸੰਭਵ",
   rules: "ਨਿਯਮ",
   gameHelp: "ਗੇਮ ਮਦਦ",
   showMistakes: "ਗਲਤੀਆਂ ਦਿਖਾਓ",

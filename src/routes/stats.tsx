@@ -44,7 +44,7 @@ function StatsPage() {
               const x = s[l];
               return (
                 <div key={l} className="grid grid-cols-[1fr_repeat(4,3.6rem)] items-center gap-1 border-t border-border/20 px-3 py-1.5 text-right font-display tabular-nums">
-                  <span className="truncate text-left font-sans text-[12px] font-bold uppercase tracking-wide text-gold">{t(LEVEL_KEY[l])}</span>
+                  <span className="truncate text-left font-sans text-[11px] font-bold uppercase text-gold">{t(LEVEL_KEY[l])}</span>
                   <span className="font-bold">{x.played}</span>
                   <span className="font-bold">{x.wins}</span>
                   <span>{x.bestMs != null ? formatTime(x.bestMs) : "–"}</span>

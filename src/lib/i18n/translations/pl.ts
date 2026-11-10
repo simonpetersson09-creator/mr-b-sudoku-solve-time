@@ -115,6 +115,8 @@ export const pl: Record<TranslationKey, string> = {
   levelMedium: "Średni",
   levelHard: "Trudny",
   levelExpert: "Ekspert",
+  levelUltra: "Ultraekspert",
+  levelImpossible: "Niemożliwe",
   rules: "Zasady",
   gameHelp: "Pomoc",
   showMistakes: "Pokazuj błędy",

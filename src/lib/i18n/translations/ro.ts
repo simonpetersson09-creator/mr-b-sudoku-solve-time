@@ -132,6 +132,8 @@ export const ro: Record<TranslationKey, string> = {
   levelMedium: "Mediu",
   levelHard: "Dificil",
   levelExpert: "Expert",
+  levelUltra: "Ultraexpert",
+  levelImpossible: "Imposibil",
   rules: "Reguli",
   gameHelp: "Ajutor pentru joc",
   showMistakes: "Afișează greșelile",

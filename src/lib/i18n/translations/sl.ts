@@ -115,6 +115,8 @@ export const sl: Record<TranslationKey, string> = {
   levelMedium: "Srednje",
   levelHard: "Težko",
   levelExpert: "Strokovno",
+  levelUltra: "Ultra strokovnjak",
+  levelImpossible: "Nemogoče",
   rules: "Pravila",
   gameHelp: "Pomoč pri igri",
   showMistakes: "Prikaži napake",

@@ -132,6 +132,8 @@ export const id: Record<TranslationKey, string> = {
   levelMedium: "Sedang",
   levelHard: "Sulit",
   levelExpert: "Ahli",
+  levelUltra: "Ultra Ahli",
+  levelImpossible: "Mustahil",
   rules: "Aturan",
   gameHelp: "Bantuan permainan",
   showMistakes: "Tampilkan kesalahan",

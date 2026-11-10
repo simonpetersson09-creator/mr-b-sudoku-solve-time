@@ -115,6 +115,8 @@ export const ptBR: Record<TranslationKey, string> = {
   levelMedium: "Médio",
   levelHard: "Difícil",
   levelExpert: "Especialista",
+  levelUltra: "Ultraespecialista",
+  levelImpossible: "Impossível",
   rules: "Regras",
   gameHelp: "Ajuda do jogo",
   showMistakes: "Mostrar erros",

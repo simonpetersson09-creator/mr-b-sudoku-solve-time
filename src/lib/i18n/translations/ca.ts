@@ -115,6 +115,8 @@ export const ca: Record<TranslationKey, string> = {
   levelMedium: "Mitjà",
   levelHard: "Difícil",
   levelExpert: "Expert",
+  levelUltra: "Ultraexpert",
+  levelImpossible: "Impossible",
   rules: "Regles",
   gameHelp: "Ajuda del joc",
   showMistakes: "Mostra els errors",

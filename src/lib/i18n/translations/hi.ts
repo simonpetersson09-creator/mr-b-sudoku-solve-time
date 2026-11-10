@@ -132,6 +132,8 @@ export const hi: Record<TranslationKey, string> = {
   levelMedium: "मध्यम",
   levelHard: "कठिन",
   levelExpert: "विशेषज्ञ",
+  levelUltra: "अल्ट्रा विशेषज्ञ",
+  levelImpossible: "असंभव",
   rules: "नियम",
   gameHelp: "खेल में मदद",
   showMistakes: "गलतियाँ दिखाएँ",

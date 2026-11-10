@@ -4,7 +4,7 @@ import { LEVEL_KEY } from "@/lib/sudoku/format";
 import { useTranslation } from "@/lib/i18n";
 
 /** How hard each level is, 1 = easiest. Drives the meter bars. */
-const DIFFICULTY: Record<Level, number> = { easy: 1, medium: 2, hard: 3, expert: 4 };
+const DIFFICULTY: Record<Level, number> = { easy: 1, medium: 2, hard: 3, expert: 4, ultra: 5, impossible: 6 };
 
 /**
  * Centre-screen dialog for picking a level. Colour plus a rising meter bar
@@ -42,7 +42,7 @@ export function LevelPicker({ onSelect, onClose }: { onSelect: (level: Level) =>
             <button key={l} type="button" onClick={() => onSelect(l)} className={`lvl-btn lvl-${l}`}>
               <span className="lvl-name font-display">{t(LEVEL_KEY[l])}</span>
               <span className="lvl-meter" aria-hidden="true">
-                {[1, 2, 3, 4].map((n) => (
+                {[1, 2, 3, 4, 5, 6].map((n) => (
                   <span key={n} className={`lvl-bar${n <= DIFFICULTY[l] ? " lvl-bar-on" : ""}`} />
                 ))}
               </span>

@@ -132,6 +132,8 @@ export const gu: Record<TranslationKey, string> = {
   levelMedium: "મધ્યમ",
   levelHard: "કઠિન",
   levelExpert: "નિષ્ણાત",
+  levelUltra: "અલ્ટ્રા નિપુણ",
+  levelImpossible: "અશક્ય",
   rules: "નિયમો",
   gameHelp: "રમતમાં મદદ",
   showMistakes: "ભૂલો બતાવો",

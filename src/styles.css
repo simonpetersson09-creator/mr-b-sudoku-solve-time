@@ -253,10 +253,12 @@
 .lvl-name { flex: 1; min-width: 0; font-size: 15px; font-weight: 700; line-height: 1.1; }
 .lvl-meter { display: flex; align-items: flex-end; gap: 3px; flex-shrink: 0; }
 .lvl-bar { width: 7px; border-radius: 2px; background: color-mix(in oklab, var(--lvl-fg) 20%, transparent); }
-.lvl-bar:nth-child(1) { height: 9px; }
-.lvl-bar:nth-child(2) { height: 12px; }
-.lvl-bar:nth-child(3) { height: 15px; }
-.lvl-bar:nth-child(4) { height: 18px; }
+.lvl-bar:nth-child(1) { height: 8px; }
+.lvl-bar:nth-child(2) { height: 10px; }
+.lvl-bar:nth-child(3) { height: 12px; }
+.lvl-bar:nth-child(4) { height: 14px; }
+.lvl-bar:nth-child(5) { height: 16px; }
+.lvl-bar:nth-child(6) { height: 18px; }
 .lvl-bar-on { background: var(--lvl-meter); }
 .lvl-easy {
   --lvl-line: var(--game-success); --lvl-bar: var(--game-success-light); --lvl-meter: var(--game-success-light);
@@ -277,6 +279,19 @@
   --lvl-line: var(--game-gold); --lvl-bar: var(--game-gold); --lvl-meter: var(--game-gold);
   --lvl-fg: var(--foreground); --lvl-glow: var(--game-ink);
   --lvl-bg: linear-gradient(to right, var(--game-ink), var(--game-ink-light));
+}
+/* Ultraexpert: het röd. Omöjlig: svart med rött sken – tuffare än båda. */
+.lvl-ultra {
+  --lvl-line: var(--destructive); --lvl-bar: color-mix(in oklab, var(--destructive) 65%, var(--foreground));
+  --lvl-meter: color-mix(in oklab, var(--destructive) 65%, var(--foreground));
+  --lvl-fg: var(--foreground); --lvl-glow: var(--destructive);
+  --lvl-bg: linear-gradient(to right, color-mix(in oklab, var(--destructive) 52%, var(--game-ink)), color-mix(in oklab, var(--destructive) 22%, var(--game-ink)));
+}
+.lvl-impossible {
+  --lvl-line: var(--destructive); --lvl-bar: var(--destructive);
+  --lvl-meter: color-mix(in oklab, var(--destructive) 60%, var(--foreground));
+  --lvl-fg: var(--foreground); --lvl-glow: var(--destructive);
+  --lvl-bg: linear-gradient(to right, var(--game-ink), color-mix(in oklab, var(--destructive) 20%, var(--game-ink-light)));
 }
 /* Pågående match-kort – portat från Yatzy: grön när det är din tur, guld när andra har turen. */
 .home-match-card { width: 100%; height: 44px; min-width: 0; display: flex; align-items: center; gap: 8px; padding: 0 12px; border-radius: 10px; overflow: hidden; text-align: left; transition: box-shadow .2s, filter .2s, transform .1s; }

@@ -2,12 +2,16 @@
  * Pure Sudoku engine: no React, DOM or network. A grid is 81 numbers (row-major), 0 = empty.
  * Notes are a 9-bit mask per cell (bit d-1 set = note d).
  */
-export const LEVELS = ["easy", "medium", "hard", "expert"] as const;
+export const LEVELS = ["easy", "medium", "hard", "expert", "ultra", "impossible"] as const;
 export type Level = (typeof LEVELS)[number];
 export const isLevel = (v: unknown): v is Level => (LEVELS as readonly unknown[]).includes(v);
 
 /** Target number of given digits per level. */
-export const GIVENS: Record<Level, number> = { easy: 40, medium: 33, hard: 28, expert: 24 };
+/**
+ * Target number of given digits per level. Easy to Expert differ mainly by clue count;
+ * Ultra and Impossible keep Expert's 24 but must need deeper techniques (see tooEasy).
+ */
+export const GIVENS: Record<Level, number> = { easy: 40, medium: 33, hard: 28, expert: 24, ultra: 24, impossible: 24 };
 
 export type Grid = number[];
 
@@ -127,6 +131,147 @@ export function solvableBySingles(grid: Grid): boolean {
   }
 }
 
+/**
+ * True when naked/hidden singles plus naked and hidden pairs finish the grid. Ultraexpert and
+ * Impossible must need more than that, so a puzzle this solver can finish is not hard enough for them.
+ */
+export function solvableWithPairs(grid: Grid): boolean {
+  const g = grid.slice();
+  const m = Array.from({ length: 81 }, (_, i) => (g[i] ? bit(g[i]) : candidates(g, i)));
+  const place = (i: number, d: number) => {
+    g[i] = d;
+    m[i] = bit(d);
+    for (const p of PEERS[i]) m[p] &= ~bit(d);
+  };
+  const spotsOf = (u: number[], d: number) => u.filter((i) => !g[i] && m[i] & bit(d));
+  for (;;) {
+    let progress = false;
+    for (let i = 0; i < 81; i++) {
+      if (g[i]) continue;
+      if (m[i] === 0) return false;
+      if (popcount(m[i]) === 1) { place(i, Math.log2(m[i]) + 1); progress = true; }
+    }
+    for (const u of UNITS) {
+      for (let d = 1; d <= 9; d++) {
+        if (u.some((i) => g[i] === d)) continue;
+        const spots = spotsOf(u, d);
+        if (spots.length === 1) { place(spots[0], d); progress = true; }
+      }
+      const open = u.filter((i) => !g[i]);
+      // Naked pair: two cells hold the same two digits, so no other cell in the unit may hold them.
+      for (let a = 0; a < open.length; a++) {
+        for (let b = a + 1; b < open.length; b++) {
+          const ma = m[open[a]], mb = m[open[b]];
+          if (ma !== mb || popcount(ma) !== 2) continue;
+          for (const i of open) if (i !== open[a] && i !== open[b] && m[i] & ma) { m[i] &= ~ma; progress = true; }
+        }
+      }
+      // Hidden pair: two digits fit only the same two cells, so those cells hold nothing else.
+      for (let d1 = 1; d1 <= 9; d1++) {
+        if (u.some((i) => g[i] === d1)) continue;
+        const s1 = spotsOf(u, d1);
+        if (s1.length !== 2) continue;
+        for (let d2 = d1 + 1; d2 <= 9; d2++) {
+          if (u.some((i) => g[i] === d2)) continue;
+          const s2 = spotsOf(u, d2);
+          if (s2.length !== 2 || s2[0] !== s1[0] || s2[1] !== s1[1]) continue;
+          const keep = bit(d1) | bit(d2);
+          for (const i of s1) if (m[i] & ~keep) { m[i] &= keep; progress = true; }
+        }
+      }
+    }
+    if (g.every((v) => v)) return true;
+    for (let i = 0; i < 81; i++) if (!g[i] && m[i] === 0) return false;
+    if (!progress) return false;
+  }
+}
+
+/** Index combinations of size k over n, memoised: used for naked and hidden subsets. */
+const COMBO_CACHE = new Map<string, number[][]>();
+function indexCombos(n: number, k: number): number[][] {
+  const key = `${n}:${k}`;
+  const hit = COMBO_CACHE.get(key);
+  if (hit) return hit;
+  const out: number[][] = [];
+  const pick: number[] = [];
+  const walk = (from: number) => {
+    if (pick.length === k) { out.push(pick.slice()); return; }
+    for (let i = from; i <= n - (k - pick.length); i++) { pick.push(i); walk(i + 1); pick.pop(); }
+  };
+  walk(0);
+  COMBO_CACHE.set(key, out);
+  return out;
+}
+
+/**
+ * True when singles, pointing pairs, naked/hidden pairs and naked/hidden triples finish the grid.
+ * Impossible must need more than that.
+ */
+export function solvableAdvanced(grid: Grid): boolean {
+  const g = grid.slice();
+  const m = Array.from({ length: 81 }, (_, i) => (g[i] ? bit(g[i]) : candidates(g, i)));
+  const place = (i: number, d: number) => {
+    g[i] = d;
+    m[i] = bit(d);
+    for (const p of PEERS[i]) m[p] &= ~bit(d);
+  };
+  const spotsOf = (u: number[], d: number) => u.filter((i) => !g[i] && m[i] & bit(d));
+  const trim = (i: number, keep: number) => { const before = m[i]; m[i] &= keep; return m[i] !== before; };
+  for (;;) {
+    let progress = false;
+    for (let i = 0; i < 81; i++) {
+      if (g[i]) continue;
+      if (m[i] === 0) return false;
+      if (popcount(m[i]) === 1) { place(i, Math.log2(m[i]) + 1); progress = true; }
+    }
+    // Pointing pair: in a box, a digit confined to one row or column is ruled out along that line.
+    for (let b = 0; b < 9; b++) {
+      const box = UNITS[18 + b];
+      for (let d = 1; d <= 9; d++) {
+        const spots = spotsOf(box, d);
+        if (spots.length < 2) continue;
+        const row = Math.floor(spots[0] / 9), col = spots[0] % 9;
+        if (spots.every((i) => Math.floor(i / 9) === row)) {
+          for (const i of UNITS[row]) if (!box.includes(i) && trim(i, ~bit(d))) progress = true;
+        } else if (spots.every((i) => i % 9 === col)) {
+          for (const i of UNITS[9 + col]) if (!box.includes(i) && trim(i, ~bit(d))) progress = true;
+        }
+      }
+    }
+    for (const u of UNITS) {
+      for (let d = 1; d <= 9; d++) {
+        if (u.some((i) => g[i] === d)) continue;
+        const spots = spotsOf(u, d);
+        if (spots.length === 1) { place(spots[0], d); progress = true; }
+      }
+      const open = u.filter((i) => !g[i]);
+      // Naked subset: k cells whose candidates span only k digits hold nothing else in this unit.
+      for (const k of [2, 3]) {
+        for (const c of indexCombos(open.length, k)) {
+          const cells = c.map((x) => open[x]);
+          let union = 0;
+          for (const i of cells) union |= m[i];
+          if (popcount(union) !== k) continue;
+          for (const i of open) if (!cells.includes(i) && trim(i, ~union)) progress = true;
+        }
+        // Hidden subset: k digits that fit only k cells, so those cells hold nothing else.
+        for (const c of indexCombos(9, k)) {
+          const digits = c.map((x) => x + 1).filter((d) => !u.some((i) => g[i] === d));
+          if (digits.length !== k) continue;
+          const spots = new Set<number>();
+          for (const d of digits) spotsOf(u, d).forEach((i) => spots.add(i));
+          if (spots.size !== k) continue;
+          const keep = digits.reduce((acc, d) => acc | bit(d), 0);
+          for (const i of spots) if (trim(i, keep)) progress = true;
+        }
+      }
+    }
+    if (g.every((v) => v)) return true;
+    for (let i = 0; i < 81; i++) if (!g[i] && m[i] === 0) return false;
+    if (!progress) return false;
+  }
+}
+
 function fullGrid(rand: () => number): Grid {
   const g: Grid = Array(81).fill(0);
   const walk = (i: number): boolean => {
@@ -151,7 +296,19 @@ export function generate(level: Level, seed: number): Puzzle {
   const rand = rng(seed);
   const target = GIVENS[level];
   const singlesOnly = level === "easy" || level === "medium";
+  /** What makes a puzzle too easy for this level: unchecked by the generator's own test. */
+  const tooEasy: (p: Grid) => boolean = singlesOnly
+    ? (p) => !solvableBySingles(p)
+    : level === "ultra"
+      ? solvableWithPairs
+      : level === "impossible"
+        ? solvableAdvanced
+        : solvableBySingles;
   let best: Puzzle | null = null;
+  let bestGivens = 99;
+  /** Best puzzle that passes the technique gate but has too many givens. */
+  let gated: Puzzle | null = null;
+  let gatedGivens = 99;
   for (let attempt = 0; attempt < 30; attempt++) {
     const solution = fullGrid(rand);
     const puzzle = solution.slice();
@@ -160,16 +317,19 @@ export function generate(level: Level, seed: number): Puzzle {
       if (givens <= target) break;
       const keep = puzzle[i];
       puzzle[i] = 0;
-      if (countSolutions(puzzle, 2) !== 1 || (singlesOnly && !solvableBySingles(puzzle))) puzzle[i] = keep;
+      if (countSolutions(puzzle, 2) !== 1 || (singlesOnly && tooEasy(puzzle))) puzzle[i] = keep;
       else givens--;
     }
     const candidate = { level, seed, puzzle, solution };
-    // Hard and Expert must need more than singles; Easy and Medium are guaranteed singles-only above.
-    const hardEnough = singlesOnly || !solvableBySingles(puzzle);
+    // Hard and Expert must need more than singles, Ultra and Impossible more than pairs;
+    // Easy and Medium are guaranteed singles-only by the removal loop above.
+    const hardEnough = !tooEasy(puzzle);
     if (givens <= target && hardEnough) return candidate;
-    if (!best || givens < best.puzzle.filter(Boolean).length) best = candidate;
+    // Nothing met both rules yet: passing the technique gate beats having fewer givens.
+    if (hardEnough && givens < gatedGivens) { gated = candidate; gatedGivens = givens; }
+    else if (!hardEnough && givens < bestGivens) { best = candidate; bestGivens = givens; }
   }
-  return best!;
+  return gated ?? best!;
 }
 
 // ---------- Game state ----------

@@ -12,7 +12,7 @@
 # Mr.B. Sudoku architecture
 
 - Standalone app: never share code, storage, backend, ad or native identities with Mr. B Ludo or Mr. B Yatzy; shared ideas are copied, never linked.
-- Sudoku rules live in `src/lib/sudoku/engine.ts` as pure functions (no React/DOM/network); generation is seeded, always verifies exactly one solution, and levels are checked by `solvableBySingles` (Easy/Medium yes, Hard/Expert no).
+- Sudoku rules live in `src/lib/sudoku/engine.ts` as pure functions (no React/DOM/network); generation is seeded, always verifies exactly one solution, and every level is gated by a solver that must fail on it: `solvableBySingles` for Easy/Medium (must be solvable by singles) and Hard/Expert (must not be), `solvableWithPairs` for Ultra, `solvableAdvanced` for Impossible.
 - All play is local against the computer; there is no online play, matchmaking, friends or push. The only shared list is "Månadens flitigaste", computed by `get_monthly_most_active` from app-only `local_game` finish reports (distinct game id, Stockholm month, test devices excluded).
 - Saved games (max 10) and per-level statistics live in browser/device storage under the `mrb-sudoku:v1:` namespace; "played" counts finished games only and each game id is counted once.
 - Board styling uses `--sudoku-*` tokens in `src/styles.css`; components never hardcode colors.

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { solvableBySingles, LEVELS, GIVENS, MAX_UNDOS, countSolutions, generate, newGame, setValue, toggleNote, erase, undo, hint, isWrong, hasNote, isConsistent, solve, PEERS, MAX_MISTAKES, isLost, completedGroups, findHintCell, markHint } from "./engine";
+import { solvableBySingles, solvableWithPairs, solvableAdvanced, LEVELS, GIVENS, MAX_UNDOS, countSolutions, generate, newGame, setValue, toggleNote, erase, undo, hint, isWrong, hasNote, isConsistent, solve, PEERS, MAX_MISTAKES, isLost, completedGroups, findHintCell, markHint } from "./engine";
 
 describe("puzzle generation", () => {
   for (const level of LEVELS) {
@@ -26,6 +26,12 @@ describe("puzzle generation", () => {
   it("same seed gives the same puzzle", () => {
     expect(generate("medium", 42).puzzle).toEqual(generate("medium", 42).puzzle);
   });
+  it("ultra needs more than pairs; impossible needs more than pairs and triples", () => {
+    for (const seed of [11, 12]) {
+      expect(solvableWithPairs(generate("ultra", seed).puzzle)).toBe(false);
+      expect(solvableAdvanced(generate("impossible", seed).puzzle)).toBe(false);
+    }
+  }, 60000);
   it("harder levels have fewer givens", () => {
     expect(generate("easy", 7).puzzle.filter(Boolean).length).toBeGreaterThan(generate("expert", 7).puzzle.filter(Boolean).length);
   }, 30000);

@@ -132,6 +132,8 @@ export const te: Record<TranslationKey, string> = {
   levelMedium: "మధ్యస్థం",
   levelHard: "కష్టం",
   levelExpert: "నిపుణులు",
+  levelUltra: "అల్ట్రా నిపుణుడు",
+  levelImpossible: "అసాధ్యం",
   rules: "నియమాలు",
   gameHelp: "ఆట సహాయం",
   showMistakes: "తప్పులను చూపించు",

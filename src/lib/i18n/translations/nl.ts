@@ -115,6 +115,8 @@ export const nl: Record<TranslationKey, string> = {
   levelMedium: "Gemiddeld",
   levelHard: "Moeilijk",
   levelExpert: "Expert",
+  levelUltra: "Ultra-expert",
+  levelImpossible: "Onmogelijk",
   rules: "Spelregels",
   gameHelp: "Spelhulp",
   showMistakes: "Toon fouten",

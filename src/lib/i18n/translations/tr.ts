@@ -132,6 +132,8 @@ export const tr: Record<TranslationKey, string> = {
   levelMedium: "Orta",
   levelHard: "Zor",
   levelExpert: "Uzman",
+  levelUltra: "Ultra Uzman",
+  levelImpossible: "İmkansız",
   rules: "Kurallar",
   gameHelp: "Oyun yardımı",
   showMistakes: "Hataları göster",

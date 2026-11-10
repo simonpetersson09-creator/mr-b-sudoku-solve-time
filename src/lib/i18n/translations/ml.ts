@@ -132,6 +132,8 @@ export const ml: Record<TranslationKey, string> = {
   levelMedium: "ഇടത്തരം",
   levelHard: "കഠിനം",
   levelExpert: "വിദഗ്ധം",
+  levelUltra: "അൾട്രാ വിദഗ്ധൻ",
+  levelImpossible: "അസാധ്യം",
   rules: "നിയമങ്ങൾ",
   gameHelp: "കളി സഹായം",
   showMistakes: "തെറ്റുകൾ കാണിക്കുക",
