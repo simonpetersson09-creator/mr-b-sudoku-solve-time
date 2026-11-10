@@ -107,7 +107,7 @@ export const pa: Record<TranslationKey, string> = {
 
   // Sudoku
   tagline: "ਸੁਡੋਕੁ – 81 ਖਾਨੇ, ਇੱਕ ਹੱਲ",
-  rateTitle: "Mr.B. Sokudo ਪਸੰਦ ਆ ਰਹੀ ਹੈ?",
+  rateTitle: "Mr.B. Sudoku ਪਸੰਦ ਆ ਰਹੀ ਹੈ?",
   rateBody: "ਤੁਸੀਂ ਕਈ ਸੁਡੋਕੁ ਹੱਲ ਕਰ ਲਏ ਹਨ! ਤੁਹਾਡੀ ਰੇਟਿੰਗ ਸਾਡੀ ਬਹੁਤ ਮਦਦ ਕਰੇਗੀ। 💛",
   rule1: "ਗਰਿੱਡ ਇਸ ਤਰ੍ਹਾਂ ਭਰੋ ਕਿ ਹਰ ਕਤਾਰ, ਕਾਲਮ ਅਤੇ 3×3 ਬਾਕਸ ਵਿੱਚ 1–9 ਤੱਕ ਹਰ ਅੰਕ ਸਿਰਫ਼ ਇੱਕ ਵਾਰ ਆਵੇ।",
   rule2: "ਹਰ ਪਹੇਲੀ ਦਾ ਸਿਰਫ਼ ਇੱਕ ਹੱਲ ਹੈ। ਦਿੱਤੇ ਅੰਕ ਬਦਲੇ ਨਹੀਂ ਜਾ ਸਕਦੇ।",
@@ -117,10 +117,10 @@ export const pa: Record<TranslationKey, string> = {
   rule6: "ਤੁਹਾਡੀ ਗੇਮ ਆਪਣੇ ਆਪ ਸੇਵ ਹੁੰਦੀ ਹੈ। ਤੁਸੀਂ ਇੱਕੋ ਸਮੇਂ 10 ਗੇਮਾਂ ਤੱਕ ਖੇਡ ਸਕਦੇ ਹੋ।",
   statPlayed: "ਖੇਡੀਆਂ",
   adminInMatch: "ਹੁਣ ਸਰਗਰਮ",
-  adsOffInfo: "Mr.B. Sokudo ਵਿੱਚ Google ਦੇ ਇਸ਼ਤਿਹਾਰ ਦਿਖਾਏ ਜਾਂਦੇ ਹਨ। ਤੁਸੀਂ ਹੇਠਾਂ ਇਸ਼ਤਿਹਾਰਾਂ ਦੀਆਂ ਚੋਣਾਂ ਬਦਲ ਸਕਦੇ ਹੋ।",
+  adsOffInfo: "Mr.B. Sudoku ਵਿੱਚ Google ਦੇ ਇਸ਼ਤਿਹਾਰ ਦਿਖਾਏ ਜਾਂਦੇ ਹਨ। ਤੁਸੀਂ ਹੇਠਾਂ ਇਸ਼ਤਿਹਾਰਾਂ ਦੀਆਂ ਚੋਣਾਂ ਬਦਲ ਸਕਦੇ ਹੋ।",
   deleteDataDescription: "ਤੁਹਾਡਾ ਨਾਮ, ਪ੍ਰੋਫਾਈਲ ਤਸਵੀਰ, ਅੰਕੜੇ ਅਤੇ ਸੇਵ ਕੀਤੀਆਂ ਗੇਮਾਂ ਫ਼ੋਨ ਅਤੇ ਸਰਵਰ ਤੋਂ ਮਿਟਾ ਦਿੱਤੀਆਂ ਜਾਣਗੀਆਂ। ਜੇ ਤੁਸੀਂ ਖੇਡਣਾ ਜਾਰੀ ਰੱਖਦੇ ਹੋ, ਤਾਂ ਨਵੀਂ ਖਿਡਾਰੀ ਪਛਾਣ ਬਣਾਈ ਜਾਵੇਗੀ।",
-  storeSoon: "Mr.B. Sokudo ਜਲਦ ਹੀ App Store ਅਤੇ Google Play 'ਤੇ ਆ ਰਹੀ ਹੈ।",
-  webOnlyTitle: "Mr.B. Sokudo ਐਪ ਵਿੱਚ ਖੇਡੀ ਜਾਂਦੀ ਹੈ",
+  storeSoon: "Mr.B. Sudoku ਜਲਦ ਹੀ App Store ਅਤੇ Google Play 'ਤੇ ਆ ਰਹੀ ਹੈ।",
+  webOnlyTitle: "Mr.B. Sudoku ਐਪ ਵਿੱਚ ਖੇਡੀ ਜਾਂਦੀ ਹੈ",
   webOnlyBody: "ਐਪ ਮੁਫ਼ਤ ਡਾਊਨਲੋਡ ਕਰੋ ਅਤੇ ਚਾਰ ਪੱਧਰਾਂ 'ਤੇ ਸੁਡੋਕੁ ਹੱਲ ਕਰੋ – ਆਫ਼ਲਾਈਨ ਵੀ।",
   newGame: "ਨਵੀਂ ਗੇਮ",
   newGameTitle: "ਨਵੀਂ ਗੇਮ",

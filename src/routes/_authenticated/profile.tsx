@@ -15,9 +15,9 @@ export const Route = createFileRoute("/_authenticated/profile")({
     meta: [
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { title: "Profil – Mr.B. Sokudo" },
+      { title: "Profil – Mr.B. Sudoku" },
       { name: "description", content: "Ditt spelarnamn, avatar och land." },
-      { property: "og:title", content: "Profil – Mr.B. Sokudo" },
+      { property: "og:title", content: "Profil – Mr.B. Sudoku" },
       { property: "og:description", content: "Ditt spelarnamn, avatar och land." },
     ],
   }),

@@ -107,7 +107,7 @@ export const th: Record<TranslationKey, string> = {
 
   // Sudoku
   tagline: "ซูโดกุ – 81 ช่อง หนึ่งคำตอบ",
-  rateTitle: "ชอบ Mr.B. Sokudo ไหม?",
+  rateTitle: "ชอบ Mr.B. Sudoku ไหม?",
   rateBody: "คุณไขซูโดกุไปหลายเกมแล้ว! คะแนนของคุณช่วยเราได้มากเลย 💛",
   rule1: "เติมตัวเลข 1–9 ให้ครบในแต่ละแถว แต่ละคอลัมน์ และแต่ละช่อง 3×3 โดยไม่ซ้ำกัน",
   rule2: "แต่ละโจทย์มีคำตอบเดียว ตัวเลขตั้งต้นไม่สามารถเปลี่ยนได้",
@@ -117,10 +117,10 @@ export const th: Record<TranslationKey, string> = {
   rule6: "เกมจะบันทึกอัตโนมัติ คุณเล่นเกมค้างไว้ได้สูงสุด 10 เกม",
   statPlayed: "เกมที่เล่น",
   adminInMatch: "กำลังเล่นอยู่",
-  adsOffInfo: "Mr.B. Sokudo แสดงโฆษณาจาก Google คุณเปลี่ยนการตั้งค่าโฆษณาได้ด้านล่าง",
+  adsOffInfo: "Mr.B. Sudoku แสดงโฆษณาจาก Google คุณเปลี่ยนการตั้งค่าโฆษณาได้ด้านล่าง",
   deleteDataDescription: "ชื่อ รูปโปรไฟล์ สถิติ และเกมที่บันทึกไว้จะถูกลบจากโทรศัพท์และเซิร์ฟเวอร์ หากเล่นต่อ ระบบจะสร้างตัวตนผู้เล่นใหม่",
-  storeSoon: "Mr.B. Sokudo กำลังจะมาใน App Store และ Google Play",
-  webOnlyTitle: "เล่น Mr.B. Sokudo ได้ในแอป",
+  storeSoon: "Mr.B. Sudoku กำลังจะมาใน App Store และ Google Play",
+  webOnlyTitle: "เล่น Mr.B. Sudoku ได้ในแอป",
   webOnlyBody: "ดาวน์โหลดแอปฟรี แล้วสนุกกับซูโดกุ 4 ระดับได้แม้ออฟไลน์",
   newGame: "เกมใหม่",
   newGameTitle: "เกมใหม่",

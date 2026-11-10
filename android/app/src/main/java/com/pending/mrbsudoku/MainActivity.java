@@ -1,4 +1,4 @@
-package com.pending.mrbsokudo;
+package com.pending.mrbsudoku;
 
 import com.getcapacitor.BridgeActivity;
 

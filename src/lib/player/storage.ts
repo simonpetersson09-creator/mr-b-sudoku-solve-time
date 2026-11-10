@@ -1,6 +1,6 @@
 import { isLevel, LEVELS, type GameState, type Level } from "@/lib/sudoku/engine";
 
-/** All Sokudo keys live in their own namespace; never shared with Ludo or Yatzy. */
+/** All Sudoku keys live in their own namespace; never shared with Ludo or Yatzy. */
 const NS = "mrb-sudoku:v1:";
 const STATS = NS + "stats";
 const SETTINGS = NS + "settings";

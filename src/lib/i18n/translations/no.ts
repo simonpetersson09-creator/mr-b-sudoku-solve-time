@@ -107,7 +107,7 @@ export const no: Record<TranslationKey, string> = {
 
   // Sudoku
   tagline: "Sudoku – 81 ruter, én løsning",
-  rateTitle: "Liker du Mr.B. Sokudo?",
+  rateTitle: "Liker du Mr.B. Sudoku?",
   rateBody: "Du har løst flere sudokuer! En vurdering hjelper oss enormt. 💛",
   rule1: "Fyll rutenettet slik at hver rad, kolonne og 3×3-boks inneholder tallene 1–9 nøyaktig én gang.",
   rule2: "Hver oppgave har nøyaktig én løsning. Oppgitte tall kan ikke endres.",
@@ -117,10 +117,10 @@ export const no: Record<TranslationKey, string> = {
   rule6: "Spillet lagres automatisk. Du kan ha opptil 10 spill på gang.",
   statPlayed: "Spilt",
   adminInMatch: "Aktive nå",
-  adsOffInfo: "Mr.B. Sokudo viser annonser fra Google. Du kan endre annonsevalgene dine nedenfor.",
+  adsOffInfo: "Mr.B. Sudoku viser annonser fra Google. Du kan endre annonsevalgene dine nedenfor.",
   deleteDataDescription: "Navnet ditt, profilbildet, statistikken og lagrede spill slettes fra telefonen og serveren. Hvis du fortsetter å spille, opprettes en ny spilleridentitet.",
-  storeSoon: "Mr.B. Sokudo kommer snart til App Store og Google Play.",
-  webOnlyTitle: "Mr.B. Sokudo spilles i appen",
+  storeSoon: "Mr.B. Sudoku kommer snart til App Store og Google Play.",
+  webOnlyTitle: "Mr.B. Sudoku spilles i appen",
   webOnlyBody: "Last ned appen gratis og løs sudoku på fire nivåer – også uten nett.",
   newGame: "Nytt spill",
   newGameTitle: "Nytt spill",

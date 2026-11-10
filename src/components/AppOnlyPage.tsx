@@ -1,6 +1,6 @@
 import { useTranslation } from "@/lib/i18n";
 import { storeLinks } from "@/lib/app-links";
-import mrBHeader from "@/assets/mr-b-sokudo-header.jpg";
+import mrBHeader from "@/assets/mr-b-sudoku-header.jpg";
 
 function AppleIcon() {
   return (
@@ -34,7 +34,7 @@ export function AppOnlyPage() {
       <>
         {store === "apple" ? <AppleIcon /> : <PlayIcon />}
         <span className="flex flex-col items-start leading-none">
-          <span className="text-[10px] font-medium opacity-70">Mr.B. Sokudo</span>
+          <span className="text-[10px] font-medium opacity-70">Mr.B. Sudoku</span>
           <span className="mt-0.5 text-[15px] font-semibold">{store === "apple" ? t("storeApple") : t("storeGoogle")}</span>
         </span>
       </>
@@ -60,7 +60,7 @@ export function AppOnlyPage() {
       </div>
       <div className="home-stack items-center text-center">
         <div className="mx-auto mb-1 w-full max-w-xs self-center">
-          <img src={mrBHeader} alt="Mr.B. Sokudo" width={1920} height={1280} className="h-auto w-full rounded-3xl object-cover shadow-lg" />
+          <img src={mrBHeader} alt="Mr.B. Sudoku" width={1920} height={1280} className="h-auto w-full rounded-3xl object-cover shadow-lg" />
         </div>
         <h1 className="brand-title text-balance text-3xl">{t("webOnlyTitle")}</h1>
         <p className="mt-2 text-balance text-sm leading-relaxed text-muted-foreground">

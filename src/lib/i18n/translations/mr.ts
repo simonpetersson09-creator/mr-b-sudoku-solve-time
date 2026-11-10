@@ -107,7 +107,7 @@ export const mr: Record<TranslationKey, string> = {
 
   // Sudoku
   tagline: "सुडोकू – ८१ चौकटी, एकच उत्तर",
-  rateTitle: "Mr.B. Sokudo आवडतोय?",
+  rateTitle: "Mr.B. Sudoku आवडतोय?",
   rateBody: "तुम्ही अनेक सुडोकू सोडवले आहेत! तुमचे रेटिंग आम्हाला खूप मदत करेल. 💛",
   rule1: "प्रत्येक ओळ, स्तंभ आणि 3×3 गटात 1–9 अंक प्रत्येकी एकदाच येतील अशी जाळी भरा.",
   rule2: "प्रत्येक कोड्याचे एकच उत्तर असते. दिलेले अंक बदलता येत नाहीत.",
@@ -117,10 +117,10 @@ export const mr: Record<TranslationKey, string> = {
   rule6: "तुमचा खेळ आपोआप जतन होतो. एकाच वेळी १० खेळ सुरू ठेवता येतात.",
   statPlayed: "खेळलेले",
   adminInMatch: "सध्या सक्रिय",
-  adsOffInfo: "Mr.B. Sokudo मध्ये Google च्या जाहिराती दिसतात. तुम्ही खाली जाहिरातींच्या निवडी बदलू शकता.",
+  adsOffInfo: "Mr.B. Sudoku मध्ये Google च्या जाहिराती दिसतात. तुम्ही खाली जाहिरातींच्या निवडी बदलू शकता.",
   deleteDataDescription: "तुमचे नाव, प्रोफाइल फोटो, आकडेवारी आणि जतन केलेले खेळ फोन आणि सर्व्हरवरून हटवले जातील. तुम्ही पुढे खेळल्यास नवीन खेळाडू ओळख तयार होईल.",
-  storeSoon: "Mr.B. Sokudo लवकरच App Store आणि Google Play वर येत आहे.",
-  webOnlyTitle: "Mr.B. Sokudo अ‍ॅपमध्ये खेळा",
+  storeSoon: "Mr.B. Sudoku लवकरच App Store आणि Google Play वर येत आहे.",
+  webOnlyTitle: "Mr.B. Sudoku अ‍ॅपमध्ये खेळा",
   webOnlyBody: "अ‍ॅप मोफत डाउनलोड करा आणि चार पातळ्यांवर सुडोकू सोडवा – ऑफलाइनही.",
   newGame: "नवीन खेळ",
   newGameTitle: "नवीन खेळ",

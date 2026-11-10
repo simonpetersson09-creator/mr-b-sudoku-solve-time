@@ -107,7 +107,7 @@ export const ko: Record<TranslationKey, string> = {
 
   // Sudoku
   tagline: "스도쿠 – 81칸, 하나의 정답",
-  rateTitle: "Mr.B. Sokudo가 마음에 드시나요?",
+  rateTitle: "Mr.B. Sudoku가 마음에 드시나요?",
   rateBody: "여러 스도쿠를 푸셨네요! 평점을 남겨주시면 큰 힘이 됩니다. 💛",
   rule1: "각 행, 열, 3×3 영역에 1~9가 한 번씩 들어가도록 칸을 채우세요.",
   rule2: "모든 퍼즐의 정답은 하나뿐입니다. 처음 주어진 숫자는 바꿀 수 없습니다.",
@@ -117,10 +117,10 @@ export const ko: Record<TranslationKey, string> = {
   rule6: "게임은 자동으로 저장됩니다. 진행 중인 게임은 최대 10개까지 보관할 수 있습니다.",
   statPlayed: "플레이",
   adminInMatch: "현재 게임 중",
-  adsOffInfo: "Mr.B. Sokudo는 Google 광고를 표시합니다. 아래에서 광고 설정을 변경할 수 있습니다.",
+  adsOffInfo: "Mr.B. Sudoku는 Google 광고를 표시합니다. 아래에서 광고 설정을 변경할 수 있습니다.",
   deleteDataDescription: "이름, 프로필 사진, 통계, 저장된 게임이 휴대폰과 서버에서 삭제됩니다. 계속 플레이하면 새 플레이어 ID가 생성됩니다.",
-  storeSoon: "Mr.B. Sokudo가 곧 App Store와 Google Play에 출시됩니다.",
-  webOnlyTitle: "Mr.B. Sokudo는 앱에서 플레이하세요",
+  storeSoon: "Mr.B. Sudoku가 곧 App Store와 Google Play에 출시됩니다.",
+  webOnlyTitle: "Mr.B. Sudoku는 앱에서 플레이하세요",
   webOnlyBody: "앱을 무료로 다운로드하고 4가지 난이도의 스도쿠를 오프라인에서도 즐기세요.",
   newGame: "새 게임",
   newGameTitle: "새 게임",

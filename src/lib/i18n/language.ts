@@ -1,4 +1,4 @@
-// Language preference for Mr.B. Sokudo. Same detection/fallback pattern as
+// Language preference for Mr.B. Sudoku. Same detection/fallback pattern as
 // Mr. B Yatzy, but fully isolated: own storage keys under the mrb-sudoku:v1:
 // namespace, no shared code or data with Yatzy.
 

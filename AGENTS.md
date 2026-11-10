@@ -9,7 +9,7 @@
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
 
-# Mr.B. Sokudo architecture
+# Mr.B. Sudoku architecture
 
 - Standalone app: never share code, storage, backend, ad or native identities with Mr. B Ludo or Mr. B Yatzy; shared ideas are copied, never linked.
 - Sudoku rules live in `src/lib/sudoku/engine.ts` as pure functions (no React/DOM/network); generation is seeded, always verifies exactly one solution, and levels are checked by `solvableBySingles` (Easy/Medium yes, Hard/Expert no).
@@ -24,7 +24,7 @@
 - The published website is download-only (`src/server.ts` + pure `src/lib/web-access.ts`); preview hosts and native origins are never gated.
 - Capacitor launches the `dist-native` static bundle from `vite.native.config.ts`, so local play needs no server; native projects contain no signing credentials, and build scripts never publish.
 - Native app ID is a temporary placeholder and the Apple team is intentionally empty until the owner supplies real values; `scripts/native.mjs` and `config.test.ts` enforce this and the absence of push.
-- Ads are the AdMob/UMP flow in `src/lib/ads/` (App Open + post-game interstitial) and must use only Google's sample IDs until the app has its own AdMob account (enforced by `sokudo-ads.test.ts`).
+- Ads are the AdMob/UMP flow in `src/lib/ads/` (App Open + post-game interstitial) and must use only Google's sample IDs until the app has its own AdMob account (enforced by `sudoku-ads.test.ts`).
 - AndroidBackButton is the only owner of native back events; leaving a game via back returns home because games save continuously.
 - App icon/splash source is `resources/icon.png`; `scripts/make-icons.mjs` regenerates committed `resources/` and `scripts/set-native-icons.mjs` copies them into the native projects.
 - DB integration tests (`*.db.test.ts`, `bun run test:db`) run only against a throwaway local PostgreSQL+PostgREST, never the live backend.

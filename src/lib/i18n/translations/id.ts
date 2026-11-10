@@ -107,7 +107,7 @@ export const id: Record<TranslationKey, string> = {
 
   // Sudoku
   tagline: "Sudoku – 81 kotak, satu solusi",
-  rateTitle: "Suka Mr.B. Sokudo?",
+  rateTitle: "Suka Mr.B. Sudoku?",
   rateBody: "Kamu sudah menyelesaikan beberapa Sudoku! Penilaianmu sangat membantu kami. 💛",
   rule1: "Isi papan agar setiap baris, kolom, dan blok 3×3 berisi angka 1–9 masing-masing tepat satu kali.",
   rule2: "Setiap teka-teki hanya memiliki satu solusi. Angka yang sudah tersedia tidak bisa diubah.",
@@ -117,10 +117,10 @@ export const id: Record<TranslationKey, string> = {
   rule6: "Permainan disimpan otomatis. Kamu bisa menyimpan hingga 10 permainan yang sedang berlangsung.",
   statPlayed: "Dimainkan",
   adminInMatch: "Aktif sekarang",
-  adsOffInfo: "Mr.B. Sokudo menampilkan iklan dari Google. Kamu bisa mengubah pilihan iklan di bawah ini.",
+  adsOffInfo: "Mr.B. Sudoku menampilkan iklan dari Google. Kamu bisa mengubah pilihan iklan di bawah ini.",
   deleteDataDescription: "Nama, foto profil, statistik, dan permainan tersimpan akan dihapus dari ponsel dan server. Jika kamu terus bermain, identitas pemain baru akan dibuat.",
-  storeSoon: "Mr.B. Sokudo segera hadir di App Store dan Google Play.",
-  webOnlyTitle: "Mr.B. Sokudo dimainkan di aplikasi",
+  storeSoon: "Mr.B. Sudoku segera hadir di App Store dan Google Play.",
+  webOnlyTitle: "Mr.B. Sudoku dimainkan di aplikasi",
   webOnlyBody: "Unduh aplikasi gratis dan mainkan Sudoku dalam empat tingkat kesulitan – bahkan tanpa internet.",
   newGame: "Permainan baru",
   newGameTitle: "Permainan baru",

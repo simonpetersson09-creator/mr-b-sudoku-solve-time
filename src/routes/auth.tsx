@@ -10,9 +10,9 @@ export const Route = createFileRoute("/auth")({
     meta: [
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { title: "Spelare – Mr.B. Sokudo" },
-      { name: "description", content: "Din personliga spelaridentitet i Mr.B. Sokudo." },
-      { property: "og:title", content: "Spelare – Mr.B. Sokudo" },
+      { title: "Spelare – Mr.B. Sudoku" },
+      { name: "description", content: "Din personliga spelaridentitet i Mr.B. Sudoku." },
+      { property: "og:title", content: "Spelare – Mr.B. Sudoku" },
       { property: "og:description", content: "Spela med din personliga spelaridentitet." },
     ],
   }),
@@ -35,7 +35,7 @@ function AuthPage() {
   return (
     <main className="app-screen">
       <div className="home-stack">
-        <h1 className="brand-title text-3xl">Mr.B. Sokudo</h1>
+        <h1 className="brand-title text-3xl">Mr.B. Sudoku</h1>
         <p role="status" className="text-sm text-muted-foreground">{failed ? t("reconnecting") : t("loading")}</p>
         {failed && <Button className="home-action" onClick={() => setAttempt(n => n + 1)}>{t("tryAgain")}</Button>}
         <Link to="/" className="home-action home-action-ghost">{t("home")}</Link>

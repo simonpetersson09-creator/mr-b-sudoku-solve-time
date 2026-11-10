@@ -1,11 +1,11 @@
 /**
- * Store listings for Mr.B. Sokudo. Both are empty until the app is approved and
+ * Store listings for Mr.B. Sudoku. Both are empty until the app is approved and
  * live; the download page then says "coming soon" instead of linking nowhere.
  * Yatzy keeps the same shape in its own app-links module (read-only reference).
  */
 export const APP_STORE_URL = "";
 export const PLAY_STORE_URL =
-  "https://play.google.com/store/apps/details?id=com.pending.mrbsokudo";
+  "https://play.google.com/store/apps/details?id=com.pending.mrbsudoku";
 
 export type StoreLink = { store: "apple" | "google"; url: string };
 

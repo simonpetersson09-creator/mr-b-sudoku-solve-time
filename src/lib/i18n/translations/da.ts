@@ -107,7 +107,7 @@ export const da: Record<TranslationKey, string> = {
 
   // Sudoku
   tagline: "Sudoku – 81 felter, én løsning",
-  rateTitle: "Kan du lide Mr.B. Sokudo?",
+  rateTitle: "Kan du lide Mr.B. Sudoku?",
   rateBody: "Du har løst flere sudokuer! En anmeldelse hjælper os enormt. 💛",
   rule1: "Udfyld gitteret, så hver række, kolonne og 3×3-boks indeholder tallene 1–9 præcis én gang.",
   rule2: "Hver sudoku har præcis én løsning. De givne tal kan ikke ændres.",
@@ -117,10 +117,10 @@ export const da: Record<TranslationKey, string> = {
   rule6: "Dit spil gemmes automatisk. Du kan have op til 10 spil i gang.",
   statPlayed: "Spillet",
   adminInMatch: "Aktive nu",
-  adsOffInfo: "Mr.B. Sokudo viser annoncer fra Google. Du kan ændre dine annoncevalg nedenfor.",
+  adsOffInfo: "Mr.B. Sudoku viser annoncer fra Google. Du kan ændre dine annoncevalg nedenfor.",
   deleteDataDescription: "Dit navn, profilbillede, dine statistikker og gemte spil slettes fra telefonen og serveren. Hvis du fortsætter med at spille, oprettes en ny spilleridentitet.",
-  storeSoon: "Mr.B. Sokudo kommer snart til App Store og Google Play.",
-  webOnlyTitle: "Mr.B. Sokudo spilles i appen",
+  storeSoon: "Mr.B. Sudoku kommer snart til App Store og Google Play.",
+  webOnlyTitle: "Mr.B. Sudoku spilles i appen",
   webOnlyBody: "Download appen gratis, og løs sudoku på fire niveauer – også offline.",
   newGame: "Nyt spil",
   newGameTitle: "Nyt spil",

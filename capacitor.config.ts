@@ -2,8 +2,8 @@ import type { CapacitorConfig } from "@capacitor/cli";
 
 // Same local-bundle principle as Yatzy, with an entirely separate Ludo identity.
 const config: CapacitorConfig = {
-  appId: "com.pending.mrbsokudo",
-  appName: "Mr.B. Sokudo",
+  appId: "com.pending.mrbsudoku",
+  appName: "Mr.B. Sudoku",
   webDir: "dist-native",
   ios: { contentInset: "never" },
   android: { allowMixedContent: false },

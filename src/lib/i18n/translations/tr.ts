@@ -107,7 +107,7 @@ export const tr: Record<TranslationKey, string> = {
 
   // Sudoku
   tagline: "Sudoku – 81 kare, tek çözüm",
-  rateTitle: "Mr.B. Sokudo'yu seviyor musun?",
+  rateTitle: "Mr.B. Sudoku'yu seviyor musun?",
   rateBody: "Birkaç Sudoku çözdün! Vereceğin puan bize çok yardımcı olur. 💛",
   rule1: "Her satır, sütun ve 3×3 kutuda 1–9 rakamlarının her biri bir kez yer alacak şekilde tabloyu doldur.",
   rule2: "Her bulmacanın tek bir çözümü vardır. Verilen rakamlar değiştirilemez.",
@@ -117,10 +117,10 @@ export const tr: Record<TranslationKey, string> = {
   rule6: "Oyunun otomatik kaydedilir. Aynı anda en fazla 10 oyun oynayabilirsin.",
   statPlayed: "Oynanan",
   adminInMatch: "Şu an aktif",
-  adsOffInfo: "Mr.B. Sokudo, Google reklamları gösterir. Reklam tercihlerini aşağıdan değiştirebilirsin.",
+  adsOffInfo: "Mr.B. Sudoku, Google reklamları gösterir. Reklam tercihlerini aşağıdan değiştirebilirsin.",
   deleteDataDescription: "Adın, profil resmin, istatistiklerin ve kayıtlı oyunların telefondan ve sunucudan silinir. Oynamaya devam edersen yeni bir oyuncu kimliği oluşturulur.",
-  storeSoon: "Mr.B. Sokudo yakında App Store ve Google Play'de.",
-  webOnlyTitle: "Mr.B. Sokudo uygulamada oynanır",
+  storeSoon: "Mr.B. Sudoku yakında App Store ve Google Play'de.",
+  webOnlyTitle: "Mr.B. Sudoku uygulamada oynanır",
   webOnlyBody: "Uygulamayı ücretsiz indir ve dört seviyede Sudoku çöz – çevrimdışıyken bile.",
   newGame: "Yeni oyun",
   newGameTitle: "Yeni oyun",

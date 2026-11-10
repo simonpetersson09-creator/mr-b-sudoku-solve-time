@@ -107,7 +107,7 @@ export const ja: Record<TranslationKey, string> = {
 
   // Sudoku
   tagline: "数独 – 81マス、答えはひとつ",
-  rateTitle: "Mr.B. Sokudoを楽しんでいますか？",
+  rateTitle: "Mr.B. Sudokuを楽しんでいますか？",
   rateBody: "いくつもの数独を解きましたね！評価をいただけると励みになります。💛",
   rule1: "各行・列・3×3のブロックに、1〜9の数字がそれぞれ1回ずつ入るように埋めます。",
   rule2: "答えは必ずひとつです。最初から入っている数字は変更できません。",
@@ -117,10 +117,10 @@ export const ja: Record<TranslationKey, string> = {
   rule6: "ゲームは自動保存されます。進行中のゲームは最大10件まで保存できます。",
   statPlayed: "プレイ数",
   adminInMatch: "現在プレイ中",
-  adsOffInfo: "Mr.B. SokudoではGoogleの広告を表示します。広告設定は以下で変更できます。",
+  adsOffInfo: "Mr.B. SudokuではGoogleの広告を表示します。広告設定は以下で変更できます。",
   deleteDataDescription: "名前、プロフィール画像、統計、保存したゲームが端末とサーバーから削除されます。プレイを続けると、新しいプレイヤーIDが作成されます。",
-  storeSoon: "Mr.B. Sokudoは近日中にApp StoreとGoogle Playに登場します。",
-  webOnlyTitle: "Mr.B. Sokudoはアプリでプレイ",
+  storeSoon: "Mr.B. Sudokuは近日中にApp StoreとGoogle Playに登場します。",
+  webOnlyTitle: "Mr.B. Sudokuはアプリでプレイ",
   webOnlyBody: "無料アプリをダウンロードして、4つのレベルの数独を楽しもう。オフラインでも遊べます。",
   newGame: "新しいゲーム",
   newGameTitle: "新しいゲーム",

@@ -38,7 +38,7 @@ const GOOGLE_TEST_IDS: Record<'ios' | 'android', Omit<PlatformAdIds, 'appId'>> =
 };
 
 export const ADMOB_IDS: Record<'ios' | 'android', PlatformAdIds> = {
-  // Until Mr.B. Sokudo has its own AdMob account, both platforms use Google's sample IDs only.
+  // Until Mr.B. Sudoku has its own AdMob account, both platforms use Google's sample IDs only.
   ios: {
     appId: 'ca-app-pub-3940256099942544~1458002511',
     appOpen: GOOGLE_TEST_IDS.ios.appOpen,

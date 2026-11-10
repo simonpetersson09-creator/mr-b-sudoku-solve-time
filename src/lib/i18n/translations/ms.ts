@@ -107,7 +107,7 @@ export const ms: Record<TranslationKey, string> = {
 
   // Sudoku
   tagline: "Sudoku – 81 petak, satu penyelesaian",
-  rateTitle: "Seronok bermain Mr.B. Sokudo?",
+  rateTitle: "Seronok bermain Mr.B. Sudoku?",
   rateBody: "Anda telah menyelesaikan beberapa Sudoku! Penilaian anda amat membantu kami. 💛",
   rule1: "Isi grid supaya setiap baris, lajur dan kotak 3×3 mengandungi digit 1–9 sekali sahaja.",
   rule2: "Setiap teka-teki hanya mempunyai satu penyelesaian. Digit yang diberi tidak boleh diubah.",
@@ -117,10 +117,10 @@ export const ms: Record<TranslationKey, string> = {
   rule6: "Permainan anda disimpan secara automatik. Anda boleh mempunyai sehingga 10 permainan yang sedang berlangsung.",
   statPlayed: "Dimainkan",
   adminInMatch: "Aktif sekarang",
-  adsOffInfo: "Mr.B. Sokudo memaparkan iklan daripada Google. Anda boleh mengubah pilihan iklan di bawah.",
+  adsOffInfo: "Mr.B. Sudoku memaparkan iklan daripada Google. Anda boleh mengubah pilihan iklan di bawah.",
   deleteDataDescription: "Nama, gambar profil, statistik dan permainan tersimpan anda akan dipadamkan daripada telefon dan pelayan. Jika anda terus bermain, identiti pemain baharu akan dicipta.",
-  storeSoon: "Mr.B. Sokudo akan hadir tidak lama lagi di App Store dan Google Play.",
-  webOnlyTitle: "Mr.B. Sokudo dimainkan dalam aplikasi",
+  storeSoon: "Mr.B. Sudoku akan hadir tidak lama lagi di App Store dan Google Play.",
+  webOnlyTitle: "Mr.B. Sudoku dimainkan dalam aplikasi",
   webOnlyBody: "Muat turun aplikasi secara percuma dan selesaikan Sudoku dalam empat tahap – walaupun di luar talian.",
   newGame: "Permainan baharu",
   newGameTitle: "Permainan baharu",

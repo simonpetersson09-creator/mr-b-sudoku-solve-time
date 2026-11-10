@@ -15,9 +15,9 @@ export const Route = createFileRoute("/settings")({
     meta: [
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { title: "Inställningar – Mr.B. Sokudo" },
+      { title: "Inställningar – Mr.B. Sudoku" },
       { name: "description", content: "Spelarnamn, språk, spelhjälp och vibration." },
-      { property: "og:title", content: "Inställningar – Mr.B. Sokudo" },
+      { property: "og:title", content: "Inställningar – Mr.B. Sudoku" },
       { property: "og:description", content: "Spelarnamn, språk, spelhjälp och vibration." },
     ],
   }),

@@ -4,7 +4,7 @@ import { supabase } from "@/lib/auth/client";
 const NS = "mrb-sudoku:v1:";
 const KEEP = new Set([NS + "language"]);
 
-/** Sokudo's own player keys; the chosen language is a device preference and stays. */
+/** Sudoku's own player keys; the chosen language is a device preference and stays. */
 export const isPlayerStorageKey = (key: string) => key.startsWith(NS) && !KEEP.has(key);
 
 /** Erase the player on the server first, then everything this device keeps about them. */

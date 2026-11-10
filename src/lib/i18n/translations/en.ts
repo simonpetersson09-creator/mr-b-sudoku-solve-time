@@ -107,7 +107,7 @@ export const en: Record<TranslationKey, string> = {
 
   // Sudoku
   tagline: "Sudoku – 81 squares, one solution",
-  rateTitle: "Enjoying Mr.B. Sokudo?",
+  rateTitle: "Enjoying Mr.B. Sudoku?",
   rateBody: "You have solved several Sudokus! A rating helps us enormously. 💛",
   rule1: "Fill the grid so every row, column and 3×3 box contains the digits 1–9 exactly once.",
   rule2: "Every puzzle has exactly one solution. Given digits cannot be changed.",
@@ -117,10 +117,10 @@ export const en: Record<TranslationKey, string> = {
   rule6: "Your game is saved automatically. You can have up to 10 games in progress.",
   statPlayed: "Played",
   adminInMatch: "Active now",
-  adsOffInfo: "Mr.B. Sokudo shows ads from Google. You can change your ad choices below.",
+  adsOffInfo: "Mr.B. Sudoku shows ads from Google. You can change your ad choices below.",
   deleteDataDescription: "Your name, profile picture, statistics and saved games are deleted from the phone and the server. If you keep playing, a new player identity is created.",
-  storeSoon: "Mr.B. Sokudo is coming soon to the App Store and Google Play.",
-  webOnlyTitle: "Mr.B. Sokudo is played in the app",
+  storeSoon: "Mr.B. Sudoku is coming soon to the App Store and Google Play.",
+  webOnlyTitle: "Mr.B. Sudoku is played in the app",
   webOnlyBody: "Download the app for free and solve Sudoku in four levels – even offline.",
   newGame: "New game",
   newGameTitle: "New game",

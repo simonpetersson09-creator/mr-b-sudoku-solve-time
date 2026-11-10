@@ -107,7 +107,7 @@ export const ro: Record<TranslationKey, string> = {
 
   // Sudoku
   tagline: "Sudoku – 81 de căsuțe, o singură soluție",
-  rateTitle: "Îți place Mr.B. Sokudo?",
+  rateTitle: "Îți place Mr.B. Sudoku?",
   rateBody: "Ai rezolvat mai multe jocuri Sudoku! O evaluare ne ajută enorm. 💛",
   rule1: "Completează grila astfel încât fiecare rând, coloană și regiune de 3×3 să conțină cifrele de la 1 la 9 o singură dată.",
   rule2: "Fiecare joc are o singură soluție. Cifrele date nu pot fi schimbate.",
@@ -117,10 +117,10 @@ export const ro: Record<TranslationKey, string> = {
   rule6: "Jocul se salvează automat. Poți avea până la 10 jocuri în desfășurare.",
   statPlayed: "Jocuri jucate",
   adminInMatch: "Activ acum",
-  adsOffInfo: "Mr.B. Sokudo afișează reclame de la Google. Poți schimba mai jos opțiunile pentru reclame.",
+  adsOffInfo: "Mr.B. Sudoku afișează reclame de la Google. Poți schimba mai jos opțiunile pentru reclame.",
   deleteDataDescription: "Numele, poza de profil, statisticile și jocurile salvate sunt șterse de pe telefon și de pe server. Dacă joci în continuare, se creează o nouă identitate de jucător.",
-  storeSoon: "Mr.B. Sokudo va fi disponibil în curând în App Store și Google Play.",
-  webOnlyTitle: "Mr.B. Sokudo se joacă în aplicație",
+  storeSoon: "Mr.B. Sudoku va fi disponibil în curând în App Store și Google Play.",
+  webOnlyTitle: "Mr.B. Sudoku se joacă în aplicație",
   webOnlyBody: "Descarcă gratuit aplicația și rezolvă Sudoku la patru niveluri – chiar și offline.",
   newGame: "Joc nou",
   newGameTitle: "Joc nou",

@@ -12,9 +12,9 @@ export const Route = createFileRoute("/setup")({
     meta: [
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { title: "Nytt spel – Mr.B. Sokudo" },
+      { title: "Nytt spel – Mr.B. Sudoku" },
       { name: "description", content: "Välj nivå för ett nytt Sudoku: Lätt, Medel, Svår eller Expert." },
-      { property: "og:title", content: "Nytt spel – Mr.B. Sokudo" },
+      { property: "og:title", content: "Nytt spel – Mr.B. Sudoku" },
       { property: "og:description", content: "Välj nivå för ett nytt Sudoku." },
     ],
   }),

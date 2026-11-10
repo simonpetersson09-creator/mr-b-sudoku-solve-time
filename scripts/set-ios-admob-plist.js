@@ -24,7 +24,7 @@ const REQUIRED_STRING_KEYS = {
   NSPhotoLibraryUsageDescription:
     'Your photo library is used only when you choose a profile picture.',
   NSUserTrackingUsageDescription:
-    'Allowing this lets Mr.B. Sokudo show ads that are more relevant to you. The game works the same either way.',
+    'Allowing this lets Mr.B. Sudoku show ads that are more relevant to you. The game works the same either way.',
 };
 
 /**

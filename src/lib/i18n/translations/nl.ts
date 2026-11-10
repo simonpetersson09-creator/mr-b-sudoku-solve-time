@@ -90,7 +90,7 @@ export const nl: Record<TranslationKey, string> = {
 
   // Sudoku
   tagline: "Sudoku – 81 vakjes, één oplossing",
-  rateTitle: "Bevalt Mr.B. Sokudo?",
+  rateTitle: "Bevalt Mr.B. Sudoku?",
   rateBody: "Je hebt al meerdere sudoku's opgelost! Een beoordeling helpt ons enorm. 💛",
   rule1: "Vul het rooster zo in dat elke rij, kolom en elk 3×3-blok de cijfers 1–9 precies één keer bevat.",
   rule2: "Elke puzzel heeft precies één oplossing. Gegeven cijfers kun je niet wijzigen.",
@@ -100,10 +100,10 @@ export const nl: Record<TranslationKey, string> = {
   rule6: "Je spel wordt automatisch opgeslagen. Je kunt maximaal 10 spellen tegelijk spelen.",
   statPlayed: "Gespeeld",
   adminInMatch: "Nu actief",
-  adsOffInfo: "Mr.B. Sokudo toont advertenties van Google. Je kunt je advertentievoorkeuren hieronder wijzigen.",
+  adsOffInfo: "Mr.B. Sudoku toont advertenties van Google. Je kunt je advertentievoorkeuren hieronder wijzigen.",
   deleteDataDescription: "Je naam, profielfoto, statistieken en opgeslagen spellen worden van je telefoon en de server verwijderd. Als je blijft spelen, wordt een nieuwe spelersidentiteit aangemaakt.",
-  storeSoon: "Mr.B. Sokudo komt binnenkort naar de App Store en Google Play.",
-  webOnlyTitle: "Je speelt Mr.B. Sokudo in de app",
+  storeSoon: "Mr.B. Sudoku komt binnenkort naar de App Store en Google Play.",
+  webOnlyTitle: "Je speelt Mr.B. Sudoku in de app",
   webOnlyBody: "Download de app gratis en speel sudoku op vier niveaus – ook offline.",
   newGame: "Nieuw spel",
   newGameTitle: "Nieuw spel",

@@ -1,5 +1,5 @@
 /**
- * Regenerate every Mr.B. Sokudo launcher icon and splash from resources/icon.png.
+ * Regenerate every Mr.B. Sudoku launcher icon and splash from resources/icon.png.
  * Ported from Mr. B Yatzy's scripts/make-icons.js (same sizes and formats).
  * Ludo addition: splash images (Yatzy keeps Capacitor's default splash).
  *
@@ -98,4 +98,4 @@ render(MASTER, join(PUBLIC, "app-icon-1024.png"), 1024);
 render(MASTER, join(PUBLIC, "app-icon.png"), 512);
 render(MASTER, join(PUBLIC, "apple-touch-icon.png"), 180);
 render(MASTER, join(PUBLIC, "favicon.png"), 64);
-console.log("[icons] Mr.B. Sokudo icons and splash regenerated.");
+console.log("[icons] Mr.B. Sudoku icons and splash regenerated.");

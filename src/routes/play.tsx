@@ -18,9 +18,9 @@ export const Route = createFileRoute("/play")({
     meta: [
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { title: "Spela – Mr.B. Sokudo" },
+      { title: "Spela – Mr.B. Sudoku" },
       { name: "description", content: "Lös ett Sudoku med anteckningar, ångra, ledtrådar och timer." },
-      { property: "og:title", content: "Spela – Mr.B. Sokudo" },
+      { property: "og:title", content: "Spela – Mr.B. Sudoku" },
       { property: "og:description", content: "Lös ett Sudoku med anteckningar, ångra, ledtrådar och timer." },
     ],
   }),

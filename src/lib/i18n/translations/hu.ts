@@ -90,7 +90,7 @@ export const hu: Record<TranslationKey, string> = {
 
   // Sudoku
   tagline: "Sudoku – 81 mező, egy megoldás",
-  rateTitle: "Tetszik a Mr.B. Sokudo?",
+  rateTitle: "Tetszik a Mr.B. Sudoku?",
   rateBody: "Már több sudokut is megoldottál! Egy értékeléssel sokat segítesz nekünk. 💛",
   rule1: "Töltsd ki a rácsot úgy, hogy minden sorban, oszlopban és 3×3-as blokkban az 1–9 számjegyek pontosan egyszer szerepeljenek.",
   rule2: "Minden feladványnak pontosan egy megoldása van. A megadott számjegyek nem módosíthatók.",
@@ -100,10 +100,10 @@ export const hu: Record<TranslationKey, string> = {
   rule6: "A játék automatikusan mentődik. Egyszerre legfeljebb 10 játékod lehet folyamatban.",
   statPlayed: "Lejátszott",
   adminInMatch: "Most aktív",
-  adsOffInfo: "A Mr.B. Sokudo a Google hirdetéseit jeleníti meg. A hirdetési beállításaidat alább módosíthatod.",
+  adsOffInfo: "A Mr.B. Sudoku a Google hirdetéseit jeleníti meg. A hirdetési beállításaidat alább módosíthatod.",
   deleteDataDescription: "A neved, profilképed, statisztikáid és mentett játékaid törlődnek a telefonról és a szerverről. Ha tovább játszol, új játékosazonosító jön létre.",
-  storeSoon: "A Mr.B. Sokudo hamarosan elérhető lesz az App Store és a Google Play kínálatában.",
-  webOnlyTitle: "A Mr.B. Sokudo az alkalmazásban játszható",
+  storeSoon: "A Mr.B. Sudoku hamarosan elérhető lesz az App Store és a Google Play kínálatában.",
+  webOnlyTitle: "A Mr.B. Sudoku az alkalmazásban játszható",
   webOnlyBody: "Töltsd le az ingyenes alkalmazást, és oldj meg sudokukat négy nehézségi szinten – akár offline is.",
   newGame: "Új játék",
   newGameTitle: "Új játék",

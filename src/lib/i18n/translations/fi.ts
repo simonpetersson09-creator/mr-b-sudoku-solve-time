@@ -90,7 +90,7 @@ export const fi: Record<TranslationKey, string> = {
 
   // Sudoku
   tagline: "Sudoku – 81 ruutua, yksi ratkaisu",
-  rateTitle: "Viihdytkö Mr.B. Sokudon parissa?",
+  rateTitle: "Viihdytkö Mr.B. Sudokun parissa?",
   rateBody: "Olet ratkaissut useita sudokuja! Arviosi auttaa meitä valtavasti. 💛",
   rule1: "Täytä ruudukko niin, että jokaisella rivillä, sarakkeessa ja 3×3-alueella on numerot 1–9 täsmälleen kerran.",
   rule2: "Jokaisella sudokulla on vain yksi ratkaisu. Annettuja numeroita ei voi muuttaa.",
@@ -100,10 +100,10 @@ export const fi: Record<TranslationKey, string> = {
   rule6: "Pelisi tallennetaan automaattisesti. Voit pitää enintään 10 peliä kesken.",
   statPlayed: "Pelatut",
   adminInMatch: "Aktiivinen nyt",
-  adsOffInfo: "Mr.B. Sokudo näyttää Googlen mainoksia. Voit muuttaa mainosasetuksiasi alla.",
+  adsOffInfo: "Mr.B. Sudoku näyttää Googlen mainoksia. Voit muuttaa mainosasetuksiasi alla.",
   deleteDataDescription: "Nimesi, profiilikuvasi, tilastosi ja tallennetut pelisi poistetaan puhelimelta ja palvelimelta. Jos jatkat pelaamista, sinulle luodaan uusi pelaajatunnus.",
-  storeSoon: "Mr.B. Sokudo on pian saatavilla App Store- ja Google Play -kaupoissa.",
-  webOnlyTitle: "Mr.B. Sokudoa pelataan sovelluksessa",
+  storeSoon: "Mr.B. Sudoku on pian saatavilla App Store- ja Google Play -kaupoissa.",
+  webOnlyTitle: "Mr.B. Sudokua pelataan sovelluksessa",
   webOnlyBody: "Lataa sovellus ilmaiseksi ja ratkaise sudokuja neljällä vaikeustasolla – myös ilman verkkoyhteyttä.",
   newGame: "Uusi peli",
   newGameTitle: "Uusi peli",

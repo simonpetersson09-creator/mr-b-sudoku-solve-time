@@ -7,7 +7,7 @@ import { listGames, saveLevel, selectGame, startNewGame } from "@/lib/player/sto
 import { randomId } from "@/lib/random-id";
 import { LANGUAGES, setLanguage, useTranslation } from "@/lib/i18n";
 import { HomeStats } from "@/components/app/HomeStats";
-import mrBLogo from "@/assets/mr-b-sokudo-logo.png";
+import mrBLogo from "@/assets/mr-b-sudoku-logo.png";
 import { startHomeAds } from "@/lib/ads/home-ads";
 import { Capacitor } from "@capacitor/core";
 import { getRankedGames } from "@/lib/ads/local-stats";
@@ -21,9 +21,9 @@ const FIRST_PLAY_KEY = "mrb-sudoku:v1:first-play-hint-done";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Mr.B. Sokudo – Sudoku för mobilen" },
+      { title: "Mr.B. Sudoku – Sudoku för mobilen" },
       { name: "description", content: "Lös Sudoku i fyra nivåer med anteckningar, ledtrådar och statistik. Från skaparna av Mr. B Yatzy." },
-      { property: "og:title", content: "Mr.B. Sokudo" },
+      { property: "og:title", content: "Mr.B. Sudoku" },
       { property: "og:description", content: "Lös Sudoku i fyra nivåer, även utan internet." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -97,7 +97,7 @@ function HomePage() {
         <div className="brand-logo mb-2 inline-flex h-28 w-28 items-center justify-center sm:mb-4 sm:h-36 sm:w-36">
           <img src={mrBLogo} alt="" width={512} height={512} className="h-full w-full object-contain" loading="eager" decoding="async" />
         </div>
-        <h1 className="brand-wordmark text-4xl sm:text-5xl">Mr.B. Sokudo</h1>
+        <h1 className="brand-wordmark text-4xl sm:text-5xl">Mr.B. Sudoku</h1>
         <p className="brand-tagline">{t("tagline")}</p>
       </div>
       <div className="w-full mt-8 sm:mt-10">

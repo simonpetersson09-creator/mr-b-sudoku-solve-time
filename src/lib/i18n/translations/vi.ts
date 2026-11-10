@@ -107,7 +107,7 @@ export const vi: Record<TranslationKey, string> = {
 
   // Sudoku
   tagline: "Sudoku – 81 ô, một lời giải",
-  rateTitle: "Bạn thích Mr.B. Sokudo?",
+  rateTitle: "Bạn thích Mr.B. Sudoku?",
   rateBody: "Bạn đã giải được nhiều ván Sudoku! Đánh giá của bạn giúp ích cho chúng tôi rất nhiều. 💛",
   rule1: "Điền các số 1–9 vào bảng sao cho mỗi hàng, cột và ô 3×3 đều có đủ các số, mỗi số chỉ xuất hiện một lần.",
   rule2: "Mỗi câu đố chỉ có một lời giải. Không thể thay đổi các số cho sẵn.",
@@ -117,10 +117,10 @@ export const vi: Record<TranslationKey, string> = {
   rule6: "Ván chơi được lưu tự động. Bạn có thể chơi dở tối đa 10 ván.",
   statPlayed: "Đã chơi",
   adminInMatch: "Đang chơi",
-  adsOffInfo: "Mr.B. Sokudo hiển thị quảng cáo từ Google. Bạn có thể thay đổi tùy chọn quảng cáo bên dưới.",
+  adsOffInfo: "Mr.B. Sudoku hiển thị quảng cáo từ Google. Bạn có thể thay đổi tùy chọn quảng cáo bên dưới.",
   deleteDataDescription: "Tên, ảnh đại diện, thống kê và các ván đã lưu của bạn sẽ bị xóa khỏi điện thoại và máy chủ. Nếu tiếp tục chơi, bạn sẽ có một danh tính người chơi mới.",
-  storeSoon: "Mr.B. Sokudo sẽ sớm có mặt trên App Store và Google Play.",
-  webOnlyTitle: "Chơi Mr.B. Sokudo trên ứng dụng",
+  storeSoon: "Mr.B. Sudoku sẽ sớm có mặt trên App Store và Google Play.",
+  webOnlyTitle: "Chơi Mr.B. Sudoku trên ứng dụng",
   webOnlyBody: "Tải ứng dụng miễn phí và giải Sudoku ở bốn cấp độ – ngay cả khi không có mạng.",
   newGame: "Ván mới",
   newGameTitle: "Ván mới",

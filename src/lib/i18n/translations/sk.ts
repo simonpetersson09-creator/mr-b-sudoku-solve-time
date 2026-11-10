@@ -90,7 +90,7 @@ export const sk: Record<TranslationKey, string> = {
 
   // Sudoku
   tagline: "Sudoku – 81 políčok, jedno riešenie",
-  rateTitle: "Baví vás Mr.B. Sokudo?",
+  rateTitle: "Baví vás Mr.B. Sudoku?",
   rateBody: "Vyriešili ste už niekoľko sudoku! Vaše hodnotenie nám veľmi pomôže. 💛",
   rule1: "Vyplňte mriežku tak, aby každý riadok, stĺpec a blok 3×3 obsahoval číslice 1–9 práve raz.",
   rule2: "Každé sudoku má práve jedno riešenie. Predvyplnené číslice nemožno meniť.",
@@ -100,10 +100,10 @@ export const sk: Record<TranslationKey, string> = {
   rule6: "Hra sa ukladá automaticky. Môžete mať rozhraných až 10 hier.",
   statPlayed: "Odohrané",
   adminInMatch: "Práve hrá",
-  adsOffInfo: "Mr.B. Sokudo zobrazuje reklamy od Google. Nastavenia reklám môžete zmeniť nižšie.",
+  adsOffInfo: "Mr.B. Sudoku zobrazuje reklamy od Google. Nastavenia reklám môžete zmeniť nižšie.",
   deleteDataDescription: "Vaše meno, profilový obrázok, štatistiky a uložené hry sa odstránia z telefónu aj zo servera. Ak budete hrať ďalej, vytvorí sa nová identita hráča.",
-  storeSoon: "Mr.B. Sokudo bude čoskoro dostupný v App Store a Google Play.",
-  webOnlyTitle: "Mr.B. Sokudo sa hrá v aplikácii",
+  storeSoon: "Mr.B. Sudoku bude čoskoro dostupný v App Store a Google Play.",
+  webOnlyTitle: "Mr.B. Sudoku sa hrá v aplikácii",
   webOnlyBody: "Stiahnite si aplikáciu zadarmo a riešte sudoku v štyroch úrovniach – aj offline.",
   newGame: "Nová hra",
   newGameTitle: "Nová hra",

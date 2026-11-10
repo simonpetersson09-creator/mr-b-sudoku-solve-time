@@ -4,12 +4,12 @@ import { LANGUAGES, mapTagToLanguage } from "../i18n/language";
 
 const read = (path: string) => readFileSync(path, "utf8");
 describe("approved native configuration", () => {
-  it("uses com.pending.mrbsokudo consistently on both platforms", () => {
-    expect(read("capacitor.config.ts")).toContain('appId: "com.pending.mrbsokudo"');
-    expect(read("android/app/build.gradle")).toContain('applicationId "com.pending.mrbsokudo"');
-    expect(read("ios/App/App.xcodeproj/project.pbxproj").match(/PRODUCT_BUNDLE_IDENTIFIER = com\.pending\.mrbsokudo;/g)).toHaveLength(2);
+  it("uses com.pending.mrbsudoku consistently on both platforms", () => {
+    expect(read("capacitor.config.ts")).toContain('appId: "com.pending.mrbsudoku"');
+    expect(read("android/app/build.gradle")).toContain('applicationId "com.pending.mrbsudoku"');
+    expect(read("ios/App/App.xcodeproj/project.pbxproj").match(/PRODUCT_BUNDLE_IDENTIFIER = com\.pending\.mrbsudoku;/g)).toHaveLength(2);
   });
-  it("leaves the Apple team empty until Mr.B. Sokudo's own team is approved", () => {
+  it("leaves the Apple team empty until Mr.B. Sudoku's own team is approved", () => {
     const project = read("ios/App/App.xcodeproj/project.pbxproj");
     expect(project.match(/DEVELOPMENT_TEAM = "";/g)).toHaveLength(2);
     expect(project).not.toContain("F43HQMHCAT");

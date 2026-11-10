@@ -1,5 +1,5 @@
 /**
- * Copy the committed Mr.B. Sokudo icons/splash over Capacitor's defaults.
+ * Copy the committed Mr.B. Sudoku icons/splash over Capacitor's defaults.
  * Mirrors Mr. B Yatzy's set-android-icons.js + set-ios-icons.js. Idempotent.
  * Usage: node scripts/set-native-icons.mjs android|ios
  */
@@ -20,11 +20,11 @@ if (platform === "android") {
   if (!existsSync(dest)) throw new Error("android/ missing; run cap add android");
   let n = 0;
   for (const dir of readdirSync(join(R, "android", "res"))) n += copyDir(join(R, "android", "res", dir), join(dest, dir));
-  console.log(`[Android icons] Copied ${n} Mr.B. Sokudo icon/splash files.`);
+  console.log(`[Android icons] Copied ${n} Mr.B. Sudoku icon/splash files.`);
 } else if (platform === "ios") {
   const cat = resolve("ios/App/App/Assets.xcassets");
   if (!existsSync(cat)) throw new Error("ios/ missing; run cap add ios");
   const n = copyDir(join(R, "ios", "AppIcon.appiconset"), join(cat, "AppIcon.appiconset"))
     + copyDir(join(R, "ios", "Splash.imageset"), join(cat, "Splash.imageset"));
-  console.log(`[iOS icons] Copied ${n} Mr.B. Sokudo icon/splash files.`);
+  console.log(`[iOS icons] Copied ${n} Mr.B. Sudoku icon/splash files.`);
 } else throw new Error("Use android or ios");

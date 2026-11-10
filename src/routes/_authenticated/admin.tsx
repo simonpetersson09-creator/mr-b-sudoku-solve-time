@@ -10,10 +10,10 @@ export const Route = createFileRoute("/_authenticated/admin")({
     meta: [
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { title: "Admin – Mr.B. Sokudo" },
+      { title: "Admin – Mr.B. Sudoku" },
       { name: "description", content: "Aktiva spelare, enheter, spel och fel." },
-      { property: "og:title", content: "Admin – Mr.B. Sokudo" },
-      { property: "og:description", content: "Adminpanel för Mr.B. Sokudo." },
+      { property: "og:title", content: "Admin – Mr.B. Sudoku" },
+      { property: "og:description", content: "Adminpanel för Mr.B. Sudoku." },
     ],
   }),
   component: AdminPage,

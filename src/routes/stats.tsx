@@ -11,9 +11,9 @@ export const Route = createFileRoute("/stats")({
     meta: [
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { title: "Statistik – Mr.B. Sokudo" },
+      { title: "Statistik – Mr.B. Sudoku" },
       { name: "description", content: "Spelade Sudoku, vinster och bästa tid per nivå." },
-      { property: "og:title", content: "Statistik – Mr.B. Sokudo" },
+      { property: "og:title", content: "Statistik – Mr.B. Sudoku" },
       { property: "og:description", content: "Spelade Sudoku, vinster och bästa tid per nivå." },
     ],
   }),

@@ -90,7 +90,7 @@ export const ptBR: Record<TranslationKey, string> = {
 
   // Sudoku
   tagline: "Sudoku – 81 casas, uma solução",
-  rateTitle: "Está gostando do Mr.B. Sokudo?",
+  rateTitle: "Está gostando do Mr.B. Sudoku?",
   rateBody: "Você já resolveu vários sudokus! Sua avaliação nos ajuda muito. 💛",
   rule1: "Preencha o tabuleiro para que cada linha, coluna e bloco 3×3 contenha os números de 1 a 9 uma única vez.",
   rule2: "Cada jogo tem apenas uma solução. Os números iniciais não podem ser alterados.",
@@ -100,10 +100,10 @@ export const ptBR: Record<TranslationKey, string> = {
   rule6: "Sua partida é salva automaticamente. Você pode ter até 10 partidas em andamento.",
   statPlayed: "Jogadas",
   adminInMatch: "Ativos agora",
-  adsOffInfo: "Mr.B. Sokudo exibe anúncios do Google. Você pode alterar suas preferências de anúncios abaixo.",
+  adsOffInfo: "Mr.B. Sudoku exibe anúncios do Google. Você pode alterar suas preferências de anúncios abaixo.",
   deleteDataDescription: "Seu nome, foto de perfil, estatísticas e partidas salvas são apagados do celular e do servidor. Se você continuar jogando, uma nova identidade de jogador será criada.",
-  storeSoon: "Mr.B. Sokudo chegará em breve à App Store e ao Google Play.",
-  webOnlyTitle: "Jogue Mr.B. Sokudo no app",
+  storeSoon: "Mr.B. Sudoku chegará em breve à App Store e ao Google Play.",
+  webOnlyTitle: "Jogue Mr.B. Sudoku no app",
   webOnlyBody: "Baixe o app grátis e resolva sudokus em quatro níveis, mesmo offline.",
   newGame: "Novo jogo",
   newGameTitle: "Novo jogo",

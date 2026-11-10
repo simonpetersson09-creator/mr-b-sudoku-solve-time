@@ -90,7 +90,7 @@ export const hr: Record<TranslationKey, string> = {
 
   // Sudoku
   tagline: "Sudoku – 81 polje, jedno rješenje",
-  rateTitle: "Sviđa vam se Mr.B. Sokudo?",
+  rateTitle: "Sviđa vam se Mr.B. Sudoku?",
   rateBody: "Riješili ste nekoliko sudokua! Vaša ocjena nam puno znači. 💛",
   rule1: "Ispunite mrežu tako da svaki redak, stupac i blok 3×3 sadrži znamenke od 1 do 9 točno jednom.",
   rule2: "Svaka zagonetka ima točno jedno rješenje. Zadane znamenke ne mogu se mijenjati.",
@@ -100,10 +100,10 @@ export const hr: Record<TranslationKey, string> = {
   rule6: "Igra se automatski sprema. Možete imati do 10 igara u tijeku.",
   statPlayed: "Odigrano",
   adminInMatch: "Trenutačno aktivni",
-  adsOffInfo: "Mr.B. Sokudo prikazuje oglase tvrtke Google. U nastavku možete promijeniti postavke oglasa.",
+  adsOffInfo: "Mr.B. Sudoku prikazuje oglase tvrtke Google. U nastavku možete promijeniti postavke oglasa.",
   deleteDataDescription: "Vaše ime, profilna slika, statistika i spremljene igre brišu se s telefona i poslužitelja. Ako nastavite igrati, stvorit će se novi identitet igrača.",
-  storeSoon: "Mr.B. Sokudo uskoro stiže na App Store i Google Play.",
-  webOnlyTitle: "Mr.B. Sokudo igra se u aplikaciji",
+  storeSoon: "Mr.B. Sudoku uskoro stiže na App Store i Google Play.",
+  webOnlyTitle: "Mr.B. Sudoku igra se u aplikaciji",
   webOnlyBody: "Besplatno preuzmite aplikaciju i rješavajte sudoku na četiri razine – čak i bez interneta.",
   newGame: "Nova igra",
   newGameTitle: "Nova igra",

@@ -120,7 +120,7 @@ export const sv = {
 
   // Sudoku
   tagline: "Sudoku – 81 rutor, en lösning",
-  rateTitle: "Gillar du Mr.B. Sokudo?",
+  rateTitle: "Gillar du Mr.B. Sudoku?",
   rateBody: "Du har löst flera Sudoku! Ett betyg hjälper oss enormt. 💛",
   rule1: "Fyll rutnätet så att varje rad, kolumn och 3×3-ruta innehåller siffrorna 1–9 exakt en gång.",
   rule2: "Varje pussel har exakt en lösning. Givna siffror kan inte ändras.",
@@ -130,10 +130,10 @@ export const sv = {
   rule6: "Spelet sparas automatiskt. Du kan ha upp till 10 pågående spel.",
   statPlayed: "Spelade",
   adminInMatch: "Aktiva nu",
-  adsOffInfo: "Mr.B. Sokudo visar annonser från Google. Du kan ändra dina annonsval här nedan.",
+  adsOffInfo: "Mr.B. Sudoku visar annonser från Google. Du kan ändra dina annonsval här nedan.",
   deleteDataDescription: "Ditt namn, profilbild, statistik och sparade spel raderas från telefonen och servern. Fortsätter du spela skapas en ny spelaridentitet.",
-  storeSoon: "Mr.B. Sokudo finns snart i App Store och Google Play.",
-  webOnlyTitle: "Mr.B. Sokudo spelas i appen",
+  storeSoon: "Mr.B. Sudoku finns snart i App Store och Google Play.",
+  webOnlyTitle: "Mr.B. Sudoku spelas i appen",
   webOnlyBody: "Ladda ner appen gratis och lös Sudoku i fyra nivåer – även utan internet.",
   newGame: "Nytt spel",
   newGameTitle: "Nytt spel",
