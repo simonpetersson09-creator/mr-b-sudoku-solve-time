@@ -712,11 +712,10 @@ main[data-level="master"] .sdk-level-pill { background: color-mix(in oklab, var(
 
 /* Spelsidan är fast: ingen scroll */
 .sdk-fixed { position: fixed; inset: 0; height: 100dvh; min-height: 0; overflow: hidden; overscroll-behavior: none; touch-action: manipulation; }
-.sdk-fixed .sdk-board { width: 100%; max-width: min(100%, max(200px, calc(100dvh - 312px - var(--safe-top) - env(safe-area-inset-bottom)))); margin-inline: auto; }
+.sdk-fixed .sdk-board { width: 100%; max-width: min(100%, max(200px, calc(100dvh - 292px - var(--safe-top) - env(safe-area-inset-bottom)))); margin-inline: auto; }
 /* The header row tracks the board exactly so its markers line up with the board's outer edges. */
-.sdk-fixed .sdk-board-head { width: 100%; max-width: min(100%, max(200px, calc(100dvh - 312px - var(--safe-top) - env(safe-area-inset-bottom)))); margin-inline: auto; }
+.sdk-fixed .sdk-board-head { width: 100%; max-width: min(100%, max(200px, calc(100dvh - 292px - var(--safe-top) - env(safe-area-inset-bottom)))); margin-inline: auto; }
 /* Compact play screen: smaller header, tools and keys give the board more room. */
-.sdk-fixed .sdk-chip { height: 40px; border-radius: 12px; }
 .sdk-fixed .sdk-level-pill { min-height: 22px; font-size: 11px; }
 .sdk-fixed .sdk-fel-pill { min-height: 22px; padding: 0 10px; gap: 6px; }
 .sdk-fixed .sdk-fel-label { font-size: 10px; }

@@ -217,10 +217,10 @@ function PlayPage() {
           </div>
         </div>
 
-        <div className="flex flex-1 flex-col gap-2">
+        <div className="flex flex-1 flex-col gap-1">
         <div className="flex-1" aria-hidden="true" />
         <p className="-mt-1 text-center font-display text-2xl font-bold tabular-nums tracking-wider" aria-label={t("time")}>{formatTime(state.elapsedMs)}</p>
-        <p className="-mt-2 text-center text-[11px] text-muted-foreground">
+        <p className="-mt-1 text-center text-[11px] text-muted-foreground">
           {t("statBestTime")}: <span className="font-display font-bold tabular-nums text-gold">{stats[state.level].bestMs != null ? formatTime(stats[state.level].bestMs!) : "–"}</span>
         </p>
         <div className="sdk-board-head">
