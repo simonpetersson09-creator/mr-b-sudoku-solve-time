@@ -25,6 +25,7 @@ export const ptBR: Record<TranslationKey, string> = {
   languageLabel: "Idioma",
   statsTitle: "Estatísticas",
   statWins: "Vitórias",
+  statPerfect: "Sem erros",
   resetStats: "Zerar estatísticas",
   signIn: "Entrar",
   playerName: "Nome do jogador",

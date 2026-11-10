@@ -34,6 +34,7 @@ export const vi: Record<TranslationKey, string> = {
 
   statsTitle: "Thống kê",
   statWins: "Thắng",
+  statPerfect: "Không lỗi",
   resetStats: "Đặt lại thống kê",
 
   signIn: "Đăng nhập",

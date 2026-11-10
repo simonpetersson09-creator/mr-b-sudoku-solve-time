@@ -34,6 +34,7 @@ export const hi: Record<TranslationKey, string> = {
 
   statsTitle: "आंकड़े",
   statWins: "जीत",
+  statPerfect: "त्रुटिरहित",
   resetStats: "आंकड़े रीसेट करें",
 
   signIn: "लॉग इन",

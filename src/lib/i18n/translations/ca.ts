@@ -25,6 +25,7 @@ export const ca: Record<TranslationKey, string> = {
   languageLabel: "Llengua",
   statsTitle: "Estadístiques",
   statWins: "Victòries",
+  statPerfect: "Impecable",
   resetStats: "Restableix les estadístiques",
   signIn: "Inicia la sessió",
   playerName: "Nom de jugador",

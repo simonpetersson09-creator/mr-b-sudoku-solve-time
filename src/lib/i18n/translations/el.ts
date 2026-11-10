@@ -25,6 +25,7 @@ export const el: Record<TranslationKey, string> = {
   languageLabel: "Γλώσσα",
   statsTitle: "Στατιστικά",
   statWins: "Νίκες",
+  statPerfect: "Άψογα",
   resetStats: "Μηδενισμός στατιστικών",
   signIn: "Σύνδεση",
   playerName: "Όνομα παίκτη",

@@ -52,6 +52,14 @@ describe("statistics per level", () => {
     expect(s.easy.wins).toBe(2);
     expect(s.easy.bestMs).toBe(90_000);
   });
+  it("perfect counts solved games with no hint and no mistake", () => {
+    let s = addResult(emptyStats(), solved(31));
+    s = addResult(s, { ...solved(32), hints: 1 });
+    s = addResult(s, { ...solved(33), mistakes: 1 });
+    expect(s.easy.played).toBe(3);
+    expect(s.easy.wins).toBe(2);
+    expect(s.easy.perfect).toBe(1);
+  });
   it("the same game is recorded once", () => {
     const g = solved(8);
     recordFinish(g); recordFinish(g);

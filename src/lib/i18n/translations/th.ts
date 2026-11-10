@@ -34,6 +34,7 @@ export const th: Record<TranslationKey, string> = {
 
   statsTitle: "สถิติ",
   statWins: "ชนะ",
+  statPerfect: "ไร้ข้อผิดพลาด",
   resetStats: "รีเซ็ตสถิติ",
 
   signIn: "เข้าสู่ระบบ",

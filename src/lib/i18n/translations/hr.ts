@@ -25,6 +25,7 @@ export const hr: Record<TranslationKey, string> = {
   languageLabel: "Jezik",
   statsTitle: "Statistika",
   statWins: "Pobjede",
+  statPerfect: "Bez grešaka",
   resetStats: "Poništi statistiku",
   signIn: "Prijavi se",
   playerName: "Ime igrača",

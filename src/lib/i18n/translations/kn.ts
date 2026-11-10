@@ -34,6 +34,7 @@ export const kn: Record<TranslationKey, string> = {
 
   statsTitle: "ಅಂಕಿಅಂಶಗಳು",
   statWins: "ಗೆಲುವುಗಳು",
+  statPerfect: "ದೋಷರಹಿತ",
   resetStats: "ಅಂಕಿಅಂಶಗಳನ್ನು ಮರುಹೊಂದಿಸಿ",
 
   signIn: "ಲಾಗ್ ಇನ್",

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ChevronDown, Grid3x3, Trophy } from "lucide-react";
+import { ChevronDown, Grid3x3, ShieldCheck } from "lucide-react";
 import { LEVELS } from "@/lib/sudoku/engine";
 import { LEVEL_KEY, formatTime } from "@/lib/sudoku/format";
 import { emptyStats, loadStats, type Stats } from "@/lib/player/storage";
@@ -18,7 +18,7 @@ export function HomeStats() {
   useEffect(() => setS(loadStats()), []);
 
   const played = LEVELS.reduce((n, l) => n + s[l].played, 0);
-  const wins = LEVELS.reduce((n, l) => n + s[l].wins, 0);
+  const perfect = LEVELS.reduce((n, l) => n + s[l].perfect, 0);
   const card = "flex min-h-[63px] flex-col items-center justify-center gap-1 py-2 sm:py-2.5 px-1.5 rounded-2xl bg-secondary/60 border border-border/50";
   const numLabel = "text-[8px] font-semibold uppercase tracking-wider text-muted-foreground";
   const numValue = "font-display text-sm font-bold leading-none tabular-nums";
@@ -40,7 +40,7 @@ export function HomeStats() {
       <div className="grid grid-cols-2 gap-2">
         {[
           { label: t("statGamesShort"), value: String(played), icon: Grid3x3 },
-          { label: t("statWins"), value: String(wins), icon: Trophy },
+          { label: t("statPerfect"), value: String(perfect), icon: ShieldCheck },
         ].map((stat) => (
           <div key={stat.label} className={card}>
             <stat.icon className="h-3 w-3 text-primary/70" />

@@ -34,6 +34,7 @@ export const ja: Record<TranslationKey, string> = {
 
   statsTitle: "統計",
   statWins: "勝利数",
+  statPerfect: "完全",
   resetStats: "統計をリセット",
 
   signIn: "ログイン",

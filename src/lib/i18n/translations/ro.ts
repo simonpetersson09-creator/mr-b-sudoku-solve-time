@@ -34,6 +34,7 @@ export const ro: Record<TranslationKey, string> = {
 
   statsTitle: "Statistici",
   statWins: "Victorii",
+  statPerfect: "Fără greșeli",
   resetStats: "Resetează statisticile",
 
   signIn: "Conectează-te",

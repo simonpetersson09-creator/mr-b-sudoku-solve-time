@@ -34,6 +34,7 @@ export const gu: Record<TranslationKey, string> = {
 
   statsTitle: "આંકડા",
   statWins: "જીત",
+  statPerfect: "નિષ્કલંક",
   resetStats: "આંકડા રીસેટ કરો",
 
   signIn: "લોગ ઇન",

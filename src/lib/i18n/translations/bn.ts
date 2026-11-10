@@ -34,6 +34,7 @@ export const bn: Record<TranslationKey, string> = {
 
   statsTitle: "পরিসংখ্যান",
   statWins: "জয়",
+  statPerfect: "নির্ভুল",
   resetStats: "পরিসংখ্যান রিসেট",
 
   signIn: "লগ ইন",

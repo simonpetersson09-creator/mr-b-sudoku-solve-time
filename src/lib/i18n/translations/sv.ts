@@ -39,6 +39,7 @@ export const sv = {
   // Statistik
   statsTitle: "Statistik",
   statWins: "Vinster",
+  statPerfect: "Felfritt",
   resetStats: "Nollställ statistik",
 
   // Inloggning

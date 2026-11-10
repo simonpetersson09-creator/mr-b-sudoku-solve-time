@@ -34,6 +34,7 @@ export const pa: Record<TranslationKey, string> = {
 
   statsTitle: "ਅੰਕੜੇ",
   statWins: "ਜਿੱਤਾਂ",
+  statPerfect: "ਗਲਤੀ ਰਹਿਤ",
   resetStats: "ਅੰਕੜੇ ਰੀਸੈਟ ਕਰੋ",
 
   signIn: "ਲੌਗ ਇਨ",

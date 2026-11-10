@@ -34,6 +34,7 @@ export const ru: Record<TranslationKey, string> = {
 
   statsTitle: "Статистика",
   statWins: "Победы",
+  statPerfect: "Без ошибок",
   resetStats: "Сбросить статистику",
 
   signIn: "Войти",

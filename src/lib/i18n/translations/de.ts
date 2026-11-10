@@ -34,6 +34,7 @@ export const de: Record<TranslationKey, string> = {
 
   statsTitle: "Statistik",
   statWins: "Siege",
+  statPerfect: "Fehlerfrei",
   resetStats: "Statistik zurücksetzen",
 
   signIn: "Anmelden",

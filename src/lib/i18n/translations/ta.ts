@@ -34,6 +34,7 @@ export const ta: Record<TranslationKey, string> = {
 
   statsTitle: "புள்ளிவிவரம்",
   statWins: "வெற்றிகள்",
+  statPerfect: "பிழையிலா",
   resetStats: "புள்ளிவிவரத்தை மீட்டமை",
 
   signIn: "உள்நுழை",

@@ -25,6 +25,7 @@ export const hu: Record<TranslationKey, string> = {
   languageLabel: "Nyelv",
   statsTitle: "Statisztikák",
   statWins: "Győzelmek",
+  statPerfect: "Hiba nélkül",
   resetStats: "Statisztikák törlése",
   signIn: "Bejelentkezés",
   playerName: "Játékosnév",

@@ -25,6 +25,7 @@ export const fi: Record<TranslationKey, string> = {
   languageLabel: "Kieli",
   statsTitle: "Tilastot",
   statWins: "Voitot",
+  statPerfect: "Virheetön",
   resetStats: "Nollaa tilastot",
   signIn: "Kirjaudu sisään",
   playerName: "Pelaajanimi",

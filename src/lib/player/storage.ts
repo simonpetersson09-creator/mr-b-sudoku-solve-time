@@ -87,13 +87,13 @@ export const loadLevel = (): Level => {
 export const saveLevel = (l: Level) => { try { localStorage.setItem(LEVEL, l); } catch { /* noop */ } };
 
 // ---------- Statistics per level ----------
-/** played = finished games only (a solved puzzle). wins = solved without hints. */
-export interface LevelStats { played: number; wins: number; bestMs: number | null; totalMs: number }
+/** played = finished games only (a solved puzzle). wins = solved without hints. perfect = solved with no hint and no mistake. */
+export interface LevelStats { played: number; wins: number; perfect: number; bestMs: number | null; totalMs: number }
 export type Stats = Record<Level, LevelStats> & { lifetimePlayed: number; year: number };
 /** Calendar year in Swedish time; per-level stats restart when it changes. */
 export const stockholmYear = (now: Date = new Date()) =>
   Number(new Intl.DateTimeFormat("en", { timeZone: "Europe/Stockholm", year: "numeric" }).format(now));
-const emptyLevel = (): LevelStats => ({ played: 0, wins: 0, bestMs: null, totalMs: 0 });
+const emptyLevel = (): LevelStats => ({ played: 0, wins: 0, perfect: 0, bestMs: null, totalMs: 0 });
 export const emptyStats = (year: number = stockholmYear()): Stats => ({ easy: emptyLevel(), medium: emptyLevel(), hard: emptyLevel(), expert: emptyLevel(), ultra: emptyLevel(), impossible: emptyLevel(), master: emptyLevel(), lifetimePlayed: 0, year });
 
 const cleanCount = (v: unknown) => (typeof v === "number" && Number.isFinite(v) && v > 0 ? Math.floor(v) : 0);
@@ -106,7 +106,7 @@ export function cleanStats(raw: unknown, year: number = stockholmYear()): Stats 
   for (const l of LEVELS) {
     const x = (r[l] && typeof r[l] === "object" ? r[l] : {}) as Record<string, unknown>;
     const played = cleanCount(x["played"]);
-    out[l] = { played, wins: Math.min(cleanCount(x["wins"]), played), bestMs: cleanCount(x["bestMs"]) || null, totalMs: cleanCount(x["totalMs"]) };
+    out[l] = { played, wins: Math.min(cleanCount(x["wins"]), played), perfect: Math.min(cleanCount(x["perfect"]), played), bestMs: cleanCount(x["bestMs"]) || null, totalMs: cleanCount(x["totalMs"]) };
   }
   out.lifetimePlayed = Math.max(cleanCount(r["lifetimePlayed"]), LEVELS.reduce((s, l) => s + out[l].played, 0));
   return out;
@@ -117,12 +117,14 @@ export function addResult(st: Stats, g: GameState): Stats {
   if (!g.finished) return st;
   const l = st[g.level];
   const win = g.hints === 0;
+  const perfect = g.hints === 0 && g.mistakes === 0;
   return {
     ...st,
     lifetimePlayed: st.lifetimePlayed + 1,
     [g.level]: {
       played: l.played + 1,
       wins: l.wins + (win ? 1 : 0),
+      perfect: l.perfect + (perfect ? 1 : 0),
       bestMs: win ? (l.bestMs == null ? g.elapsedMs : Math.min(l.bestMs, g.elapsedMs)) : l.bestMs,
       totalMs: l.totalMs + g.elapsedMs,
     },
@@ -140,7 +142,7 @@ export function cleanAllTime(raw: unknown): AllTimeStats {
   for (const l of LEVELS) {
     const x = (r[l] && typeof r[l] === "object" ? r[l] : {}) as Record<string, unknown>;
     const played = cleanCount(x["played"]);
-    out[l] = { played, wins: Math.min(cleanCount(x["wins"]), played), bestMs: cleanCount(x["bestMs"]) || null, totalMs: cleanCount(x["totalMs"]) };
+    out[l] = { played, wins: Math.min(cleanCount(x["wins"]), played), perfect: Math.min(cleanCount(x["perfect"]), played), bestMs: cleanCount(x["bestMs"]) || null, totalMs: cleanCount(x["totalMs"]) };
   }
   return out;
 }
@@ -150,11 +152,13 @@ export function addAllTimeResult(at: AllTimeStats, g: GameState): AllTimeStats {
   if (!g.finished) return at;
   const l = at[g.level];
   const win = g.hints === 0;
+  const perfect = g.hints === 0 && g.mistakes === 0;
   return {
     ...at,
     [g.level]: {
       played: l.played + 1,
       wins: l.wins + (win ? 1 : 0),
+      perfect: l.perfect + (perfect ? 1 : 0),
       bestMs: win ? (l.bestMs == null ? g.elapsedMs : Math.min(l.bestMs, g.elapsedMs)) : l.bestMs,
       totalMs: l.totalMs + g.elapsedMs,
     },
