@@ -149,8 +149,8 @@ function PlayPage() {
     setHintBusy(false);
     const r = markHint(state);
     if (r.cell == null) return;
-    setSelected(info.cell);
     input(info.digit, info.cell, true, r.state);
+    setSelected(null);
     setHintInfo({ info, step: 1 });
     window.setTimeout(() => setHintInfo((h) => (h?.info === info ? null : h)), 3500);
   };
