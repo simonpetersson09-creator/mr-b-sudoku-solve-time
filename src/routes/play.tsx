@@ -56,6 +56,18 @@ function PlayPage() {
   const settings = useMemo(() => loadSettings(), []);
   const [record, setRecord] = useState<number | null>(null);
   const stats = useMemo(() => loadStats(), []);
+  // Preview helper: open /play?best=1 to see the row with a sample time (?best=0 clears it).
+  // A real record from a solved game always wins over the sample.
+  const [previewBest, setPreviewBest] = useState<number | null>(null);
+  useEffect(() => {
+    try {
+      const p = new URLSearchParams(window.location.search).get("best");
+      if (p === "1") sessionStorage.setItem("mrb-sudoku:v1:best-preview", "1");
+      if (p === "0") sessionStorage.removeItem("mrb-sudoku:v1:best-preview");
+      if (sessionStorage.getItem("mrb-sudoku:v1:best-preview") === "1") setPreviewBest(252000);
+    } catch { /* storage blocked: just no sample */ }
+  }, []);
+  const bestMs = stats[state?.level ?? "easy"].bestMs ?? previewBest;
   const finishedDone = useRef(false);
 
   useEffect(() => {
@@ -219,7 +231,7 @@ function PlayPage() {
 
         <div className="flex flex-1 flex-col justify-end gap-0">
         <p className="mb-0.5 text-center text-[11px] leading-none text-muted-foreground">
-          {t("statBestTime")}: <span className="font-display font-bold tabular-nums text-gold">{stats[state.level].bestMs != null ? formatTime(stats[state.level].bestMs!) : "–"}</span>
+          {t("statBestTime")}: <span className="font-display font-bold tabular-nums text-gold">{bestMs != null ? formatTime(bestMs) : "–"}</span>
         </p>
         <div className="sdk-board-head">
           <span className="sdk-level-pill" aria-label={`${t("level")}: ${t(LEVEL_KEY[state.level])}`}>{t(LEVEL_KEY[state.level])}</span>
