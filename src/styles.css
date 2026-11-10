@@ -60,6 +60,7 @@
   --color-ludo-yellow: var(--ludo-yellow);
   --color-ludo-blue: var(--ludo-blue);
   --color-board: var(--board);
+  --color-ink: var(--game-ink);
   --color-board-line: var(--board-line);
 }
 
@@ -99,6 +100,9 @@
   --ludo-blue: hsl(210 70% 52%);
   --board: hsl(40 30% 96%);
   --board-line: hsl(195 12% 72%);
+  /* Svart nivåkort för Expert. */
+  --game-ink: hsl(195 32% 5%);
+  --game-ink-light: hsl(195 26% 11%);
   --admin-chart-devices: var(--primary);
   --admin-chart-ios: var(--game-info-light);
   --admin-chart-android: var(--game-success-light);
@@ -235,6 +239,45 @@
 .home-action-success { background: linear-gradient(to right, var(--game-success-light), var(--game-success)); box-shadow: 0 4px 14px color-mix(in oklab, var(--game-success) 35%, transparent); }
 .home-action-ghost { background: var(--secondary); color: var(--secondary-foreground); box-shadow: none; border: 1px solid var(--border); }
 .home-action-danger { background: color-mix(in oklab, var(--destructive) 85%, var(--background)); color: var(--destructive-foreground); box-shadow: none; }
+/* Nivåval i centrerad dialog: färg + stigande mätare visar hur svårt nivån är. */
+.lvl-btn {
+  position: relative; display: flex; align-items: center; gap: 12px; width: 100%;
+  min-height: 56px; padding: 0 14px; border-radius: 14px; overflow: hidden; text-align: left;
+  border: 1px solid color-mix(in oklab, var(--lvl-line) 55%, transparent);
+  background: var(--lvl-bg); color: var(--lvl-fg);
+  box-shadow: 0 4px 16px color-mix(in oklab, var(--lvl-glow) 30%, transparent);
+  transition: transform .1s ease, filter .2s ease;
+}
+.lvl-btn:active { transform: scale(.98); filter: brightness(.93); }
+.lvl-btn::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--lvl-bar); }
+.lvl-name { flex: 1; min-width: 0; font-size: 15px; font-weight: 700; line-height: 1.1; }
+.lvl-meter { display: flex; align-items: flex-end; gap: 3px; flex-shrink: 0; }
+.lvl-bar { width: 7px; border-radius: 2px; background: color-mix(in oklab, var(--lvl-fg) 20%, transparent); }
+.lvl-bar:nth-child(1) { height: 9px; }
+.lvl-bar:nth-child(2) { height: 12px; }
+.lvl-bar:nth-child(3) { height: 15px; }
+.lvl-bar:nth-child(4) { height: 18px; }
+.lvl-bar-on { background: var(--lvl-meter); }
+.lvl-easy {
+  --lvl-line: var(--game-success); --lvl-bar: var(--game-success-light); --lvl-meter: var(--game-success-light);
+  --lvl-fg: var(--foreground); --lvl-glow: var(--game-success);
+  --lvl-bg: linear-gradient(to right, color-mix(in oklab, var(--game-success) 34%, var(--card)), color-mix(in oklab, var(--game-success) 14%, var(--card)));
+}
+.lvl-medium {
+  --lvl-line: var(--game-info); --lvl-bar: var(--game-info-light); --lvl-meter: var(--game-info-light);
+  --lvl-fg: var(--foreground); --lvl-glow: var(--game-info);
+  --lvl-bg: linear-gradient(to right, color-mix(in oklab, var(--game-info) 34%, var(--card)), color-mix(in oklab, var(--game-info) 14%, var(--card)));
+}
+.lvl-hard {
+  --lvl-line: var(--game-gold); --lvl-bar: var(--game-gold-light); --lvl-meter: var(--game-gold-light);
+  --lvl-fg: var(--foreground); --lvl-glow: var(--game-gold);
+  --lvl-bg: linear-gradient(to right, color-mix(in oklab, var(--game-gold) 34%, var(--card)), color-mix(in oklab, var(--game-gold) 14%, var(--card)));
+}
+.lvl-expert {
+  --lvl-line: var(--game-gold); --lvl-bar: var(--game-gold); --lvl-meter: var(--game-gold);
+  --lvl-fg: var(--foreground); --lvl-glow: var(--game-ink);
+  --lvl-bg: linear-gradient(to right, var(--game-ink), var(--game-ink-light));
+}
 /* Pågående match-kort – portat från Yatzy: grön när det är din tur, guld när andra har turen. */
 .home-match-card { width: 100%; height: 44px; min-width: 0; display: flex; align-items: center; gap: 8px; padding: 0 12px; border-radius: 10px; overflow: hidden; text-align: left; transition: box-shadow .2s, filter .2s, transform .1s; }
 .home-match-card:active { transform: scale(.97); }

@@ -1,12 +1,13 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { BarChart3, BookOpen, Globe, Play, Settings } from "lucide-react";
-import { LEVELS, newGame, type Level } from "@/lib/sudoku/engine";
+import { newGame, type Level } from "@/lib/sudoku/engine";
 import { LEVEL_KEY, formatTime } from "@/lib/sudoku/format";
 import { listGames, saveLevel, selectGame, startNewGame } from "@/lib/player/storage";
 import { randomId } from "@/lib/random-id";
 import { LANGUAGES, setLanguage, useTranslation } from "@/lib/i18n";
 import { HomeStats } from "@/components/app/HomeStats";
+import { LevelPicker } from "@/components/app/LevelPicker";
 import mrBLogo from "@/assets/mr-b-sudoku-logo.png";
 import { startHomeAds } from "@/lib/ads/home-ads";
 import { Capacitor } from "@capacitor/core";
@@ -122,19 +123,7 @@ function HomePage() {
         {firstHint && <div className="home-quick-hint" role="note">{t("firstPlayHint")}</div>}
         <button className={`home-action w-full font-display${firstHint ? " home-quick-glow" : ""}`} aria-expanded={showQuick} onClick={() => { doneFirstHint(); setShowQuick((v) => !v); }}><span aria-hidden="true" className="home-action-icon">🧩</span><span>{t("newGame")}</span></button>
         </div>
-        {showQuick && (
-          <div className="space-y-2 overflow-hidden rounded-xl border border-primary/30 bg-card/80 p-2.5">
-            <p className="mb-1 text-[11px] font-semibold text-foreground">{t("chooseLevel")}</p>
-            <div className="grid grid-cols-2 gap-1.5">
-              {LEVELS.map((l) => (
-                <button key={l} type="button" onClick={() => startLevel(l)}
-                  className="min-h-11 rounded-lg border border-gold/40 bg-gold/10 px-1 py-1.5 text-center font-display text-[12px] font-bold leading-tight text-foreground transition-all active:scale-95 active:bg-gold/25">
-                  {t(LEVEL_KEY[l])}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
+        {showQuick && <LevelPicker onSelect={startLevel} onClose={() => setShowQuick(false)} />}
         <Link to="/stats" className="home-action font-display"><BarChart3 size={16} /><span>{t("stats")}</span></Link>
       </div>
       <div className="home-round-row relative z-20">
