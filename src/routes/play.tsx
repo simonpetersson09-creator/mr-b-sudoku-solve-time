@@ -80,12 +80,9 @@ function PlayPage() {
   const input = (d: number) => {
     if (selected == null || !state) return;
     if (notesMode) { act((s) => toggleNote(s, selected, d)); void playLightHaptic(); return; }
+    if (paused) return;
     const before = state;
-    let next = setValue(before, selected, d);
-    if (!settings.autoRemoveNotes && next !== before) {
-      // Keep peers' notes when the player switched that help off.
-      next = { ...next, notes: next.notes.map((m, i) => (i === selected ? 0 : before.notes[i])) };
-    }
+    const next = setValue(before, selected, d, settings.autoRemoveNotes);
     setState(next);
     if (next !== before) void (next.values[selected] !== before.solution[selected] ? playDiceLandHaptic() : playLightHaptic());
   };

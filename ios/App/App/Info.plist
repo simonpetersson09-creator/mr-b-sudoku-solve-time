@@ -7,7 +7,7 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Your photo library is used only when you choose a profile picture.</string>
 	<key>NSUserTrackingUsageDescription</key>
-	<string>Allowing this lets Mr. B Ludo show ads that are more relevant to you. The game works the same either way.</string>
+	<string>Allowing this lets Mr.B. Sokudo show ads that are more relevant to you. The game works the same either way.</string>
 	<key>SKAdNetworkItems</key>
   <array>
 		<dict><key>SKAdNetworkIdentifier</key><string>cstr6suwn9.skadnetwork</string></dict>
@@ -211,8 +211,8 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
-			<key>CFBundleURLName</key><string>com.simonpetersson.mrbludo</string>
-			<key>CFBundleURLSchemes</key><array><string>mrbludo</string></array>
+			<key>CFBundleURLName</key><string>com.pending.mrbsokudo</string>
+			<key>CFBundleURLSchemes</key><array><string>mrbsokudo</string></array>
 		</dict>
 	</array>
 	<key>NSCameraUsageDescription</key>
@@ -233,7 +233,7 @@
 		<string>mr</string><string>or</string><string>pa</string><string>ta</string><string>te</string>
 	</array>
 	<key>CFBundleDisplayName</key>
-        <string>Mr. B Ludo</string>
+        <string>Mr.B. Sokudo</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -293,6 +293,6 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
   <key>GADApplicationIdentifier</key>
-  <string>ca-app-pub-7448540924654868~5267706252</string>
+  <string>ca-app-pub-3940256099942544~1458002511</string>
 </dict>
 </plist>

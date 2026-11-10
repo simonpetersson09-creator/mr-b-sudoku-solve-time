@@ -1,4 +1,4 @@
-package com.simonpetersson.mrbludo;
+package com.pending.mrbsokudo;
 
 import com.getcapacitor.BridgeActivity;
 

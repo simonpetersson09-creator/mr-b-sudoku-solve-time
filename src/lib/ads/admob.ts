@@ -38,16 +38,16 @@ const GOOGLE_TEST_IDS: Record<'ios' | 'android', Omit<PlatformAdIds, 'appId'>> =
 };
 
 export const ADMOB_IDS: Record<'ios' | 'android', PlatformAdIds> = {
-  // Mr. B Ludo's own IDs. `optional` is the post-match interstitial unit.
+  // Until Mr.B. Sokudo has its own AdMob account, both platforms use Google's sample IDs only.
   ios: {
-    appId: 'ca-app-pub-7448540924654868~5267706252',
-    appOpen: 'ca-app-pub-7448540924654868/8436795076',
-    optional: 'ca-app-pub-7448540924654868/7239438484',
+    appId: 'ca-app-pub-3940256099942544~1458002511',
+    appOpen: GOOGLE_TEST_IDS.ios.appOpen,
+    optional: GOOGLE_TEST_IDS.ios.optional,
   },
   android: {
-    appId: 'ca-app-pub-7448540924654868~9915034875',
-    appOpen: 'ca-app-pub-7448540924654868/6723116515',
-    optional: 'ca-app-pub-7448540924654868/8690804307',
+    appId: 'ca-app-pub-3940256099942544~3347511713',
+    appOpen: GOOGLE_TEST_IDS.android.appOpen,
+    optional: GOOGLE_TEST_IDS.android.optional,
   },
 };
 

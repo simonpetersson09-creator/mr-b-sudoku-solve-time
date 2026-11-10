@@ -18,13 +18,13 @@ const PLIST_PATH = resolve(process.cwd(), 'ios/App/App/Info.plist');
 
 /** key → string value that must be present in Info.plist. */
 const REQUIRED_STRING_KEYS = {
-  GADApplicationIdentifier: 'ca-app-pub-7448540924654868~5267706252',
+  GADApplicationIdentifier: 'ca-app-pub-3940256099942544~1458002511',
   NSCameraUsageDescription:
     "The camera is used only to scan a friend's match QR code.",
   NSPhotoLibraryUsageDescription:
     'Your photo library is used only when you choose a profile picture.',
   NSUserTrackingUsageDescription:
-    'Allowing this lets Mr. B Ludo show ads that are more relevant to you. The game works the same either way.',
+    'Allowing this lets Mr.B. Sokudo show ads that are more relevant to you. The game works the same either way.',
 };
 
 /**

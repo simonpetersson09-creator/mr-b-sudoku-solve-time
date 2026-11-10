@@ -4,18 +4,21 @@ import { LANGUAGES, mapTagToLanguage } from "../i18n/language";
 
 const read = (path: string) => readFileSync(path, "utf8");
 describe("approved native configuration", () => {
-  it("uses com.simonpetersson.mrbludo consistently on both platforms", () => {
-    expect(read("capacitor.config.ts")).toContain('appId: "com.simonpetersson.mrbludo"');
-    expect(read("android/app/build.gradle")).toContain('applicationId "com.simonpetersson.mrbludo"');
-    expect(read("ios/App/App.xcodeproj/project.pbxproj").match(/PRODUCT_BUNDLE_IDENTIFIER = com\.simonpetersson\.mrbludo;/g)).toHaveLength(2);
+  it("uses com.pending.mrbsokudo consistently on both platforms", () => {
+    expect(read("capacitor.config.ts")).toContain('appId: "com.pending.mrbsokudo"');
+    expect(read("android/app/build.gradle")).toContain('applicationId "com.pending.mrbsokudo"');
+    expect(read("ios/App/App.xcodeproj/project.pbxproj").match(/PRODUCT_BUNDLE_IDENTIFIER = com\.pending\.mrbsokudo;/g)).toHaveLength(2);
   });
-  it("uses approved public Apple team F43HQMHCAT for Debug and Release", () => {
-    expect(read("ios/App/App.xcodeproj/project.pbxproj").match(/DEVELOPMENT_TEAM = F43HQMHCAT;/g)).toHaveLength(2);
+  it("leaves the Apple team empty until Mr.B. Sokudo's own team is approved", () => {
+    const project = read("ios/App/App.xcodeproj/project.pbxproj");
+    expect(project.match(/DEVELOPMENT_TEAM = "";/g)).toHaveLength(2);
+    expect(project).not.toContain("F43HQMHCAT");
   });
-  it("connects the existing QR scanner to iOS and Android", () => {
-    expect(read("ios/App/CapApp-SPM/Package.swift")).toContain("node_modules/@capacitor/barcode-scanner");
-    expect(read("android/capacitor.settings.gradle")).toContain("node_modules/@capacitor/barcode-scanner/android");
-    expect(read("android/app/capacitor.build.gradle")).toContain("implementation project(':capacitor-barcode-scanner')");
+  it("ships no QR scanner or push plugin", () => {
+    for (const f of ["package.json", "ios/App/CapApp-SPM/Package.swift", "android/capacitor.settings.gradle", "android/app/capacitor.build.gradle"]) {
+      expect(read(f)).not.toContain("barcode-scanner");
+      expect(read(f)).not.toContain("push-notifications");
+    }
   });
   it("declares all 40 actual UI languages on both platforms", () => {
     const plist = read("ios/App/App/Info.plist");
@@ -28,13 +31,8 @@ describe("approved native configuration", () => {
       expect(tags.map(mapTagToLanguage).sort()).toEqual(expected);
     }
   });
-  it("uses Xcode-build (development) and TestFlight/App Store (production) APNs environments without background modes", () => {
-    const project = read("ios/App/App.xcodeproj/project.pbxproj");
-    expect(project.match(/CODE_SIGN_ENTITLEMENTS = App\/App.entitlements;/g)).toHaveLength(2);
-    expect(project).toContain("MRB_APNS_ENVIRONMENT = development;");
-    expect(project).toContain("MRB_APNS_ENVIRONMENT = production;");
-    expect(read("ios/App/App/App.entitlements")).toContain("$(MRB_APNS_ENVIRONMENT)");
+  it("has no push entitlement or background modes", () => {
+    expect(read("ios/App/App/App.entitlements")).not.toContain("aps-environment");
     expect(read("ios/App/App/Info.plist")).not.toContain("UIBackgroundModes");
-    expect(read("src/lib/native/services.ts")).toContain("registerOnLaunch: false");
   });
 });

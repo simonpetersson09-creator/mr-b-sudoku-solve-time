@@ -164,7 +164,8 @@ export function generate(level: Level, seed: number): Puzzle {
       else givens--;
     }
     const candidate = { level, seed, puzzle, solution };
-    const hardEnough = level === "hard" || level === "expert" ? !solvableBySingles(puzzle) || level === "hard" : true;
+    // Hard and Expert must need more than singles; Easy and Medium are guaranteed singles-only above.
+    const hardEnough = singlesOnly || !solvableBySingles(puzzle);
     if (givens <= target && hardEnough) return candidate;
     if (!best || givens < best.puzzle.filter(Boolean).length) best = candidate;
   }
@@ -213,11 +214,11 @@ function apply(s: GameState, changes: Change[], record = true): GameState {
   return { ...next, finished: isSolved(next) };
 }
 
-/** Places a digit. Clears the cell's notes and that digit's notes in peers (undone together). */
-export function setValue(s: GameState, i: number, d: number): GameState {
+/** Places a digit and clears the cell's notes; with clearPeerNotes, also that digit's notes in peers (undone together). */
+export function setValue(s: GameState, i: number, d: number, clearPeerNotes = true): GameState {
   if (s.finished || isGiven(s, i) || d < 1 || d > 9 || s.values[i] === d) return s;
   const changes: Change[] = [{ i, value: d, notes: 0 }];
-  for (const p of PEERS[i]) if (s.notes[p] & bit(d)) changes.push({ i: p, value: s.values[p], notes: s.notes[p] & ~bit(d) });
+  if (clearPeerNotes) for (const p of PEERS[i]) if (s.notes[p] & bit(d)) changes.push({ i: p, value: s.values[p], notes: s.notes[p] & ~bit(d) });
   const next = apply(s, changes);
   return d !== s.solution[i] ? { ...next, mistakes: s.mistakes + 1 } : next;
 }

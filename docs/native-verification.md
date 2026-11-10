@@ -1,4 +1,4 @@
-# Mr. B Ludo — native readiness
+# Mr.B. Sokudo — native readiness
 
 The current configuration audit is recorded in [native-configuration-audit.md](native-configuration-audit.md). The dated test results below are historical, not a claim that compilation or physical-device verification has since been completed.
 
@@ -8,7 +8,7 @@ The current configuration audit is recorded in [native-configuration-audit.md](n
 - Profile/friend-code/statistics display cache and last-online-match shortcut, all Ludo-namespaced; cached data is never authority for roles or leaderboard writes.
 - Automatic anonymous Cloud identity at first launch, existing identity reuse, deduplicated initialization and authenticated server actions. Ordinary players have no registration, Google, email/password or sign-out controls.
 - Separate `/admin-login` password form; admin data still requires a server-controlled role. No administrator was created or role assigned.
-- Separate iOS and Android Capacitor 8 projects, now using `com.simonpetersson.mrbludo`. iOS signing is prepared for approved team `F43HQMHCAT`, with no credentials in source. No Yatzy application identifier, backend, key, signing certificate or production service file was copied. Identifier ownership/reservation in the stores is not verified.
+- Separate iOS and Android Capacitor 8 projects, now using `com.pending.mrbsokudo`. iOS signing is prepared for approved team `F43HQMHCAT`, with no credentials in source. No Yatzy application identifier, backend, key, signing certificate or production service file was copied. Identifier ownership/reservation in the stores is not verified.
 - Native-only session client backed by iOS Keychain / Android Keystore plugin, with a Ludo-specific key; no plaintext fallback on storage failure. Web retains the managed preview client. Server token attachment uses the same client as the UI.
 - Native foreground/background and connectivity listeners, auth refresh pause/resume, fresh match reads on return, Android back handling, and 3D canvas wake/context-loss recovery. Home/back never forfeits a match.
 - Safe-area insets on all four edges and compact landscape layout. Android hardware acceleration explicitly enabled, cleartext networking disabled and app backups disabled. All 40 language dictionaries retained.
@@ -38,7 +38,7 @@ Ludo now follows the same local-bundle/build-then-sync principle and visualViewp
 - Real authenticated anonymous native API profile/stats read passed; missing bearer returns 401. Capacitor preflight receives allowed CORS headers; unknown origins receive no allowed-origin header in the dev server. A full packaged-native online match against a published origin remains unverified.
 
 ## Website and build blockers
-The prior URL check showed only Ludo's preview URL; no service deployment/address has been supplied or configured since. Nothing was published. Local offline installation needs no published website. `VITE_MRB_LUDO_ONLINE_ORIGIN` is separately configured, not derived from the WebView or website address, but `/api/public/native` still needs a deployed Ludo Start server. Independent configuration is not an independently deployed backend host. Never use the Cloud database host, Yatzy host or editor preview as that route's release endpoint.
+The prior URL check showed only Ludo's preview URL; no service deployment/address has been supplied or configured since. Nothing was published. Local offline installation needs no published website. `VITE_MRB_SOKUDO_ORIGIN` is separately configured, not derived from the WebView or website address, but `/api/public/native` still needs a deployed Ludo Start server. Independent configuration is not an independently deployed backend host. Never use the Cloud database host, Yatzy host or editor preview as that route's release endpoint.
 
 Actual build attempts: Android stopped because Java/JAVA_HOME is missing (Android SDK is also absent); iOS stopped because xcodebuild is unavailable. Static package build, both Capacitor sync operations and native package verification passed. No APK, AAB or IPA was produced.
 
@@ -56,7 +56,7 @@ bun run native:sync:ios
 bun run native:verify
 ```
 
-For approved online service configuration, set `VITE_MRB_LUDO_ONLINE_ORIGIN` to the separately approved reachable Ludo service origin, then repeat `native:web` and sync. Leaving it unset creates an offline-capable package without an online endpoint; no fabricated URL is supplied.
+For approved online service configuration, set `VITE_MRB_SOKUDO_ORIGIN` to the separately approved reachable Ludo service origin, then repeat `native:web` and sync. Leaving it unset creates an offline-capable package without an online endpoint; no fabricated URL is supplied.
 
 Android with JDK 21+ and SDK/API 36 installed:
 ```sh

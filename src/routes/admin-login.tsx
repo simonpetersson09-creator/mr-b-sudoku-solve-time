@@ -8,10 +8,10 @@ import { useQueryClient } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/admin-login")({
   head: () => ({ meta: [
-    { title: "Administratörsåtkomst – Mr. B Ludo" },
-    { name: "description", content: "Skyddad administratörsåtkomst till Mr. B Ludo." },
-    { property: "og:title", content: "Administratörsåtkomst – Mr. B Ludo" },
-    { property: "og:description", content: "Skyddad administratörsåtkomst till Mr. B Ludo." },
+    { title: "Administratörsåtkomst – Mr.B. Sokudo" },
+    { name: "description", content: "Skyddad administratörsåtkomst till Mr.B. Sokudo." },
+    { property: "og:title", content: "Administratörsåtkomst – Mr.B. Sokudo" },
+    { property: "og:description", content: "Skyddad administratörsåtkomst till Mr.B. Sokudo." },
     { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" },
     { name: "robots", content: "noindex, nofollow" },
   ] }), component: AdminLogin,

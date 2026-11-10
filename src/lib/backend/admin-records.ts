@@ -35,7 +35,7 @@ export function adminOnlineOutcomes(row: AdminDayRow): number {
 
 export function adminForfeitShare(row: AdminDayRow): number | null {
   const outcomes = adminOnlineOutcomes(row);
-  return outcomes ? row.forfeits / outcomes * 100 : null;
+  return outcomes && row.forfeits != null ? row.forfeits / outcomes * 100 : null;
 }
 
 export function adminValueIncomplete(row: AdminDayRow, key: AdminColumnKey): boolean {

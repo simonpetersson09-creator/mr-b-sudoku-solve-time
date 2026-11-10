@@ -126,8 +126,8 @@ export const saveStats = (s: Stats) => write(STATS, s);
 /** Records a finished game once per game id. */
 export function recordFinish(g: GameState) {
   if (!g.finished) return;
-  const done = read<string[]>(COUNTED, []);
-  const list = Array.isArray(done) ? done : [];
+  let list: string[] = [];
+  try { const v: unknown = JSON.parse(localStorage.getItem(COUNTED) ?? "[]"); if (Array.isArray(v)) list = v.filter((x) => typeof x === "string"); } catch { /* damaged list starts over */ }
   if (list.includes(g.id)) return;
   saveStats(addResult(loadStats(), g));
   write(COUNTED, [...list, g.id].slice(-200));

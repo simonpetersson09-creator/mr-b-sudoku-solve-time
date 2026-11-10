@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { LEVELS, GIVENS, countSolutions, generate, newGame, setValue, toggleNote, erase, undo, hint, isWrong, hasNote, isConsistent, solve, PEERS } from "./engine";
+import { solvableBySingles, LEVELS, GIVENS, countSolutions, generate, newGame, setValue, toggleNote, erase, undo, hint, isWrong, hasNote, isConsistent, solve, PEERS } from "./engine";
 
 describe("puzzle generation", () => {
   for (const level of LEVELS) {
@@ -15,6 +15,14 @@ describe("puzzle generation", () => {
       }
     }, 30000);
   }
+  it("easy and medium need only singles; hard and expert need more", () => {
+    for (const seed of [11, 12]) {
+      expect(solvableBySingles(generate("easy", seed).puzzle)).toBe(true);
+      expect(solvableBySingles(generate("medium", seed).puzzle)).toBe(true);
+      expect(solvableBySingles(generate("hard", seed).puzzle)).toBe(false);
+      expect(solvableBySingles(generate("expert", seed).puzzle)).toBe(false);
+    }
+  }, 60000);
   it("same seed gives the same puzzle", () => {
     expect(generate("medium", 42).puzzle).toEqual(generate("medium", 42).puzzle);
   });
@@ -51,6 +59,11 @@ describe("play", () => {
     expect(hasNote(s.notes[peer], right)).toBe(false);
     s = undo(s);
     expect(s.values[open]).toBe(0);
+    expect(hasNote(s.notes[peer], right)).toBe(true);
+  });
+  it("keeps peers' notes when automatic note removal is off", () => {
+    const peer = PEERS[open].find((p) => g.puzzle[p] === 0)!;
+    const s = setValue(toggleNote(g, peer, right), open, right, false);
     expect(hasNote(s.notes[peer], right)).toBe(true);
   });
   it("erase clears the cell and undo restores it", () => {

@@ -80,7 +80,7 @@ describe("tryStaleChunkReload", () => {
 describe("the give-up path", () => {
   it("sends a used-up reload to the home screen for a brand new copy of the page", () => {
     expect(staleGiveUpHref("http://localhost:8080/online/abc?x=1#/top", 123)).toBe("/?stale=1&fresh=123");
-    expect(staleGiveUpHref("https://mrbludo.lovable.app/settings", 4567)).toBe("/?stale=1&fresh=4567");
+    expect(staleGiveUpHref("https://mrbsokudo.lovable.app/settings", 4567)).toBe("/?stale=1&fresh=4567");
     expect(staleGiveUpHref("capacitor://localhost/index.html", 8)).toBe("/?stale=1&fresh=8");
   });
 

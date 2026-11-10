@@ -1,10 +1,10 @@
-# Mr. B Ludo — native configuration audit, 3 November 2026
+# Mr.B. Sokudo — native configuration audit, 3 November 2026
 
 ## Result
 Source configuration is checked and corrected, **not certified production-ready**. No APK/AAB/IPA, signed archive, current packaged-offline run or physical-device test was produced in this audit. Nothing was published; no ads, purchases, login flow, new runtime permissions or push delivery was added.
 
 ## Already correct and preserved
-- App display name Mr. B Ludo; Android/iOS version 1.0, build 1.
+- App display name Mr.B. Sokudo; Android/iOS version 1.0, build 1.
 - Local `dist-native` startup with no Capacitor remote `server.url`; bundled game architecture unchanged.
 - Android HTTPS-only/mixed-content protection, hardware acceleration and disabled app backup; iOS has no ATS insecure-load exception.
 - iPhone portrait/landscape left/right; iPad all four orientations, device family 1,2. Existing orientations are retained rather than changed without device evidence.
@@ -17,12 +17,12 @@ Source configuration is checked and corrected, **not certified production-ready*
 ## Exact changes
 | File | Change |
 | --- | --- |
-| `capacitor.config.ts` | Shared app ID changed to approved `com.simonpetersson.mrbludo`. |
+| `capacitor.config.ts` | Shared app ID changed to approved `com.pending.mrbsokudo`. |
 | `ios/App/App.xcodeproj/project.pbxproj` | Debug/Release Bundle ID, approved team `F43HQMHCAT`, linked entitlements, Push capability; development APNs for Debug, production for Release. |
 | `ios/App/App/App.entitlements` | New `aps-environment` build-setting substitution; no keys/tokens. |
 | `ios/App/App/Info.plist` | All 40 actual UI languages declared; existing English development region retained. `no` uses native tag `nb`, European Portuguese uses `pt-PT`. |
 | `android/app/build.gradle` | Namespace and application ID aligned with shared Capacitor ID. |
-| `android/app/src/main/java/com/simonpetersson/mrbludo/MainActivity.java` | Moved from old package path and changed Java package. |
+| `android/app/src/main/java/com/simonpetersson/mrbsokudo/MainActivity.java` | Moved from old package path and changed Java package. |
 | `android/app/src/main/res/values/strings.xml` | Package/custom scheme identity aligned; display name unchanged. |
 | `android/app/src/main/AndroidManifest.xml` | Linked Android 13+ language availability list; permissions unchanged. |
 | `android/app/src/main/res/xml/locales_config.xml` | New list of 40 platform locale tags. |

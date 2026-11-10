@@ -9,44 +9,22 @@
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
 
-## Mr. B Ludo architecture
-- Board-only inks use separate `--board-*` tokens from piece `--ludo-*` colors, so board refinements cannot recolor pieces; decorative board SVG layers never receive pointer events.
-- Legal destination overlays use engine `targetOf` and board `pieceCenter`, invoke the same piece action as piece taps, and animate visual waypoints without splitting authoritative moves; die tint and entry direction are presentation props only.
-- Ludo rules live in `src/lib/player/engine.ts` as pure functions (no React/DOM/network) so they can run on a server later; rendering only reads state.
-- Rule variants are `RULES` configs in the one engine, stored as optional `GameState.variant` (missing = classic) and `matches.variant`; quick play filters on it so modes never mix, keeping old saves and Classic behavior unchanged.
-- Variant geometry uses `PATHS.trackLen` and board `trackOf`/`cellSizeOf`; Fia has a separate photo-derived grid fitted to the same canvas, so rules, rendering, AI and server capture calculations share variant-specific positions without changing Classic.
-- `src/components/dice-engine/` is copied read-only-sourced from Mr. B Yatzy; keep it presentation-only and never re-link it to Yatzy resources.
-- Vite strips preview `data-tsd-source` attributes only from dice-engine modules because Three.js objects cannot accept DOM source labels during updates.
-- All browser storage keys use the `mrb-ludo:v1:` namespace to stay isolated from Yatzy.
-- `noUncheckedIndexedAccess` is off: the board/engine index fixed-size arrays heavily.
-- Online play is server-authoritative: shared `src/lib/backend/online-actions.ts` handlers apply `match-logic.ts` and optimistic version writes; authenticated Start functions and the native API call those same handlers to avoid divergent rules.
-- Dice for online matches are generated only on the server (`secureRoll`); clients never send die values.
-- Admin access is granted only by the server-secret PIN (rate-limited, constant-time) to the caller's own anonymous identity; admin UI never signs out because that would discard the player identity.
-- Match/stat/friend writes go through server functions with the admin client after auth; tables only expose member-scoped SELECT via RLS, so leaderboards can only be changed by finished online matches.
-- Clients sync via realtime plus a 5 s heartbeat that also refetches and lets the server auto-play idle turns (30 s) and forfeit dropped players (90 s).
-- i18n lives in `src/lib/i18n/`: `language.ts` (40 languages, detection, `mrb-ludo:v1:language` storage), `index.ts` (`t`/`useTranslation`, en→sv fallback, `errorMessage` for `err:*` server codes), `translations/*.ts` (sv.ts is the key source of truth; every dict must have identical keys and placeholders — enforced by `i18n.test.ts`, which also fails on unused/unknown keys).
-- Server functions throw stable `err:<code>` strings instead of user-facing text; clients translate via `errorMessage()`.
-- App-owned auth goes through `src/lib/auth/client.ts`: managed client on web, namespaced Keychain/Keystore storage on native; generated integration files remain untouched.
-- Ordinary startup deduplicates anonymous sign-in and never discards a saved identity on storage/network failure; server middleware verifies every private request.
-- Capacitor launches the `dist-native` static bundle built by `vite.native.config.ts`, reusing TanStack Router's generated tree and the actual local game screens; only the root and server transport are substituted, so cold-start local play needs no server.
-- Packaged online actions use the authenticated `/api/public/native` JSON boundary with shared validators/handlers; the native service origin must be separately approved and cannot point at Yatzy or preview hosts.
-- Fonts and local gameplay imagery are bundled; native viewport synchronization uses visualViewport after mount, following Yatzy's principle without importing preview-only globals.
-- Native platform projects contain no release signing credentials; build scripts refuse preview/HTTP origins and never publish.
-- Keep Capacitor, iOS and Android app identities aligned; the native verifier checks the approved public Apple team and environment-specific APNs entitlements, never private signing credentials.
-- Native locale declarations map the 40 app dictionaries to platform tags (no → nb, pt → pt-PT); regression tests prevent platform language lists from drifting.
-- AndroidBackButton is the only owner of native back events; lifecycle/network runtime must not install a competing back handler that bypasses confirmation.
-- Ads are Yatzy's AdMob flow copied into `src/lib/ads/` (logic identical, only Ludo IDs; rewarded/banner IDs null) plus Yatzy's plugin patch scripts run on install/sync.
-- Push (iOS via APNs, Android via FCM through Ludo's own Firebase connector; never Yatzy's Firebase project): server-only `push_tokens`/`push_sent` tables (no client policies); `src/lib/push/` signs APNs tokens with WebCrypto and sends via Worker fetch (HTTP/2 only in production Cloudflare, not the Node preview); per-token environment is learned by retrying the other APNs host on BadDeviceToken; event keys in `push_sent` prevent duplicates; players watching the match are skipped; permission is asked on entering online play, never at launch; visible alerts only, no background modes.
-- Temporary native diagnostics are build-time opt-in, allowlisted event/status labels plus elapsed time only; never errors, URLs, identities, request data or credentials, never persisted or uploaded.
-- Android back button (`src/components/AndroidBackButton.tsx` + pure `src/lib/native/back-policy.ts`) and haptics (`src/lib/native/haptics.ts`) are ports of Yatzy's equivalents; leaving a match via back never forfeits.
-- App icon/splash source is `resources/icon.png`; `scripts/make-icons.mjs` regenerates committed `resources/`, and `scripts/set-native-icons.mjs` (run by native sync) overwrites Capacitor defaults, mirroring Yatzy's pipeline.
-- Quick play mirrors Yatzy: 15 s search; ≥2 humans start online with server-played `bot:*` seats (never get stats, played via heartbeat); alone → local bot game.
-- Profile pictures are small square JPEG data URLs kept in `profiles.avatar_image` (no storage bucket: this workspace blocks public ones), with the emoji in `profiles.avatar` as the fallback; the device copy drives the UI, and a device that has never seen the picture must adopt the server copy (`adoptOwnAvatarFromServer`) before it pushes, so a new device can never erase an existing picture.
-- Friend requests follow Yatzy: only between players seated in the same started or finished online match (seat-card popup or result screen); there is no friend-code entry.
-- Native invite links are parsed only by pure `src/lib/native/deep-link.ts` (own domain + `mrbludo://`; foreign hosts ignored).
-- App errors and ad events reach the admin panel only via `src/lib/backend/report.ts` → `app_events` (deduplicated, capped per session, short fields only; consent/tracking answers never leave the device).
-- Admin analytics resets use the latest server-owned `admin_statistics_reset` event as a reporting cutoff; never erase profiles, game results or diagnostic logs to reset charts.
-- The published website is download-only: `src/server.ts` asks `src/lib/web-redirect.ts` (pure rules in `src/lib/web-access.ts`) to send browsers on the live origin to `/join`, so the game, admin panel and the app's own API stay reachable while visitors never become players; preview hosts and native origins must never be gated.
-- A shared match code lives 6 hours (`CODE_TTL_MS`/`codeExpired` in `src/lib/backend/match-logic.ts`): joining with a dead code closes the waiting match as abandoned instead of letting it sit open forever.
-- DB integration tests (`*.db.test.ts`, `bun run test:db`) run only on a throwaway local PostgreSQL+PostgREST; config aliases swap the server client/push and a fetch guard blocks non-local calls (module mocks leaked to the live backend).
-- Admin activity (Yatzy-style): durable device number, per-visit heartbeats, `local_game` reports, Stockholm days in pure `activity-stats.ts`.
+# Mr.B. Sokudo architecture
+
+- Standalone app: never share code, storage, backend, ad or native identities with Mr. B Ludo or Mr. B Yatzy; shared ideas are copied, never linked.
+- Sudoku rules live in `src/lib/sudoku/engine.ts` as pure functions (no React/DOM/network); generation is seeded, always verifies exactly one solution, and levels are checked by `solvableBySingles` (Easy/Medium yes, Hard/Expert no).
+- All play is local against the computer; there is no online play, matchmaking, friends, leaderboards or push, so the backend holds only profiles, roles, app events and admin activity.
+- Saved games (max 10) and per-level statistics live in browser/device storage under the `mrb-sudoku:v1:` namespace; "played" counts finished games only and each game id is counted once.
+- Board styling uses `--sudoku-*` tokens in `src/styles.css`; components never hardcode colors.
+- `noUncheckedIndexedAccess` is off: the engine indexes fixed-size 81-cell arrays heavily.
+- i18n lives in `src/lib/i18n/`: sv.ts is the key source of truth; every one of the 40 dictionaries must have identical keys and placeholders and no unused keys (enforced by `i18n.test.ts`). Server functions throw stable `err:<code>` strings translated by `errorMessage()`.
+- App-owned auth goes through `src/lib/auth/client.ts` (anonymous identity; namespaced Keychain/Keystore storage on native); startup never discards a saved identity on storage/network failure, and server middleware verifies every private request.
+- Admin access is granted only by the server-secret PIN (rate-limited, constant-time) to the caller's own anonymous identity; admin UI never signs out.
+- Admin activity: durable device number, per-visit heartbeats, `local_game` reports, Stockholm days in pure `activity-stats.ts`; app errors/ad events reach admin only via `src/lib/backend/report.ts` → `app_events`.
+- The published website is download-only (`src/server.ts` + pure `src/lib/web-access.ts`); preview hosts and native origins are never gated.
+- Capacitor launches the `dist-native` static bundle from `vite.native.config.ts`, so local play needs no server; native projects contain no signing credentials, and build scripts never publish.
+- Native app ID is a temporary placeholder and the Apple team is intentionally empty until the owner supplies real values; `scripts/native.mjs` and `config.test.ts` enforce this and the absence of push.
+- Ads are the AdMob/UMP flow in `src/lib/ads/` (App Open + post-game interstitial) and must use only Google's sample IDs until the app has its own AdMob account (enforced by `sokudo-ads.test.ts`).
+- AndroidBackButton is the only owner of native back events; leaving a game via back returns home because games save continuously.
+- App icon/splash source is `resources/icon.png`; `scripts/make-icons.mjs` regenerates committed `resources/` and `scripts/set-native-icons.mjs` copies them into the native projects.
+- DB integration tests (`*.db.test.ts`, `bun run test:db`) run only against a throwaway local PostgreSQL+PostgREST, never the live backend.

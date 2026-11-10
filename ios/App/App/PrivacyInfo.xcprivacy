@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<!-- Mr. B Ludo app privacy manifest. Covers the app's own code and plugins without their own manifest;
+<!-- Mr.B. Sokudo app privacy manifest. Covers the app's own code and plugins without their own manifest;
      Capacitor and Google Mobile Ads ship their own manifests (incl. advertising/tracking declarations). -->
 <plist version="1.0">
 <dict>
