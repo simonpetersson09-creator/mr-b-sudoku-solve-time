@@ -108,7 +108,21 @@ function PlayPage() {
     setState(next);
     if (next === before) return;
     const k = Date.now();
-    if (next.values[selected] !== before.solution[selected]) { setShakeCell({ i: selected, k }); void playDiceLandHaptic(); return; }
+    if (next.values[selected] !== before.solution[selected]) {
+      setShakeCell({ i: selected, k });
+      void playDiceLandHaptic();
+      // The wrong digit fades away by itself after a moment; the cell empties but the mistake still counts.
+      const cell = selected;
+      window.setTimeout(() => {
+        setState((s) => {
+          if (!s || s.finished || s.values[cell] === 0 || s.values[cell] === s.solution[cell]) return s;
+          const values = s.values.slice() as GameState["values"];
+          values[cell] = 0;
+          return { ...s, values };
+        });
+      }, 1800);
+      return;
+    }
     setPopCell({ i: selected, k });
     if (next.finished) { setCelebrating(true); window.setTimeout(() => setCelebrating(false), 1600); }
     const done = completedGroups(next, selected).filter((i) => !completedGroups(before, selected).includes(i));
