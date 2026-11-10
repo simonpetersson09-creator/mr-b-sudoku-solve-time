@@ -9,7 +9,7 @@ import { AppOpenGameGate } from "@/components/AppOpenGameGate";
 import { usePostMatchExit } from "@/lib/ads/usePostMatchExit";
 import { reportLocalGame } from "@/lib/backend/report";
 import {
-  PEERS, MAX_MISTAKES, MAX_UNDOS, MAX_HINTS, findHintCell, markHint, completedGroups, isLost, digitCounts, erase, hasNote, isGiven, isWrong, newGame, setValue, toggleNote, undo, type GameState, type Level,
+  PEERS, MAX_MISTAKES, MAX_UNDOS, MAX_HINTS, explainHint, markHint, type HintInfo, completedGroups, isLost, digitCounts, erase, hasNote, isGiven, isWrong, newGame, setValue, toggleNote, undo, type GameState, type Level,
 } from "@/lib/sudoku/engine";
 import { LEVEL_KEY, formatTime } from "@/lib/sudoku/format";
 import { loadGame, loadProgress, loadSettings, loadStats, recordFinish, removeGame, saveGame, startNewGame } from "@/lib/player/storage";
@@ -39,7 +39,7 @@ function PlayPage() {
   const [selected, setSelected] = useState<number | null>(null);
   const [notesMode, setNotesMode] = useState(false);
   const [paused, setPaused] = useState(false);
-  const [hintCell, setHintCell] = useState<number | null>(null);
+  const [hintInfo, setHintInfo] = useState<{ info: HintInfo; step: 1 | 2 } | null>(null);
   const [hintBusy, setHintBusy] = useState(false);
   const [unlocked, setUnlocked] = useState<Level[]>([]);
   const [confirmEnd, setConfirmEnd] = useState(false);
@@ -97,9 +97,10 @@ function PlayPage() {
     setState((s) => (s && !paused ? fn(s) : s));
   }, [paused]);
 
-  const input = (d: number) => {
+  const input = (d: number, at: number | null = selected, fromHint = false) => {
+    const selected = at;
     if (selected == null || !state) return;
-    if (notesMode) { act((s) => toggleNote(s, selected, d)); void playLightHaptic(); return; }
+    if (notesMode && !fromHint) { act((s) => toggleNote(s, selected, d)); void playLightHaptic(); return; }
     if (paused) return;
     const before = state;
     const next = setValue(before, selected, d, settings.autoRemoveNotes);
@@ -138,8 +139,17 @@ function PlayPage() {
 
   // A hint is preceded by an interstitial ad (app only; skipped silently when none is available).
   const doHint = async () => {
-    if (hintBusy || state.finished || lost || state.hints >= MAX_HINTS) return;
-    if (findHintCell(state) == null) return;
+    if (hintBusy || state.finished || lost) return;
+    // Step 2: point out the square and explain why. Step 3: fill it in. Same hint, no extra cost.
+    if (activeHint) {
+      if (hintInfo!.step === 1) { setHintInfo({ info: activeHint, step: 2 }); setSelected(activeHint.cell); return; }
+      input(activeHint.digit, activeHint.cell, true);
+      setHintInfo(null);
+      return;
+    }
+    if (state.hints >= MAX_HINTS) return;
+    const info = explainHint(state);
+    if (info == null) return;
     setHintBusy(true);
     setPaused(true);
     try { await showOptionalInterstitial(); } catch { /* the hint is never blocked by an ad */ }
@@ -148,12 +158,16 @@ function PlayPage() {
     const r = markHint(state);
     if (r.cell == null) return;
     setState(r.state);
-    setSelected(r.cell);
-    setHintCell(r.cell);
+    setHintInfo({ info, step: 1 });
   };
-  // The hint mark stays until that cell holds its correct digit; once filled (or undone) it is gone.
-  if (hintCell != null && state.values[hintCell] === state.solution[hintCell]) queueMicrotask(() => setHintCell(null));
-  const showHint = hintCell != null && state.values[hintCell] !== state.solution[hintCell] ? hintCell : null;
+  // The hint stays until its square holds the right digit (typed by the player or filled by step 3).
+  const activeHint = hintInfo && state.values[hintInfo.info.cell] !== hintInfo.info.digit ? hintInfo.info : null;
+  if (hintInfo && !activeHint) queueMicrotask(() => setHintInfo(null));
+  const showHint = activeHint && hintInfo!.step === 2 ? activeHint.cell : null;
+  const hintZone = activeHint ? new Set(activeHint.unit) : null;
+  const hintText = !activeHint || paused ? null
+    : hintInfo!.step === 1 ? t(activeHint.kind === "wrong" ? "hintLookWrong" : "hintLook")
+    : t(activeHint.kind === "wrong" ? "hintWhyWrong" : activeHint.kind === "naked" ? "hintWhyNaked" : activeHint.kind === "hidden" ? "hintWhyHidden" : "hintWhyFewest", { digit: activeHint.digit });
 
   const again = () => {
     const g = newGame(state.level, Math.floor(Math.random() * 2 ** 31), randomId());
@@ -191,7 +205,7 @@ function PlayPage() {
         </div>
 
         <div className="flex flex-1 flex-col justify-center gap-3">
-        <div className="flex justify-center"><span className="sdk-level-pill">{t(LEVEL_KEY[state.level])}</span></div>
+        <div className="flex justify-center"><span className="sdk-level-pill" aria-label={`${t("level")}: ${t(LEVEL_KEY[state.level])}`}>{t(LEVEL_KEY[state.level])}</span></div>
         <p className="-mt-1 text-center font-display text-3xl font-bold tabular-nums tracking-wider" aria-label={t("time")}>{formatTime(state.elapsedMs)}</p>
         <p className="-mt-3 text-center text-xs text-muted-foreground">
           {t("statBestTime")}: <span className="font-display font-bold tabular-nums text-gold">{stats[state.level].bestMs != null ? formatTime(stats[state.level].bestMs!) : "–"}</span>
@@ -220,7 +234,7 @@ function PlayPage() {
                   data-wave={celebrating}
                   style={{ ["--d" as string]: r + c }}
                   data-wrong={wrong}
-                  data-hint={showHint === i}
+                  data-hint={showHint === i} data-hint-zone={hintZone?.has(i) || undefined}
                   aria-label={t("cellLabel", { row: r + 1, col: c + 1 }) + (v ? `: ${v}` : "") + (showHint === i ? ` (${t("hint")}: ${state.solution[i]})` : "")}
                   className="sdk-cell"
                   onClick={() => setSelected(i)}
@@ -238,10 +252,10 @@ function PlayPage() {
         )}
 
         <div className="flex gap-1">
-          <button className="sdk-tool" onClick={() => { setHintCell(null); act(undo); }} disabled={paused || !state.history.length || state.undosLeft <= 0} aria-label={`${t("undo")}: ${state.undosLeft}/${MAX_UNDOS}`}><Undo2 className="h-5 w-5" />{t("undo")}<span className="sdk-pips" aria-hidden="true">{Array.from({ length: MAX_UNDOS }, (_, i) => <span key={i} className="sdk-pip" data-on={i < state.undosLeft} />)}</span></button>
-          <button className="sdk-tool" onClick={() => selected != null && act((s) => erase(s, selected))} disabled={paused}><Eraser className="h-5 w-5" />{t("erase")}</button>
+          <button className="sdk-tool" onClick={() => { setHintInfo(null); act(undo); }} disabled={paused || !state.history.length || state.undosLeft <= 0} aria-label={`${t("undo")}: ${state.undosLeft}/${MAX_UNDOS}`}><Undo2 className="h-5 w-5" />{t("undo")}<span className="sdk-pips" aria-hidden="true">{Array.from({ length: MAX_UNDOS }, (_, i) => <span key={i} className="sdk-pip" data-on={i < state.undosLeft} />)}</span></button>
+          <button className="sdk-tool" onClick={() => selected != null && act((s) => erase(s, selected))} disabled={paused}><Eraser className="h-5 w-5" />{t("eraseNotes")}</button>
           <button className="sdk-tool" aria-pressed={notesMode} onClick={() => setNotesMode((n) => !n)} disabled={paused}><Pencil className="h-5 w-5" />{t("notes")}</button>
-          <button className="sdk-tool relative" onClick={() => void doHint()} disabled={paused || hintBusy || state.hints >= MAX_HINTS} aria-label={`${t("hint")}: ${MAX_HINTS - state.hints}/${MAX_HINTS}`}><Lightbulb className="h-5 w-5" />{t("hint")}<span className="sdk-pips" aria-hidden="true">{Array.from({ length: MAX_HINTS }, (_, i) => <span key={i} className="sdk-pip" data-on={i < MAX_HINTS - state.hints} />)}</span></button>
+          <button className="sdk-tool relative" onClick={() => void doHint()} disabled={paused || hintBusy || (!activeHint && state.hints >= MAX_HINTS)} data-active={!!activeHint} aria-label={`${activeHint ? t(hintInfo!.step === 1 ? "hintMore" : "hintFill") : t("hint")}: ${MAX_HINTS - state.hints}/${MAX_HINTS}`}><Lightbulb className="h-5 w-5" />{activeHint ? t(hintInfo!.step === 1 ? "hintMore" : "hintFill") : t("hint")}<span className="sdk-pips" aria-hidden="true">{Array.from({ length: MAX_HINTS }, (_, i) => <span key={i} className="sdk-pip" data-on={i < MAX_HINTS - state.hints} />)}</span></button>
         </div>
 
         <div className="sdk-pad">
@@ -259,7 +273,7 @@ function PlayPage() {
             </button>
           ))}
         </div>
-        <p className="sdk-hint-tip" role="status" data-show={showHint != null && !paused}>{showHint != null && !paused && <><Lightbulb className="h-3 w-3 shrink-0" />{t("hintTip", { digit: state.solution[showHint] })}</>}</p>
+        <p className="sdk-hint-tip" role="status" data-show={hintText != null}>{hintText != null && <><Lightbulb className="h-3 w-3 shrink-0" /><span>{hintText}</span></>}</p>
 
         </div>
       </div>

@@ -574,7 +574,8 @@ export function toggleNote(s: GameState, i: number, d: number): GameState {
 
 /** Clears a non-given cell's digit and notes. */
 export function erase(s: GameState, i: number): GameState {
-  if (over(s) || isGiven(s, i) || (s.values[i] === 0 && s.notes[i] === 0)) return s;
+  // Erase removes notes only: a placed digit (even a wrong one) is fixed by typing the right digit.
+  if (over(s) || isGiven(s, i) || s.values[i] !== 0 || s.notes[i] === 0) return s;
   return apply(s, [{ i, value: 0, notes: 0 }]);
 }
 
@@ -606,33 +607,49 @@ export function hint(s: GameState, selected: number | null): { state: GameState;
  * that can be solved right now (only one digit fits, or a digit fits nowhere else in its row/column/box),
  * else the open cell with the fewest possible digits. Counts as a used hint.
  */
-export function findHintCell(s: GameState): number | null {
+export type HintKind = "wrong" | "naked" | "hidden" | "fewest";
+export interface HintInfo { cell: number; digit: number; kind: HintKind; unit: number[] }
+
+const unitRow = (i: number) => Array.from({ length: 9 }, (_, j) => Math.floor(i / 9) * 9 + j);
+const unitCol = (i: number) => Array.from({ length: 9 }, (_, j) => j * 9 + (i % 9));
+const unitBox = (i: number) => {
+  const r0 = Math.floor(Math.floor(i / 9) / 3) * 3, c0 = Math.floor((i % 9) / 3) * 3;
+  return Array.from({ length: 9 }, (_, j) => (r0 + Math.floor(j / 3)) * 9 + c0 + (j % 3));
+};
+
+/**
+ * Explains the next step: a wrong digit first; else a cell where only one digit fits ("naked"),
+ * else a digit that fits only one place in a row/column/box ("hidden"), else the open cell with
+ * the fewest possible digits. `unit` is the area shown in step 1 of a hint.
+ */
+export function explainHint(s: GameState): HintInfo | null {
   if (over(s)) return null;
   const wrong = s.values.findIndex((_, i) => isWrong(s, i));
-  if (wrong >= 0) return wrong;
+  if (wrong >= 0) return { cell: wrong, digit: s.solution[wrong], kind: "wrong", unit: unitBox(wrong) };
   const known = s.values.map((v, i) => (v === s.solution[i] ? v : 0));
-  const cand = (i: number) => {
-    if (known[i]) return 0;
+  const masks = known.map((k, i) => {
+    if (k) return 0;
     let m = 0x3fe;
     for (const p of PEERS[i]) if (known[p]) m &= ~bit(known[p]);
     return m;
-  };
-  const masks = known.map((_, i) => cand(i));
+  });
   const pop = (m: number) => { let n = 0; while (m) { m &= m - 1; n++; } return n; };
   const single = masks.findIndex((m) => m && pop(m) === 1);
-  if (single >= 0) return single;
-  const units: number[][] = [];
+  if (single >= 0) return { cell: single, digit: s.solution[single], kind: "naked", unit: unitBox(single) };
   for (let k = 0; k < 9; k++) {
-    units.push(Array.from({ length: 9 }, (_, j) => k * 9 + j), Array.from({ length: 9 }, (_, j) => j * 9 + k),
-      Array.from({ length: 9 }, (_, j) => (Math.floor(k / 3) * 3 + Math.floor(j / 3)) * 9 + (k % 3) * 3 + (j % 3)));
-  }
-  for (const u of units) for (let d = 1; d <= 9; d++) {
-    const spots = u.filter((i) => masks[i] & bit(d));
-    if (spots.length === 1) return spots[0];
+    for (const u of [unitRow(k * 9), unitCol(k), unitBox((Math.floor(k / 3) * 3) * 9 + (k % 3) * 3)]) for (let d = 1; d <= 9; d++) {
+      const spots = u.filter((i) => masks[i] & bit(d));
+      if (spots.length === 1 && s.solution[spots[0]] === d) return { cell: spots[0], digit: d, kind: "hidden", unit: u };
+    }
   }
   let best = -1;
   masks.forEach((m, i) => { if (m && (best < 0 || pop(m) < pop(masks[best]))) best = i; });
-  return best >= 0 ? best : null;
+  return best >= 0 ? { cell: best, digit: s.solution[best], kind: "fewest", unit: unitBox(best) } : null;
+}
+
+/** The cell a hint points at (see explainHint). */
+export function findHintCell(s: GameState): number | null {
+  return explainHint(s)?.cell ?? null;
 }
 
 /** Uses a hint: marks the cell from findHintCell and counts it; the board itself is unchanged. */

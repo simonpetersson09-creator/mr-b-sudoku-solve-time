@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { solvableBySingles, solvableWithPairs, solvableAdvanced, solvableMaster, LEVELS, GIVENS, MAX_UNDOS, countSolutions, generate, newGame, setValue, toggleNote, erase, undo, hint, isWrong, hasNote, isConsistent, solve, PEERS, MAX_MISTAKES, isLost, completedGroups, findHintCell, markHint } from "./engine";
+import { solvableBySingles, solvableWithPairs, solvableAdvanced, solvableMaster, LEVELS, GIVENS, MAX_UNDOS, countSolutions, generate, newGame, setValue, toggleNote, erase, undo, hint, isWrong, hasNote, isConsistent, solve, PEERS, MAX_MISTAKES, isLost, completedGroups, findHintCell, markHint, explainHint } from "./engine";
 
 describe("puzzle generation", () => {
   for (const level of LEVELS) {
@@ -86,12 +86,17 @@ describe("play", () => {
     const s = setValue(toggleNote(g, peer, right), open, right, false);
     expect(hasNote(s.notes[peer], right)).toBe(true);
   });
-  it("erase clears the cell and undo restores it", () => {
-    let s = setValue(g, open, wrong);
+  it("erase removes notes and undo restores them", () => {
+    let s = toggleNote(g, open, right);
     s = erase(s, open);
-    expect(s.values[open]).toBe(0);
+    expect(s.notes[open]).toBe(0);
     s = undo(s);
-    expect(s.values[open]).toBe(wrong);
+    expect(hasNote(s.notes[open], right)).toBe(true);
+  });
+  it("erase never removes a placed digit, not even a wrong one", () => {
+    const s = setValue(g, open, wrong);
+    expect(erase(s, open)).toBe(s);
+    expect(erase(s, open).values[open]).toBe(wrong);
   });
   it("allows at most 3 undos per game", () => {
     let s = g;
@@ -175,5 +180,29 @@ describe("hint limit", () => {
     expect(MAX_HINTS).toBe(3);
     expect(s.hints).toBe(3);
     expect(markHint(s).cell).toBeNull();
+  });
+});
+
+describe("hint explanation", () => {
+  const g = newGame("medium", 777, "x");
+  it("points at a wrong digit first, inside its box", () => {
+    const open = g.puzzle.findIndex((v) => v === 0);
+    const wrong = (g.solution[open] % 9) + 1;
+    const h = explainHint(setValue(g, open, wrong))!;
+    expect(h.kind).toBe("wrong");
+    expect(h.cell).toBe(open);
+    expect(h.digit).toBe(g.solution[open]);
+    expect(h.unit).toContain(open);
+  });
+  it("always gives the correct digit and an area containing the cell", () => {
+    let s = g;
+    for (let n = 0; n < 60 && !s.finished; n++) {
+      const h = explainHint(s)!;
+      expect(h.digit).toBe(s.solution[h.cell]);
+      expect(h.unit).toContain(h.cell);
+      expect(h.unit.length).toBe(9);
+      s = setValue(s, h.cell, h.digit);
+    }
+    expect(s.finished).toBe(true);
   });
 });
