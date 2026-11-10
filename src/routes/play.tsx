@@ -16,15 +16,6 @@ import { loadGame, loadSettings, loadStats, recordFinish, removeGame, saveGame, 
 import { randomId } from "@/lib/random-id";
 import { playLightHaptic, playSuccessHaptic, playDiceLandHaptic } from "@/lib/native/haptics";
 import { useTranslation } from "@/lib/i18n";
-import mrbNod from "@/assets/mrb/nod.png";
-import mrbHat from "@/assets/mrb/hat.png";
-import mrbBrow from "@/assets/mrb/brow.png";
-import mrbNervous from "@/assets/mrb/nervous.png";
-import mrbSleep from "@/assets/mrb/sleep.png";
-import mrbWin from "@/assets/mrb/win.png";
-
-type Mood = "nod" | "hat" | "brow" | "nervous" | "sleep" | "win";
-const MOOD_IMG: Record<Mood, string> = { nod: mrbNod, hat: mrbHat, brow: mrbBrow, nervous: mrbNervous, sleep: mrbSleep, win: mrbWin };
 
 export const Route = createFileRoute("/play")({
   head: () => ({
@@ -54,13 +45,6 @@ function PlayPage() {
   const [popCell, setPopCell] = useState<{ i: number; k: number } | null>(null);
   const [shakeCell, setShakeCell] = useState<{ i: number; k: number } | null>(null);
   const [celebrating, setCelebrating] = useState(false);
-  const [react, setReact] = useState<{ mood: Mood; k: number } | null>(null);
-  const reactTimer = useRef<number | null>(null);
-  const flashMood = (mood: Mood) => {
-    if (reactTimer.current) window.clearTimeout(reactTimer.current);
-    setReact({ mood, k: Date.now() });
-    reactTimer.current = window.setTimeout(() => setReact(null), 1400);
-  };
   const [holdDigit, setHoldDigit] = useState<number | null>(null);
   const holdTimer = useRef<number | null>(null);
   const held = useRef(false);
@@ -117,16 +101,15 @@ function PlayPage() {
     setState(next);
     if (next === before) return;
     const k = Date.now();
-    if (next.values[selected] !== before.solution[selected]) { setShakeCell({ i: selected, k }); flashMood("brow"); void playDiceLandHaptic(); return; }
+    if (next.values[selected] !== before.solution[selected]) { setShakeCell({ i: selected, k }); void playDiceLandHaptic(); return; }
     setPopCell({ i: selected, k });
     if (next.finished) { setCelebrating(true); window.setTimeout(() => setCelebrating(false), 1600); }
     const done = completedGroups(next, selected).filter((i) => !completedGroups(before, selected).includes(i));
     if (done.length && !next.finished) {
       setFlash(new Set(done));
-      flashMood("hat");
       window.setTimeout(() => setFlash(new Set()), 700);
       void playSuccessHaptic();
-    } else { if (!next.finished) flashMood("nod"); void playLightHaptic(); }
+    } else void playLightHaptic();
   };
 
   const onKey = useCallback((e: KeyboardEvent) => {
@@ -182,7 +165,7 @@ function PlayPage() {
           <button onClick={() => navigate({ to: "/" })} aria-label={t("back")} className="flex h-11 w-11 items-center justify-center rounded-xl active:bg-secondary/80">
             <ArrowLeft className="h-5 w-5 text-muted-foreground" />
           </button>
-          <div className="grid flex-1 grid-cols-4 gap-1.5">
+          <div className="grid flex-1 grid-cols-[1.2fr_1.2fr_1fr_1fr] gap-1.5">
             <div className="sdk-chip">
               <span className="sdk-chip-label">{t("level")}</span>
               <span className="sdk-chip-value text-gold">{t(LEVEL_KEY[state.level])}</span>
@@ -205,11 +188,7 @@ function PlayPage() {
         </div>
 
         <div className="flex flex-1 flex-col justify-center gap-3">
-        <div className="grid grid-cols-[76px_1fr_76px] items-center">
-          <MrB mood={paused ? "sleep" : celebrating || state.finished ? "win" : react?.mood ?? (state.mistakes === MAX_MISTAKES - 1 ? "nervous" : "nod")} k={react?.k ?? 0} />
-          <p className="text-center font-display text-3xl font-bold tabular-nums tracking-wider" aria-label={t("time")}>{formatTime(state.elapsedMs)}</p>
-          <span />
-        </div>
+        <p className="text-center font-display text-3xl font-bold tabular-nums tracking-wider" aria-label={t("time")}>{formatTime(state.elapsedMs)}</p>
         <p className="-mt-3 text-center text-xs text-muted-foreground">
           {t("statBestTime")}: <span className="font-display font-bold tabular-nums text-gold">{stats[state.level].bestMs != null ? formatTime(stats[state.level].bestMs!) : "–"}</span>
         </p>
@@ -329,15 +308,6 @@ function ResultOverlay({ state, onAgain, onHome }: { state: GameState; onAgain: 
           <button className="home-action home-action-ghost" disabled={leaving} onClick={() => void leave()}>{t("home")}</button>
         </div>
       </div>
-    </div>
-  );
-}
-
-/** Mr. B reacts to the game: nod (right digit), hat (completed group), brow (mistake), nervous (one mistake left), sleep (paused), win. */
-function MrB({ mood, k }: { mood: Mood; k: number }) {
-  return (
-    <div className="sdk-mrb" aria-hidden="true">
-      <img key={`${mood}-${k}`} src={MOOD_IMG[mood]} alt="" data-mood={mood} draggable={false} />
     </div>
   );
 }
