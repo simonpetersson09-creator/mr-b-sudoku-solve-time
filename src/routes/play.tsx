@@ -113,7 +113,7 @@ function PlayPage() {
 
   const act = useCallback((fn: (s: GameState) => GameState) => {
     setState((s) => (s && !paused ? fn(s) : s));
-  }, [paused]);
+  }, [paused, !!state]);
 
   const input = (d: number, at: number | null = selected, fromHint = false, base: GameState | null = null) => {
     const selected = at;
@@ -171,6 +171,29 @@ function PlayPage() {
     return () => clearTimeout(t);
   }, [lost]);
 
+  const fitMainRef = useRef<HTMLElement>(null);
+  const fitColRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    // Size the board from the real free space, so it is as large as the screen allows.
+    const col = fitColRef.current; if (!col) return;
+    let raf = 0;
+    const fit = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const board = col.querySelector<HTMLElement>(".sdk-board, .sdk-paused");
+        const first = col.firstElementChild as HTMLElement | null;
+        if (!board || !first) return;
+        const free = first.getBoundingClientRect().top - col.getBoundingClientRect().top - 6;
+        const size = Math.max(200, Math.min(col.clientWidth, board.getBoundingClientRect().width + free));
+        col.style.setProperty("--board-px", `${Math.floor(size)}px`);
+      });
+    };
+    fit();
+    const ro = new ResizeObserver(fit); ro.observe(col);
+    window.addEventListener("resize", fit);
+    return () => { cancelAnimationFrame(raf); ro.disconnect(); window.removeEventListener("resize", fit); };
+  }, [paused]);
+
   if (!state) return <main className="app-screen" />;
 
   const counts = digitCounts(state);
@@ -211,25 +234,23 @@ function PlayPage() {
   };
 
   return (
-    <main className="app-screen sdk-fixed flex flex-col" data-level={state.level} style={{ paddingTop: "calc(4px + var(--safe-top))", paddingBottom: "calc(20px + env(safe-area-inset-bottom))" }}>
+    <main ref={fitMainRef} className="app-screen sdk-fixed flex flex-col" data-level={state.level} style={{ paddingTop: "calc(4px + var(--safe-top))", paddingBottom: "calc(20px + env(safe-area-inset-bottom))" }}>
       <div className="mx-auto flex w-full max-w-md flex-1 flex-col gap-1">
         <div className="flex items-center gap-2">
           <button onClick={() => navigate({ to: "/" })} aria-label={t("back")} className="sdk-back">
             <ArrowLeft className="h-4 w-4" /><span>{t("back")}</span>
           </button>
-          <div className="grid flex-1 grid-cols-2 gap-1.5">
-            <button onClick={() => setPaused((p) => !p)} disabled={state.finished} aria-label={paused ? t("resume") : t("pause")} className="sdk-chip sdk-chip-btn" data-active={paused}>
-              <span className="sdk-chip-label">{paused ? t("resume") : t("pause")}</span>
-              <span className="sdk-chip-value">{paused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}</span>
+          <div className="ml-auto flex items-center gap-2">
+            <button onClick={() => setPaused((p) => !p)} disabled={state.finished} aria-label={paused ? t("resume") : t("pause")} className="sdk-round-btn" data-active={paused}>
+              {paused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
             </button>
-            <button onClick={() => setConfirmEnd(true)} disabled={state.finished} aria-label={t("endGame")} className="sdk-chip sdk-chip-btn sdk-chip-end">
-              <span className="sdk-chip-label">{t("endShort")}</span>
-              <span className="sdk-chip-value"><CircleX className="h-4 w-4" /></span>
+            <button onClick={() => setConfirmEnd(true)} disabled={state.finished} aria-label={t("endGame")} className="sdk-round-btn sdk-round-end">
+              <CircleX className="h-4 w-4" />
             </button>
           </div>
         </div>
 
-        <div className="flex flex-1 flex-col justify-end gap-0">
+        <div ref={fitColRef} className="flex min-h-0 flex-1 flex-col justify-end gap-0">
         <p className="mb-0.5 text-center text-[11px] leading-none text-muted-foreground">
           {t("statBestTime")}: <span className="font-display font-bold tabular-nums text-gold">{bestMs != null ? formatTime(bestMs) : "–"}</span>
         </p>

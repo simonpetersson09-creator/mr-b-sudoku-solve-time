@@ -716,9 +716,9 @@ main[data-level="master"] .sdk-level-pill { background: color-mix(in oklab, var(
 
 /* Spelsidan är fast: ingen scroll */
 .sdk-fixed { position: fixed; inset: 0; height: 100dvh; min-height: 0; overflow: hidden; overscroll-behavior: none; touch-action: manipulation; padding-left: max(6px, env(safe-area-inset-left)); padding-right: max(6px, env(safe-area-inset-right)); }
-.sdk-fixed .sdk-board { width: 100%; max-width: min(100%, max(200px, calc(100dvh - 300px - var(--safe-top) - env(safe-area-inset-bottom)))); margin-inline: auto; }
+.sdk-fixed .sdk-board { width: 100%; max-width: min(100%, max(200px, var(--board-px, calc(100dvh - 300px - var(--safe-top) - env(safe-area-inset-bottom))))); margin-inline: auto; }
 /* The header row tracks the board exactly so its markers line up with the board's outer edges. */
-.sdk-fixed .sdk-board-head { width: 100%; max-width: min(100%, max(200px, calc(100dvh - 300px - var(--safe-top) - env(safe-area-inset-bottom)))); margin-inline: auto; margin-bottom: 18px; }
+.sdk-fixed .sdk-board-head { width: 100%; max-width: min(100%, max(200px, var(--board-px, calc(100dvh - 300px - var(--safe-top) - env(safe-area-inset-bottom))))); margin-inline: auto; margin-bottom: 18px; }
 /* Top bar: smaller buttons, pushed as high as the iPhone status bar allows. */
 .sdk-fixed .sdk-chip { height: 40px; border-radius: 12px; }
 .sdk-fixed .sdk-back { min-height: 40px; }
@@ -759,3 +759,13 @@ main[data-level="master"] .sdk-level-pill { background: color-mix(in oklab, var(
 @keyframes sdk-record-in { from { transform: scale(.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 @keyframes sdk-record-glow { 50% { filter: drop-shadow(0 0 12px var(--game-gold)); transform: scale(1.06); } }
 @media (prefers-reduced-motion: reduce) { .sdk-record, .sdk-record-trophy { animation: none; } }
+
+.sdk-fixed .sdk-paused { max-width: var(--board-px, 100%); margin-inline: auto; }
+.sdk-round-btn { display: inline-grid; place-items: center; width: 36px; height: 36px; border-radius: 999px; background: var(--card); border: 1px solid var(--border); color: var(--foreground); box-shadow: 0 2px 8px -4px color-mix(in oklab, var(--foreground) 30%, transparent); transition: transform .1s, background .15s; }
+.sdk-round-btn svg { color: var(--game-gold); }
+.sdk-round-btn:active { transform: scale(.92); background: var(--secondary); }
+.sdk-round-btn:disabled { opacity: .4; }
+.sdk-round-btn[data-active="true"] { border-color: var(--game-gold); }
+.sdk-round-end svg { color: var(--destructive); }
+.sdk-round-end { border-color: color-mix(in oklab, var(--destructive) 30%, var(--border)); }
+.sdk-fixed .sdk-back { min-height: 36px; }
