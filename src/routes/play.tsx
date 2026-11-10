@@ -100,7 +100,7 @@ function PlayPage() {
   const input = (d: number, at: number | null = selected, fromHint = false) => {
     const selected = at;
     if (selected == null || !state) return;
-    if (notesMode && !fromHint) { act((s) => toggleNote(s, selected, d)); void playLightHaptic(); return; }
+    if (notesMode && !fromHint) { act((s) => toggleNote(s, selected, d)); void playLightHaptic(); setNotesMode(false); return; }
     if (paused) return;
     const before = state;
     const next = setValue(before, selected, d, settings.autoRemoveNotes);
