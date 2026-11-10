@@ -158,6 +158,8 @@ export const mr: Record<TranslationKey, string> = {
   notes: "टिपा",
   hint: "इशारा",
   solvedTitle: "सोडवले!",
+  gameOverTitle: "खेळ संपला",
+  gameOverBody: "तुम्ही {n} चुका केल्या. पुन्हा प्रयत्न करा!",
   endGame: "खेळ समाप्त करा",
   endGameBody: "खेळ हटवला जाईल आणि तुमच्या आकडेवारीत मोजला जाणार नाही.",
 };

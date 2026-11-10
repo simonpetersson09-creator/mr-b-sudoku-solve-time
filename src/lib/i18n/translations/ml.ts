@@ -158,6 +158,8 @@ export const ml: Record<TranslationKey, string> = {
   notes: "കുറിപ്പുകൾ",
   hint: "സൂചന",
   solvedTitle: "പൂർത്തിയായി!",
+  gameOverTitle: "കളി കഴിഞ്ഞു",
+  gameOverBody: "നിങ്ങൾ {n} തെറ്റുകൾ വരുത്തി. വീണ്ടും ശ്രമിക്കുക!",
   endGame: "കളി അവസാനിപ്പിക്കുക",
   endGameBody: "കളി ഇല്ലാതാക്കപ്പെടും; നിങ്ങളുടെ സ്ഥിതിവിവരക്കണക്കുകളിൽ ഉൾപ്പെടില്ല.",
 };

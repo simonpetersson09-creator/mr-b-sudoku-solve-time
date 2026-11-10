@@ -158,6 +158,8 @@ export const vi: Record<TranslationKey, string> = {
   notes: "Ghi chú",
   hint: "Gợi ý",
   solvedTitle: "Đã giải xong!",
+  gameOverTitle: "Trò chơi kết thúc",
+  gameOverBody: "Bạn đã mắc {n} lỗi. Hãy thử lại!",
   endGame: "Kết thúc ván chơi",
   endGameBody: "Ván chơi sẽ bị xóa và không được tính vào thống kê của bạn.",
 };

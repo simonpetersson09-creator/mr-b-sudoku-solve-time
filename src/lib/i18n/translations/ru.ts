@@ -158,6 +158,8 @@ export const ru: Record<TranslationKey, string> = {
   notes: "Заметки",
   hint: "Подсказка",
   solvedTitle: "Решено!",
+  gameOverTitle: "Игра окончена",
+  gameOverBody: "Вы допустили {n} ошибок. Попробуйте снова!",
   endGame: "Завершить игру",
   endGameBody: "Игра будет удалена и не будет учитываться в статистике.",
 };

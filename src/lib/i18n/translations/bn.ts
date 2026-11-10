@@ -158,6 +158,8 @@ export const bn: Record<TranslationKey, string> = {
   notes: "নোট",
   hint: "ইঙ্গিত",
   solvedTitle: "সমাধান হয়েছে!",
+  gameOverTitle: "খেলা শেষ",
+  gameOverBody: "আপনি {n}টি ভুল করেছেন। আবার চেষ্টা করুন!",
   endGame: "গেম শেষ করুন",
   endGameBody: "গেমটি মুছে যাবে এবং আপনার পরিসংখ্যানে যোগ হবে না।",
 };

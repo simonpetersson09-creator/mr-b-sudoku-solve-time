@@ -158,6 +158,8 @@ export const or: Record<TranslationKey, string> = {
   notes: "ନୋଟ୍ସ",
   hint: "ସଙ୍କେତ",
   solvedTitle: "ସମାଧାନ ହେଲା!",
+  gameOverTitle: "ଖେଳ ଶେଷ",
+  gameOverBody: "ଆପଣ {n} ଟି ଭୁଲ୍ କରିଛନ୍ତି। ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ!",
   endGame: "ଖେଳ ଶେଷ କରନ୍ତୁ",
   endGameBody: "ଖେଳଟି ଡିଲିଟ୍ ହେବ ଏବଂ ଆପଣଙ୍କ ପରିସଂଖ୍ୟାନରେ ଗଣାଯିବ ନାହିଁ।",
 };

@@ -158,6 +158,8 @@ export const uk: Record<TranslationKey, string> = {
   notes: "Нотатки",
   hint: "Підказка",
   solvedTitle: "Розв’язано!",
+  gameOverTitle: "Кінець гри",
+  gameOverBody: "Ви припустилися {n} помилок. Спробуйте ще раз!",
   endGame: "Завершити гру",
   endGameBody: "Гру буде видалено, і вона не враховуватиметься у вашій статистиці.",
 };

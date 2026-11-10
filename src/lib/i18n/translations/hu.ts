@@ -141,6 +141,8 @@ export const hu: Record<TranslationKey, string> = {
   notes: "Jegyzetek",
   hint: "Tipp",
   solvedTitle: "Megoldva!",
+  gameOverTitle: "Játék vége",
+  gameOverBody: "{n} hibát vétettél. Próbáld újra!",
   endGame: "Játék befejezése",
   endGameBody: "A játék törlődik, és nem számít bele a statisztikáidba.",
 };

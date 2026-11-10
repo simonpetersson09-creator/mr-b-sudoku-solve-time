@@ -158,6 +158,8 @@ export const th: Record<TranslationKey, string> = {
   notes: "บันทึก",
   hint: "คำใบ้",
   solvedTitle: "ไขสำเร็จ!",
+  gameOverTitle: "จบเกม",
+  gameOverBody: "คุณทำผิด {n} ครั้ง ลองใหม่อีกครั้ง!",
   endGame: "จบเกม",
   endGameBody: "เกมจะถูกลบและไม่นับรวมในสถิติของคุณ",
 };

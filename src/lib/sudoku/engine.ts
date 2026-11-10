@@ -196,6 +196,24 @@ export type GameState = {
 
 /** Undos allowed per game. */
 export const MAX_UNDOS = 3;
+/** Mistakes allowed; the third mistake ends (loses) the game. */
+export const MAX_MISTAKES = 3;
+export const isLost = (s: GameState) => !s.finished && s.mistakes >= MAX_MISTAKES;
+/** No more moves: solved or lost. */
+const over = (s: GameState) => s.finished || isLost(s);
+
+/** Cells of every row, column and box through cell i that are now completely and correctly filled. */
+export function completedGroups(s: GameState, i: number): number[] {
+  const r = rowOf(i), c = colOf(i), b = boxOf(i);
+  const groups = [
+    Array.from({ length: 9 }, (_, k) => r * 9 + k),
+    Array.from({ length: 9 }, (_, k) => k * 9 + c),
+    Array.from({ length: 9 }, (_, k) => (Math.floor(b / 3) * 3 + Math.floor(k / 3)) * 9 + (b % 3) * 3 + (k % 3)),
+  ];
+  const out = new Set<number>();
+  for (const g of groups) if (g.every((x) => s.values[x] === s.solution[x])) g.forEach((x) => out.add(x));
+  return [...out];
+}
 
 export function newGame(level: Level, seed: number, id: string, now = Date.now()): GameState {
   const p = generate(level, seed);
@@ -221,7 +239,7 @@ function apply(s: GameState, changes: Change[], record = true): GameState {
 
 /** Places a digit and clears the cell's notes; with clearPeerNotes, also that digit's notes in peers (undone together). */
 export function setValue(s: GameState, i: number, d: number, clearPeerNotes = true): GameState {
-  if (s.finished || isGiven(s, i) || d < 1 || d > 9 || s.values[i] === d) return s;
+  if (over(s) || isGiven(s, i) || d < 1 || d > 9 || s.values[i] === d) return s;
   const changes: Change[] = [{ i, value: d, notes: 0 }];
   if (clearPeerNotes) for (const p of PEERS[i]) if (s.notes[p] & bit(d)) changes.push({ i: p, value: s.values[p], notes: s.notes[p] & ~bit(d) });
   const next = apply(s, changes);
@@ -230,19 +248,19 @@ export function setValue(s: GameState, i: number, d: number, clearPeerNotes = tr
 
 /** Toggles a note on an empty, non-given cell. */
 export function toggleNote(s: GameState, i: number, d: number): GameState {
-  if (s.finished || isGiven(s, i) || s.values[i] !== 0 || d < 1 || d > 9) return s;
+  if (over(s) || isGiven(s, i) || s.values[i] !== 0 || d < 1 || d > 9) return s;
   return apply(s, [{ i, value: 0, notes: s.notes[i] ^ bit(d) }]);
 }
 
 /** Clears a non-given cell's digit and notes. */
 export function erase(s: GameState, i: number): GameState {
-  if (s.finished || isGiven(s, i) || (s.values[i] === 0 && s.notes[i] === 0)) return s;
+  if (over(s) || isGiven(s, i) || (s.values[i] === 0 && s.notes[i] === 0)) return s;
   return apply(s, [{ i, value: 0, notes: 0 }]);
 }
 
 /** Reverts the latest change (digit, note or erase). Hints cannot be undone. Limited to MAX_UNDOS per game. */
 export function undo(s: GameState): GameState {
-  if (s.finished || !s.history.length || s.undosLeft <= 0) return s;
+  if (over(s) || !s.history.length || s.undosLeft <= 0) return s;
   const last = s.history[s.history.length - 1];
   const values = s.values.slice(), notes = s.notes.slice();
   for (const c of last) { values[c.i] = c.value; notes[c.i] = c.notes; }
@@ -251,7 +269,7 @@ export function undo(s: GameState): GameState {
 
 /** Reveals the correct digit: the selected cell when it is open or wrong, else the first such cell. */
 export function hint(s: GameState, selected: number | null): { state: GameState; cell: number | null } {
-  if (s.finished) return { state: s, cell: null };
+  if (over(s)) return { state: s, cell: null };
   const open = (i: number) => !isGiven(s, i) && s.values[i] !== s.solution[i];
   const cell = selected != null && open(selected) ? selected : s.values.findIndex((_, i) => open(i));
   if (cell < 0) return { state: s, cell: null };

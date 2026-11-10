@@ -141,6 +141,8 @@ export const ca: Record<TranslationKey, string> = {
   notes: "Notes",
   hint: "Pista",
   solvedTitle: "Resolt!",
+  gameOverTitle: "Fi de la partida",
+  gameOverBody: "Has fet {n} errors. Torna-ho a provar!",
   endGame: "Finalitza la partida",
   endGameBody: "La partida s'eliminarà i no comptarà a les teves estadístiques.",
 };

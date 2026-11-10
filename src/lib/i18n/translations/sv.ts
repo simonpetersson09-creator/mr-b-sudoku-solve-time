@@ -171,6 +171,8 @@ export const sv = {
   notes: "Anteckningar",
   hint: "Ledtråd",
   solvedTitle: "Löst!",
+  gameOverTitle: "Spelet är slut",
+  gameOverBody: "Du gjorde {n} fel. Försök igen!",
   endGame: "Avsluta spel",
   endGameBody: "Spelet raderas och räknas inte i statistiken.",
 };

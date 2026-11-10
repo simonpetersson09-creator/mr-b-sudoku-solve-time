@@ -9,7 +9,7 @@ import { AppOpenGameGate } from "@/components/AppOpenGameGate";
 import { usePostMatchExit } from "@/lib/ads/usePostMatchExit";
 import { reportLocalGame } from "@/lib/backend/report";
 import {
-  PEERS, digitCounts, erase, hasNote, hint, isGiven, isWrong, newGame, setValue, toggleNote, undo, type GameState,
+  PEERS, MAX_MISTAKES, completedGroups, isLost, digitCounts, erase, hasNote, hint, isGiven, isWrong, newGame, setValue, toggleNote, undo, type GameState,
 } from "@/lib/sudoku/engine";
 import { LEVEL_KEY, formatTime } from "@/lib/sudoku/format";
 import { loadGame, loadSettings, recordFinish, removeGame, saveGame, startNewGame } from "@/lib/player/storage";
@@ -41,6 +41,10 @@ function PlayPage() {
   const [hintCell, setHintCell] = useState<number | null>(null);
   const [hintBusy, setHintBusy] = useState(false);
   const [confirmEnd, setConfirmEnd] = useState(false);
+  const [flash, setFlash] = useState<Set<number>>(new Set());
+  const [holdDigit, setHoldDigit] = useState<number | null>(null);
+  const holdTimer = useRef<number | null>(null);
+  const held = useRef(false);
   const settings = useMemo(() => loadSettings(), []);
   const finishedDone = useRef(false);
 
@@ -90,7 +94,14 @@ function PlayPage() {
     const before = state;
     const next = setValue(before, selected, d, settings.autoRemoveNotes);
     setState(next);
-    if (next !== before) void (next.values[selected] !== before.solution[selected] ? playDiceLandHaptic() : playLightHaptic());
+    if (next === before) return;
+    if (next.values[selected] !== before.solution[selected]) { void playDiceLandHaptic(); return; }
+    const done = completedGroups(next, selected).filter((i) => !completedGroups(before, selected).includes(i));
+    if (done.length && !next.finished) {
+      setFlash(new Set(done));
+      window.setTimeout(() => setFlash(new Set()), 700);
+      void playSuccessHaptic();
+    } else void playLightHaptic();
   };
 
   const onKey = useCallback((e: KeyboardEvent) => {
@@ -101,6 +112,10 @@ function PlayPage() {
     if (e.key in move) { e.preventDefault(); setSelected((c) => { const n = (c ?? 40) + move[e.key]; return n >= 0 && n < 81 ? n : c; }); }
   }, [state, paused, selected, notesMode]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => { window.addEventListener("keydown", onKey); return () => window.removeEventListener("keydown", onKey); }, [onKey]);
+
+  // A lost game (too many mistakes) is removed and never counted in the statistics.
+  const lost = state ? isLost(state) : false;
+  useEffect(() => { if (lost && state) removeGame(state.id); }, [lost]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!state) return <main className="app-screen" />;
 
@@ -143,7 +158,7 @@ function PlayPage() {
           </button>
           <div className="grid flex-1 grid-cols-3 gap-2">
             <span className="sdk-chip text-gold">{t(LEVEL_KEY[state.level])}</span>
-            <span className="sdk-chip" data-bad={state.mistakes > 0}>{t("mistakesN", { n: state.mistakes })}</span>
+            <span className="sdk-chip" data-bad={state.mistakes > 0}>{t("mistakesN", { n: `${state.mistakes}/${MAX_MISTAKES}` })}</span>
             <button onClick={() => setPaused((p) => !p)} disabled={state.finished} aria-label={paused ? t("resume") : t("pause")} className="sdk-chip active:scale-95 disabled:opacity-40">
               {paused ? <Play className="h-5 w-5" /> : <Pause className="h-5 w-5" />}
             </button>
@@ -172,7 +187,8 @@ function PlayPage() {
                   data-given={isGiven(state, i)}
                   data-selected={selected === i}
                   data-peer={selected != null && selected !== i && peers.has(i)}
-                  data-same={settings.highlightSame && selValue !== 0 && v === selValue && selected !== i}
+                  data-same={holdDigit != null ? v === holdDigit : settings.highlightSame && selValue !== 0 && v === selValue && selected !== i}
+                  data-flash={flash.has(i)}
                   data-wrong={wrong}
                   data-hint={hintCell === i}
                   aria-label={t("cellLabel", { row: r + 1, col: c + 1 }) + (v ? `: ${v}` : "")}
@@ -199,7 +215,14 @@ function PlayPage() {
 
         <div className="sdk-pad">
           {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((d) => (
-            <button key={d} className="sdk-key" data-notes={notesMode} disabled={paused || counts[d] >= 9} onClick={() => input(d)} aria-label={String(d)}>
+            <button
+              key={d} className="sdk-key" data-notes={notesMode} disabled={paused || counts[d] >= 9} aria-label={String(d)}
+              onPointerDown={() => { held.current = false; holdTimer.current = window.setTimeout(() => { held.current = true; setHoldDigit(d); void playLightHaptic(); }, 400); }}
+              onPointerUp={() => { if (holdTimer.current) window.clearTimeout(holdTimer.current); setHoldDigit(null); }}
+              onPointerLeave={() => { if (holdTimer.current) window.clearTimeout(holdTimer.current); setHoldDigit(null); }}
+              onContextMenu={(e) => e.preventDefault()}
+              onClick={() => { if (held.current) { held.current = false; return; } input(d); }}
+            >
               {d}
               <small>{9 - counts[d]}</small>
             </button>
@@ -220,6 +243,19 @@ function PlayPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      {lost && (
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-background/80 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-[360px] rounded-2xl border bg-card p-5 text-center shadow-2xl">
+            <p className="text-4xl">😵</p>
+            <h2 className="brand-title mt-1 text-2xl">{t("gameOverTitle")}</h2>
+            <p className="mt-1 text-sm text-muted-foreground">{t("gameOverBody", { n: MAX_MISTAKES })}</p>
+            <div className="home-stack mt-4">
+              <button className="home-action home-action-gold" onClick={again}>{t("playAgain")}</button>
+              <button className="home-action home-action-ghost" onClick={() => navigate({ to: "/" })}>{t("home")}</button>
+            </div>
+          </div>
+        </div>
+      )}
       {state.finished && <ResultOverlay state={state} onAgain={again} onHome={() => navigate({ to: "/" })} />}
     </main>
   );

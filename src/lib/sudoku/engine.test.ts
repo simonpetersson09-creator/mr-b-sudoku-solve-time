@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { solvableBySingles, LEVELS, GIVENS, MAX_UNDOS, countSolutions, generate, newGame, setValue, toggleNote, erase, undo, hint, isWrong, hasNote, isConsistent, solve, PEERS } from "./engine";
+import { solvableBySingles, LEVELS, GIVENS, MAX_UNDOS, countSolutions, generate, newGame, setValue, toggleNote, erase, undo, hint, isWrong, hasNote, isConsistent, solve, PEERS, MAX_MISTAKES, isLost, completedGroups } from "./engine";
 
 describe("puzzle generation", () => {
   for (const level of LEVELS) {
@@ -96,5 +96,30 @@ describe("play", () => {
     g.puzzle.forEach((v, i) => { if (!v) s = setValue(s, i, g.solution[i]); });
     expect(s.finished).toBe(true);
     expect(setValue(s, open, wrong)).toBe(s);
+  });
+});
+
+describe("mistake limit and completed groups", () => {
+  it("the game is lost on the 3rd mistake and then accepts no moves", () => {
+    expect(MAX_MISTAKES).toBe(3);
+    let s = newGame("easy", 11, "m");
+    const open = s.values.map((v, i) => (v ? -1 : i)).filter((i) => i >= 0);
+    const wrong = (i: number) => (s.solution[i] % 9) + 1;
+    s = setValue(s, open[0], wrong(open[0]));
+    s = setValue(s, open[1], wrong(open[1]));
+    expect(isLost(s)).toBe(false);
+    s = setValue(s, open[2], wrong(open[2]));
+    expect(isLost(s)).toBe(true);
+    const after = setValue(s, open[3], s.solution[open[3]]);
+    expect(after).toBe(s);
+  });
+  it("reports the row, column and box once they are completely correct", () => {
+    const g = newGame("easy", 12, "c");
+    const s = { ...g, values: g.solution.slice() };
+    expect(completedGroups(s, 0).length).toBe(21);
+    const gap = { ...s, values: s.values.map((v, i) => (i === 80 ? 0 : v)) };
+    expect(completedGroups(gap, 0).length).toBe(21);
+    expect(completedGroups(gap, 72).length).toBe(15);
+    expect(completedGroups(gap, 80).length).toBe(0);
   });
 });

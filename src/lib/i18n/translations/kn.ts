@@ -158,6 +158,8 @@ export const kn: Record<TranslationKey, string> = {
   notes: "ಟಿಪ್ಪಣಿಗಳು",
   hint: "ಸುಳಿವು",
   solvedTitle: "ಬಿಡಿಸಿದ್ದೀರಿ!",
+  gameOverTitle: "ಆಟ ಮುಗಿದಿದೆ",
+  gameOverBody: "ನೀವು {n} ತಪ್ಪುಗಳನ್ನು ಮಾಡಿದ್ದೀರಿ. ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ!",
   endGame: "ಆಟವನ್ನು ಮುಗಿಸಿ",
   endGameBody: "ಆಟವನ್ನು ಅಳಿಸಲಾಗುತ್ತದೆ ಮತ್ತು ನಿಮ್ಮ ಅಂಕಿಅಂಶಗಳಲ್ಲಿ ಸೇರಿಸಲಾಗುವುದಿಲ್ಲ.",
 };

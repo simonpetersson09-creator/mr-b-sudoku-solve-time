@@ -158,6 +158,8 @@ export const ja: Record<TranslationKey, string> = {
   notes: "メモ",
   hint: "ヒント",
   solvedTitle: "クリア！",
+  gameOverTitle: "ゲームオーバー",
+  gameOverBody: "{n}回間違えました。もう一度挑戦してください！",
   endGame: "ゲームを終了",
   endGameBody: "このゲームは削除され、統計には反映されません。",
 };

@@ -158,6 +158,8 @@ export const pt: Record<TranslationKey, string> = {
   notes: "Notas",
   hint: "Ajuda",
   solvedTitle: "Resolvido!",
+  gameOverTitle: "Fim de jogo",
+  gameOverBody: "Você cometeu {n} erros. Tente novamente!",
   endGame: "Terminar jogo",
   endGameBody: "O jogo será eliminado e não contará para as suas estatísticas.",
 };

@@ -141,6 +141,8 @@ export const sk: Record<TranslationKey, string> = {
   notes: "Poznámky",
   hint: "Pomôcka",
   solvedTitle: "Vyriešené!",
+  gameOverTitle: "Koniec hry",
+  gameOverBody: "Urobili ste {n} chýb. Skúste to znova!",
   endGame: "Ukončiť hru",
   endGameBody: "Hra sa vymaže a nezapočíta sa do vašich štatistík.",
 };

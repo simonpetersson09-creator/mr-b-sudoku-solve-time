@@ -158,6 +158,8 @@ export const no: Record<TranslationKey, string> = {
   notes: "Notater",
   hint: "Hint",
   solvedTitle: "Løst!",
+  gameOverTitle: "Spillet er over",
+  gameOverBody: "Du gjorde {n} feil. Prøv igjen!",
   endGame: "Avslutt spillet",
   endGameBody: "Spillet slettes og telles ikke med i statistikken din.",
 };

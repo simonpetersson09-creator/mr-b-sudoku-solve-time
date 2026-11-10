@@ -141,6 +141,8 @@ export const cs: Record<TranslationKey, string> = {
   notes: "Poznámky",
   hint: "Nápověda",
   solvedTitle: "Vyřešeno!",
+  gameOverTitle: "Konec hry",
+  gameOverBody: "Udělali jste {n} chyb. Zkuste to znovu!",
   endGame: "Ukončit hru",
   endGameBody: "Hra bude smazána a nezapočítá se do statistik.",
 };

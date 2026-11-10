@@ -158,6 +158,8 @@ export const ro: Record<TranslationKey, string> = {
   notes: "Notițe",
   hint: "Indiciu",
   solvedTitle: "Rezolvat!",
+  gameOverTitle: "Jocul s-a terminat",
+  gameOverBody: "Ai făcut {n} greșeli. Încearcă din nou!",
   endGame: "Încheie jocul",
   endGameBody: "Jocul este șters și nu este inclus în statisticile tale.",
 };

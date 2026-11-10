@@ -520,6 +520,9 @@ html::-webkit-scrollbar, body::-webkit-scrollbar, *::-webkit-scrollbar { display
 .sdk-tool:disabled { opacity: .4; }
 .sdk-badge { position: absolute; top: 2px; right: 10%; min-width: 16px; padding: 0 4px; border-radius: 9999px; background: var(--game-gold); color: var(--primary-foreground); font-size: 10px; line-height: 16px; }
 .sdk-pad { display: grid; grid-template-columns: repeat(9, 1fr); gap: 4px; }
+.sdk-cell[data-flash="true"] { animation: sdk-flash .7s ease-out; }
+@keyframes sdk-flash { 0% { background: var(--sudoku-cell-bg, transparent); } 35% { background: color-mix(in oklab, var(--game-gold) 55%, transparent); } 100% { } }
+.sdk-key { -webkit-touch-callout: none; user-select: none; }
 .sdk-chip {
   display: flex; height: 44px; min-width: 0; align-items: center; justify-content: center; padding: 0 8px;
   border-radius: 12px; border: 1px solid var(--border); background: color-mix(in oklab, var(--secondary) 60%, transparent);

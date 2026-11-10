@@ -158,6 +158,8 @@ export const pa: Record<TranslationKey, string> = {
   notes: "ਨੋਟਸ",
   hint: "ਇਸ਼ਾਰਾ",
   solvedTitle: "ਹੱਲ ਹੋ ਗਈ!",
+  gameOverTitle: "Fim de jogo",
+  gameOverBody: "Você cometeu {n} erros. Tente novamente!",
   endGame: "ਗੇਮ ਖਤਮ ਕਰੋ",
   endGameBody: "ਗੇਮ ਮਿਟਾ ਦਿੱਤੀ ਜਾਵੇਗੀ ਅਤੇ ਤੁਹਾਡੇ ਅੰਕੜਿਆਂ ਵਿੱਚ ਨਹੀਂ ਗਿਣੀ ਜਾਵੇਗੀ।",
 };

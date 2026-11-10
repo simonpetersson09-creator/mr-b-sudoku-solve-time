@@ -158,6 +158,8 @@ export const tr: Record<TranslationKey, string> = {
   notes: "Notlar",
   hint: "İpucu",
   solvedTitle: "Çözüldü!",
+  gameOverTitle: "Oyun Bitti",
+  gameOverBody: "{n} hata yaptın. Tekrar dene!",
   endGame: "Oyunu bitir",
   endGameBody: "Oyun silinir ve istatistiklerinize dahil edilmez.",
 };

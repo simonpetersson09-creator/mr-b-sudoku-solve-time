@@ -158,6 +158,8 @@ export const ko: Record<TranslationKey, string> = {
   notes: "메모",
   hint: "힌트",
   solvedTitle: "완료!",
+  gameOverTitle: "게임 종료",
+  gameOverBody: "{n}번 틀렸습니다. 다시 시도해 보세요!",
   endGame: "게임 종료",
   endGameBody: "게임이 삭제되며 통계에 반영되지 않습니다.",
 };

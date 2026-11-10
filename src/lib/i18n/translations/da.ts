@@ -158,6 +158,8 @@ export const da: Record<TranslationKey, string> = {
   notes: "Noter",
   hint: "Tip",
   solvedTitle: "Løst!",
+  gameOverTitle: "Spillet er slut",
+  gameOverBody: "Du lavede {n} fejl. Prøv igen!",
   endGame: "Afslut spil",
   endGameBody: "Spillet slettes og tæller ikke med i din statistik.",
 };

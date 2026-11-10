@@ -141,6 +141,8 @@ export const el: Record<TranslationKey, string> = {
   notes: "Σημειώσεις",
   hint: "Βοήθεια",
   solvedTitle: "Λύθηκε!",
+  gameOverTitle: "Τέλος παιχνιδιού",
+  gameOverBody: "Έκανες {n} λάθη. Προσπάθησε ξανά!",
   endGame: "Τερματισμός παιχνιδιού",
   endGameBody: "Το παιχνίδι διαγράφεται και δεν προσμετράται στα στατιστικά σου.",
 };
