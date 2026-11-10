@@ -701,3 +701,7 @@ main[data-level="master"] .sdk-level-pill { background: color-mix(in oklab, var(
 .sdk-board[data-lost="true"] { animation: sdk-board-out 1.5s ease-in forwards; pointer-events: none; }
 @keyframes sdk-board-out { to { opacity: .25; filter: grayscale(1) blur(1px); transform: scale(.97); } }
 @media (prefers-reduced-motion: reduce) { .sdk-board[data-lost="true"], .sdk-dot[data-on="true"] { animation: none; } }
+
+/* Spelsidan är fast: ingen scroll */
+.sdk-fixed { position: fixed; inset: 0; height: 100dvh; min-height: 0; overflow: hidden; overscroll-behavior: none; touch-action: manipulation; }
+.sdk-fixed .sdk-board { width: 100%; max-width: min(100%, max(200px, calc(100dvh - 350px - var(--safe-top) - env(safe-area-inset-bottom)))); margin-inline: auto; }
