@@ -629,8 +629,29 @@ html::-webkit-scrollbar, body::-webkit-scrollbar, *::-webkit-scrollbar { display
 
 /* Play-screen effects (one-shot). */
 .sdk-cell { transition: background-color .25s ease, color .2s ease; }
-.sdk-cell[data-pop="true"] { animation: sdk-pop .35s ease-out; }
+.sdk-cell[data-pop="true"] {
+  z-index: 5; background: color-mix(in oklab, var(--game-gold) 40%, var(--board));
+  animation: sdk-pop .35s ease-out, sdk-digit-glow .9s ease-out;
+}
 @keyframes sdk-pop { 0% { transform: scale(.3); opacity: 0; } 60% { transform: scale(1.25); opacity: 1; } 100% { transform: scale(1); } }
+/* Right digit: a gold ring expands out of the cell while the digit glows. */
+.sdk-cell[data-pop="true"]::after {
+  content: ""; position: absolute; inset: 6%; z-index: 3; pointer-events: none;
+  border-radius: 50%; border: 2.5px solid var(--game-gold);
+  box-shadow: 0 0 10px color-mix(in oklab, var(--game-gold) 55%, transparent);
+  animation: sdk-ripple .85s ease-out forwards;
+}
+@keyframes sdk-ripple { 0% { transform: scale(.35); opacity: 1; } 55% { opacity: .75; } 100% { transform: scale(2.1); opacity: 0; } }
+@keyframes sdk-digit-glow {
+  0% { color: var(--sdk-entry); text-shadow: 0 0 0 transparent; }
+  20% { color: var(--game-gold); text-shadow: 0 0 18px color-mix(in oklab, var(--game-gold) 100%, transparent), 0 0 6px color-mix(in oklab, var(--game-gold) 100%, transparent); }
+  55% { color: var(--game-gold); text-shadow: 0 0 12px color-mix(in oklab, var(--game-gold) 85%, transparent); }
+  100% { color: var(--sdk-entry); text-shadow: 0 0 0 transparent; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sdk-cell[data-pop="true"]::after { animation: none; opacity: 0; }
+  .sdk-cell[data-pop="true"] { animation: sdk-pop .35s ease-out; }
+}
 .sdk-cell[data-shake="true"] { animation: sdk-shake .4s ease-in-out; }
 @keyframes sdk-shake { 0%, 100% { transform: none; } 20%, 60% { transform: translateX(-4px); } 40%, 80% { transform: translateX(4px); } }
 .sdk-cell[data-wave="true"] { animation: sdk-wave .6s ease-in-out both; animation-delay: calc(var(--d) * 60ms); }

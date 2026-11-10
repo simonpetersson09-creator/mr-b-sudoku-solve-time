@@ -145,6 +145,8 @@ function PlayPage() {
     }
     setShakeCell(null);
     setPopCell({ i: selected, k });
+    // Let the gold ripple finish, then let the cell return to its normal look.
+    window.setTimeout(() => setPopCell((p) => (p && p.k === k ? null : p)), 950);
     if (next.finished) { setCelebrating(true); window.setTimeout(() => setCelebrating(false), 1600); }
     const done = completedGroups(next, selected).filter((i) => !completedGroups(before, selected).includes(i));
     if (done.length && !next.finished) {
