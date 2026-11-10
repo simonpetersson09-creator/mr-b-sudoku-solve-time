@@ -149,7 +149,6 @@ export const ro: Record<TranslationKey, string> = {
   level: "Nivel",
   pauseMenu: "Pauză / Încheie",
   time: "Timp",
-  pause: "Pauză",
   resume: "Continuă",
   paused: "În pauză",
   tapToResume: "Atinge pentru a continua",

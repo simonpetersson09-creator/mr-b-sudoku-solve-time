@@ -149,7 +149,6 @@ export const tr: Record<TranslationKey, string> = {
   level: "Seviye",
   pauseMenu: "Duraklat / Bitir",
   time: "Süre",
-  pause: "Duraklat",
   resume: "Devam et",
   paused: "Duraklatıldı",
   tapToResume: "Devam etmek için dokun",

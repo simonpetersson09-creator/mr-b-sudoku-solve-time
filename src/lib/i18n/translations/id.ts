@@ -149,7 +149,6 @@ export const id: Record<TranslationKey, string> = {
   level: "Level",
   pauseMenu: "Jeda / Akhiri",
   time: "Waktu",
-  pause: "Jeda",
   resume: "Lanjutkan",
   paused: "Dijeda",
   tapToResume: "Ketuk untuk melanjutkan",

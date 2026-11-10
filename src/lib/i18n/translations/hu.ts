@@ -132,7 +132,6 @@ export const hu: Record<TranslationKey, string> = {
   level: "Szint",
   pauseMenu: "Szünet / Befejezés",
   time: "Idő",
-  pause: "Szünet",
   resume: "Folytatás",
   paused: "Szüneteltetve",
   tapToResume: "Koppints a folytatáshoz",

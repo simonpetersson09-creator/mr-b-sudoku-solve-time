@@ -132,7 +132,6 @@ export const sl: Record<TranslationKey, string> = {
   level: "Raven",
   pauseMenu: "Pavza / Končaj",
   time: "Čas",
-  pause: "Premor",
   resume: "Nadaljuj",
   paused: "Igra je na premoru",
   tapToResume: "Tapnite za nadaljevanje",

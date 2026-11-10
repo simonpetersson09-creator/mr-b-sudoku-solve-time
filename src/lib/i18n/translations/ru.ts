@@ -149,7 +149,6 @@ export const ru: Record<TranslationKey, string> = {
   level: "Уровень",
   pauseMenu: "Пауза / Выход",
   time: "Время",
-  pause: "Пауза",
   resume: "Продолжить",
   paused: "Пауза",
   tapToResume: "Нажмите, чтобы продолжить",

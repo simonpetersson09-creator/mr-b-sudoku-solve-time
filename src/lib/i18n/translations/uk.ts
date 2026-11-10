@@ -149,7 +149,6 @@ export const uk: Record<TranslationKey, string> = {
   level: "Рівень",
   pauseMenu: "Пауза / Завершити",
   time: "Час",
-  pause: "Пауза",
   resume: "Продовжити",
   paused: "Пауза",
   tapToResume: "Торкніться, щоб продовжити",

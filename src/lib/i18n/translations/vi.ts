@@ -149,7 +149,6 @@ export const vi: Record<TranslationKey, string> = {
   level: "Cấp độ",
   pauseMenu: "Tạm dừng / Thoát",
   time: "Thời gian",
-  pause: "Tạm dừng",
   resume: "Tiếp tục",
   paused: "Đã tạm dừng",
   tapToResume: "Chạm để tiếp tục",

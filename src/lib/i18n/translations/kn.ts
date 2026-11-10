@@ -149,7 +149,6 @@ export const kn: Record<TranslationKey, string> = {
   level: "ಮಟ್ಟ",
   pauseMenu: "ವಿರಾಮ / ಮುಗಿಸು",
   time: "ಸಮಯ",
-  pause: "ವಿರಾಮ",
   resume: "ಮುಂದುವರಿಸಿ",
   paused: "ವಿರಾಮದಲ್ಲಿದೆ",
   tapToResume: "ಮುಂದುವರಿಸಲು ಟ್ಯಾಪ್ ಮಾಡಿ",

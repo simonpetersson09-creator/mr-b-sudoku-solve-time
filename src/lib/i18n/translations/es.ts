@@ -149,7 +149,6 @@ export const es: Record<TranslationKey, string> = {
   level: "Nivel",
   pauseMenu: "Pausa / Salir",
   time: "Tiempo",
-  pause: "Pausar",
   resume: "Continuar",
   paused: "En pausa",
   tapToResume: "Toca para continuar",

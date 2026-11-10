@@ -149,7 +149,6 @@ export const pa: Record<TranslationKey, string> = {
   level: "ਪੱਧਰ",
   pauseMenu: "ਰੋਕੋ / ਛੱਡੋ",
   time: "ਸਮਾਂ",
-  pause: "ਵਿਰਾਮ",
   resume: "ਜਾਰੀ ਰੱਖੋ",
   paused: "ਵਿਰਾਮ 'ਤੇ",
   tapToResume: "ਜਾਰੀ ਰੱਖਣ ਲਈ ਟੈਪ ਕਰੋ",

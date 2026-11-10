@@ -149,7 +149,6 @@ export const ko: Record<TranslationKey, string> = {
   level: "레벨",
   pauseMenu: "일시정지 / 종료",
   time: "시간",
-  pause: "일시정지",
   resume: "계속하기",
   paused: "일시정지됨",
   tapToResume: "탭하여 계속하기",

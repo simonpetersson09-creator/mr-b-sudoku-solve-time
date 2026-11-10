@@ -149,7 +149,6 @@ export const th: Record<TranslationKey, string> = {
   level: "ระดับ",
   pauseMenu: "พัก / จบ",
   time: "เวลา",
-  pause: "พักเกม",
   resume: "เล่นต่อ",
   paused: "พักเกมอยู่",
   tapToResume: "แตะเพื่อเล่นต่อ",

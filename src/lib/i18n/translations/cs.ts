@@ -132,7 +132,6 @@ export const cs: Record<TranslationKey, string> = {
   level: "Úroveň",
   pauseMenu: "Pauza / Konec",
   time: "Čas",
-  pause: "Pozastavit",
   resume: "Pokračovat",
   paused: "Pozastaveno",
   tapToResume: "Klepnutím pokračujte",

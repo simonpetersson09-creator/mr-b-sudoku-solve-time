@@ -162,7 +162,6 @@ export const sv = {
   level: "Nivå",
   pauseMenu: "Paus / Avsluta",
   time: "Tid",
-  pause: "Pausa",
   resume: "Fortsätt",
   paused: "Pausat",
   tapToResume: "Tryck för att fortsätta",

@@ -149,7 +149,6 @@ export const te: Record<TranslationKey, string> = {
   level: "స్థాయి",
   pauseMenu: "పాజ్ / ముగించు",
   time: "సమయం",
-  pause: "పాజ్",
   resume: "కొనసాగించు",
   paused: "పాజ్ చేయబడింది",
   tapToResume: "కొనసాగించడానికి నొక్కండి",

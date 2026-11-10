@@ -132,7 +132,6 @@ export const fi: Record<TranslationKey, string> = {
   level: "Taso",
   pauseMenu: "Tauko / Lopeta",
   time: "Aika",
-  pause: "Tauko",
   resume: "Jatka",
   paused: "Tauolla",
   tapToResume: "Jatka napauttamalla",

@@ -149,7 +149,6 @@ export const ml: Record<TranslationKey, string> = {
   level: "നില",
   pauseMenu: "പോസ് / അവസാനിപ്പിക്കുക",
   time: "സമയം",
-  pause: "താൽക്കാലികമായി നിർത്തുക",
   resume: "തുടരുക",
   paused: "താൽക്കാലികമായി നിർത്തി",
   tapToResume: "തുടരാൻ ടാപ്പ് ചെയ്യുക",

@@ -132,7 +132,6 @@ export const el: Record<TranslationKey, string> = {
   level: "Επίπεδο",
   pauseMenu: "Παύση / Τέλος",
   time: "Χρόνος",
-  pause: "Παύση",
   resume: "Συνέχεια",
   paused: "Σε παύση",
   tapToResume: "Πάτησε για συνέχεια",

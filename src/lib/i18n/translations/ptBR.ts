@@ -132,7 +132,6 @@ export const ptBR: Record<TranslationKey, string> = {
   level: "Nível",
   pauseMenu: "Pausa / Sair",
   time: "Tempo",
-  pause: "Pausar",
   resume: "Continuar",
   paused: "Pausado",
   tapToResume: "Toque para continuar",

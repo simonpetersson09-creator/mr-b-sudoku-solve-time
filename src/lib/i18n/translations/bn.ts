@@ -149,7 +149,6 @@ export const bn: Record<TranslationKey, string> = {
   level: "স্তর",
   pauseMenu: "বিরতি / শেষ",
   time: "সময়",
-  pause: "বিরতি",
   resume: "আবার শুরু",
   paused: "বিরতি চলছে",
   tapToResume: "আবার শুরু করতে ট্যাপ করুন",

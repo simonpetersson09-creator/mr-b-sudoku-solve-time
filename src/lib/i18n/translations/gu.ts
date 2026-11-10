@@ -149,7 +149,6 @@ export const gu: Record<TranslationKey, string> = {
   level: "સ્તર",
   pauseMenu: "વિરામ / સમાપ્ત",
   time: "સમય",
-  pause: "થોભાવો",
   resume: "ફરી શરૂ કરો",
   paused: "થોભાવેલી",
   tapToResume: "ફરી શરૂ કરવા ટૅપ કરો",

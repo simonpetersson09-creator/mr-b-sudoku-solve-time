@@ -132,7 +132,6 @@ export const hr: Record<TranslationKey, string> = {
   level: "Razina",
   pauseMenu: "Pauza / Kraj",
   time: "Vrijeme",
-  pause: "Pauziraj",
   resume: "Nastavi",
   paused: "Pauzirano",
   tapToResume: "Dodirnite za nastavak",

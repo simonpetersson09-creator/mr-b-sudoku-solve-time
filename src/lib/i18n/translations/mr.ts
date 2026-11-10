@@ -149,7 +149,6 @@ export const mr: Record<TranslationKey, string> = {
   level: "स्तर",
   pauseMenu: "विराम / समाप्त",
   time: "वेळ",
-  pause: "थांबवा",
   resume: "पुढे सुरू करा",
   paused: "थांबवले",
   tapToResume: "पुढे सुरू करण्यासाठी टॅप करा",

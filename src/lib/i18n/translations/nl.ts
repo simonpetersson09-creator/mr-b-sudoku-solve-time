@@ -132,7 +132,6 @@ export const nl: Record<TranslationKey, string> = {
   level: "Niveau",
   pauseMenu: "Pauze / Stop",
   time: "Tijd",
-  pause: "Pauzeren",
   resume: "Hervatten",
   paused: "Gepauzeerd",
   tapToResume: "Tik om te hervatten",

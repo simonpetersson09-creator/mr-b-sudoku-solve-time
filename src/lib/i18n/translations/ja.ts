@@ -149,7 +149,6 @@ export const ja: Record<TranslationKey, string> = {
   level: "レベル",
   pauseMenu: "一時停止 / 終了",
   time: "時間",
-  pause: "一時停止",
   resume: "再開",
   paused: "一時停止中",
   tapToResume: "タップして再開",

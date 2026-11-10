@@ -149,7 +149,6 @@ export const ta: Record<TranslationKey, string> = {
   level: "நிலை",
   pauseMenu: "இடைநிறுத்து / முடி",
   time: "நேரம்",
-  pause: "இடைநிறுத்து",
   resume: "தொடர்",
   paused: "இடைநிறுத்தப்பட்டது",
   tapToResume: "தொடரத் தட்டுங்கள்",
