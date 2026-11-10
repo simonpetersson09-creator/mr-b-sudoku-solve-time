@@ -1,7 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, CircleX, Eraser, Lightbulb, Pause, Pencil, Play, Undo2 } from "lucide-react";
-import mrBLogo from "@/assets/mr-b-sudoku-logo.png";
 import { showOptionalInterstitial } from "@/lib/ads/admob";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
@@ -142,25 +141,24 @@ function PlayPage() {
           <button onClick={() => navigate({ to: "/" })} aria-label={t("back")} className="flex h-11 w-11 items-center justify-center rounded-xl active:bg-secondary/80">
             <ArrowLeft className="h-5 w-5 text-muted-foreground" />
           </button>
-          <div className="min-w-0 flex-1">
-            <p className="font-display text-sm font-bold text-gold">{t(LEVEL_KEY[state.level])}</p>
-            <p className="text-xs text-muted-foreground">{t("mistakesN", { n: state.mistakes })}</p>
+          <div className="grid flex-1 grid-cols-3 gap-2">
+            <span className="sdk-chip text-gold">{t(LEVEL_KEY[state.level])}</span>
+            <span className="sdk-chip" data-bad={state.mistakes > 0}>{t("mistakesN", { n: state.mistakes })}</span>
+            <button onClick={() => setPaused((p) => !p)} disabled={state.finished} aria-label={paused ? t("resume") : t("pause")} className="sdk-chip active:scale-95 disabled:opacity-40">
+              {paused ? <Play className="h-5 w-5" /> : <Pause className="h-5 w-5" />}
+            </button>
           </div>
-          <span className="font-display text-lg font-bold tabular-nums" aria-label={t("time")}>{formatTime(state.elapsedMs)}</span>
-          <button onClick={() => setPaused((p) => !p)} disabled={state.finished} aria-label={paused ? t("resume") : t("pause")} className="flex h-11 w-11 items-center justify-center rounded-xl bg-secondary/60 active:bg-secondary disabled:opacity-40">
-            {paused ? <Play className="h-5 w-5" /> : <Pause className="h-5 w-5" />}
-          </button>
-        </div>
-
-        <div className="flex items-center justify-center py-1">
-          <img src={mrBLogo} alt="Mr.B. Sudoku" className="h-20 w-20 object-contain sm:h-24 sm:w-24" />
         </div>
 
         <div className="flex flex-1 flex-col justify-center gap-3">
+        <p className="text-center font-display text-3xl font-bold tabular-nums tracking-wider" aria-label={t("time")}>{formatTime(state.elapsedMs)}</p>
         {paused ? (
-          <button className="sdk-paused" onClick={() => setPaused(false)}>
-            <span className="flex flex-col items-center gap-2"><Play className="h-10 w-10 text-gold" /><span className="font-display text-lg font-bold">{t("paused")}</span><span className="text-xs text-muted-foreground">{t("tapToResume")}</span></span>
-          </button>
+          <div className="sdk-paused">
+            <button onClick={() => setPaused(false)} className="flex flex-col items-center gap-2 rounded-xl p-4 active:scale-95"><Play className="h-12 w-12 text-gold" /><span className="font-display text-lg font-bold">{t("paused")}</span><span className="text-xs text-muted-foreground">{t("tapToResume")}</span></button>
+            <button className="sdk-end absolute inset-x-4 bottom-4" onClick={() => setConfirmEnd(true)} disabled={state.finished}>
+              <CircleX className="h-5 w-5" />{t("endGame")}
+            </button>
+          </div>
         ) : (
           <div className="sdk-board" role="grid" aria-label={t("board")}>
             {state.values.map((v, i) => {
@@ -208,9 +206,6 @@ function PlayPage() {
           ))}
         </div>
 
-        <button className="sdk-end" onClick={() => setConfirmEnd(true)} disabled={state.finished}>
-          <CircleX className="h-5 w-5" />{t("endGame")}
-        </button>
         </div>
       </div>
       <AlertDialog open={confirmEnd} onOpenChange={setConfirmEnd}>

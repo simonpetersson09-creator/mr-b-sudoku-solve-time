@@ -513,13 +513,19 @@ html::-webkit-scrollbar, body::-webkit-scrollbar, *::-webkit-scrollbar { display
 .sdk-cell[data-wrong="true"][data-selected="true"] { background: color-mix(in oklch, var(--sdk-wrong-bg) 60%, var(--sdk-selected)); }
 .sdk-notes { position: absolute; inset: 1px; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); }
 .sdk-notes span { display: grid; place-items: center; font-family: var(--font-sans); font-size: clamp(8px, 2.4vw, 11px); font-weight: 600; color: var(--control-muted); }
-.sdk-paused { display: grid; place-items: center; aspect-ratio: 1; width: 100%; border-radius: 12px; background: var(--card); border: 1px solid var(--border); }
+.sdk-paused { position: relative; display: grid; place-items: center; aspect-ratio: 1; width: 100%; border-radius: 12px; background: var(--card); border: 1px solid var(--border); }
 .sdk-tool { display: flex; min-height: 44px; flex: 1; flex-direction: column; align-items: center; justify-content: center; gap: 2px; border-radius: 12px; color: var(--foreground); font-size: 11px; font-weight: 600; transition: transform .1s, background-color .15s; }
 .sdk-tool:active { transform: scale(.95); background: var(--secondary); }
 .sdk-tool[aria-pressed="true"] { color: var(--primary-foreground); background: var(--game-gold); }
 .sdk-tool:disabled { opacity: .4; }
 .sdk-badge { position: absolute; top: 2px; right: 10%; min-width: 16px; padding: 0 4px; border-radius: 9999px; background: var(--game-gold); color: var(--primary-foreground); font-size: 10px; line-height: 16px; }
 .sdk-pad { display: grid; grid-template-columns: repeat(9, 1fr); gap: 4px; }
+.sdk-chip {
+  display: flex; height: 44px; min-width: 0; align-items: center; justify-content: center; padding: 0 8px;
+  border-radius: 12px; border: 1px solid var(--border); background: color-mix(in oklab, var(--secondary) 60%, transparent);
+  font-family: var(--font-display); font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.sdk-chip[data-bad="true"] { color: var(--destructive); border-color: color-mix(in oklab, var(--destructive) 40%, transparent); }
 .sdk-end {
   display: flex; min-height: 44px; align-items: center; justify-content: center; gap: 8px;
   border-radius: 12px; border: 1px solid color-mix(in oklab, var(--destructive) 30%, transparent);
@@ -530,7 +536,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar, *::-webkit-scrollbar { display
 .sdk-end:disabled { opacity: .4; }
 /* Short phones: shrink the board so the number row and the end-game button stay on screen. */
 @media (orientation: portrait) {
-  .sdk-board { max-width: min(100%, max(200px, calc(100dvh - 350px))); margin-inline: auto; }
+  .sdk-board { max-width: min(100%, max(200px, calc(100dvh - 330px))); margin-inline: auto; }
 }
 .sdk-key { display: flex; min-height: 52px; flex-direction: column; align-items: center; justify-content: center; border-radius: 12px; background: var(--card); border: 1px solid var(--border); color: var(--game-gold-light); font-family: var(--font-display); font-size: 24px; font-weight: 700; transition: transform .1s; }
 .sdk-key:active { transform: scale(.94); background: var(--secondary); }
