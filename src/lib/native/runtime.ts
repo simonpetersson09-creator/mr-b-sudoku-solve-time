@@ -1,0 +1,31 @@
+import { Capacitor } from "@capacitor/core";
+import type { PluginListenerHandle } from "@capacitor/core";
+import { supabase } from "@/lib/auth/client";
+import { nativeDiagnostic } from "./diagnostics";
+
+export const RESUME_EVENT = "mrb-sudoku:resume";
+export async function startNativeRuntime(goHome: () => void) {
+  if (!Capacitor.isNativePlatform()) return () => {};
+  const [{ App }, { Network }, { StatusBar, Style }] = await Promise.all([
+    import("@capacitor/app"), import("@capacitor/network"), import("@capacitor/status-bar"),
+  ]);
+  const handles: PluginListenerHandle[] = [];
+  await StatusBar.setStyle({ style: Style.Dark }).catch(() => {});
+  const resume = () => {
+    supabase.auth.startAutoRefresh();
+    window.dispatchEvent(new Event(RESUME_EVENT));
+  };
+  handles.push(await App.addListener("appStateChange", ({ isActive }) => {
+    nativeDiagnostic("lifecycle", isActive ? "active" : "background");
+    if (isActive) resume();
+    else { supabase.auth.stopAutoRefresh(); window.dispatchEvent(new Event("mrb-sudoku:pause")); }
+  }));
+  handles.push(await Network.addListener("networkStatusChange", ({ connected }) => {
+    nativeDiagnostic("network", connected ? "online" : "offline");
+    window.dispatchEvent(new Event(connected ? "online" : "offline"));
+    if (connected) resume();
+  }));
+  // AndroidBackButton owns back navigation; a second handler bypassed its
+  // leave-match confirmation and could exit instead of minimizing.
+  return () => { handles.forEach(handle => { void handle.remove(); }); };
+}
