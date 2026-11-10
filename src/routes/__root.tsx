@@ -157,6 +157,19 @@ function RootComponent() {
     const clear = window.setTimeout(() => clearChunkReloadTries(CHUNK_RELOAD_KEY), 10_000);
     return () => { window.removeEventListener("vite:preloadError", onFail); window.clearTimeout(clear); };
   }, []);
+  // Preview helper: open any screen with ?safe=1 to see the iPhone status-bar margin in the browser
+  // preview (?safe=0 turns it off again). The real app sets the same class from the native shell.
+  useEffect(() => {
+    const SAFE_PREVIEW_KEY = "mrb-sudoku:v1:safe-preview";
+    const param = new URLSearchParams(window.location.search).get("safe");
+    try {
+      if (param === "1") sessionStorage.setItem(SAFE_PREVIEW_KEY, "1");
+      if (param === "0") sessionStorage.removeItem(SAFE_PREVIEW_KEY);
+      if (sessionStorage.getItem(SAFE_PREVIEW_KEY) === "1") document.documentElement.classList.add("native-ios");
+    } catch {
+      // Storage unavailable: the preview just keeps the normal margin.
+    }
+  }, []);
   // Uncaught app errors go to the admin logs (deduplicated and capped per session).
   useEffect(() => {
     const onError = (e: ErrorEvent) => reportAppError(e.error ?? e.message, "onerror");
