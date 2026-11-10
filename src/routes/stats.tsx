@@ -36,15 +36,15 @@ function StatsPage() {
         <h1 className="brand-title mb-3 text-3xl">{t("statsTitle")}</h1>
         {s && (
           <section className="overflow-hidden rounded-2xl border border-border/40 bg-secondary/50 text-sm">
-            <div className="grid grid-cols-[1fr_repeat(4,3.6rem)] gap-1 px-3 pb-1 pt-2 text-right text-[10px] text-muted-foreground">
+            <div className="grid grid-cols-[minmax(0,1fr)_repeat(4,3.1rem)] gap-1 px-3 pb-1 pt-2 text-right text-[10px] text-muted-foreground">
               <span className="text-left font-display text-[12px] font-bold text-foreground">{t("statsAllTime")}</span>
               <span>{t("statPlayed")}</span><span>{t("statWins")}</span><span>{t("statBestTime")}</span><span>{t("statAvgTime")}</span>
             </div>
             {LEVELS.map((l) => {
               const x = s[l];
               return (
-                <div key={l} className="grid grid-cols-[1fr_repeat(4,3.6rem)] items-center gap-1 border-t border-border/20 px-3 py-1.5 text-right font-display tabular-nums">
-                  <span className="truncate text-left font-sans text-[11px] font-bold uppercase text-gold">{t(LEVEL_KEY[l])}</span>
+                <div key={l} className="grid grid-cols-[minmax(0,1fr)_repeat(4,3.1rem)] items-center gap-1 border-t border-border/20 px-3 py-1.5 text-right font-display tabular-nums">
+                  <span className="break-words text-left font-sans text-[11px] font-bold uppercase leading-tight text-gold">{t(LEVEL_KEY[l])}</span>
                   <span className="font-bold">{x.played}</span>
                   <span className="font-bold">{x.wins}</span>
                   <span>{x.bestMs != null ? formatTime(x.bestMs) : "–"}</span>
