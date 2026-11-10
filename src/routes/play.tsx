@@ -218,12 +218,12 @@ function PlayPage() {
         </div>
 
         <div className="flex flex-1 flex-col justify-end gap-0">
-        <p className="text-center font-display text-2xl font-bold tabular-nums tracking-wider" aria-label={t("time")}>{formatTime(state.elapsedMs)}</p>
-        <p className="-mb-1 text-center text-[11px] text-muted-foreground">
+        <p className="mb-0.5 text-center text-[11px] leading-none text-muted-foreground">
           {t("statBestTime")}: <span className="font-display font-bold tabular-nums text-gold">{stats[state.level].bestMs != null ? formatTime(stats[state.level].bestMs!) : "–"}</span>
         </p>
         <div className="sdk-board-head">
           <span className="sdk-level-pill" aria-label={`${t("level")}: ${t(LEVEL_KEY[state.level])}`}>{t(LEVEL_KEY[state.level])}</span>
+          <p className="sdk-board-time" aria-label={t("time")}>{formatTime(state.elapsedMs)}</p>
           <span className="sdk-fel-pill" data-bad={state.mistakes > 0} aria-label={`${t("mistakes")}: ${state.mistakes}/${MAX_MISTAKES}`}>
             <span className="sdk-fel-label">{t("mistakes")}</span>
             <span className="sdk-fel-dots">{Array.from({ length: MAX_MISTAKES }, (_, k) => <span key={k} className="sdk-dot" data-on={k < state.mistakes} />)}</span>
