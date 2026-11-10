@@ -231,7 +231,7 @@ function PlayPage() {
                   {showHint === i && <span className="sdk-hint-digit" aria-hidden="true">{state.solution[i]}</span>}
                   {v ? v : state.notes[i] ? (
                     <span className="sdk-notes" aria-hidden="true">
-                      {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((d) => <span key={d}>{hasNote(state.notes[i], d) ? d : ""}</span>)}
+                      {[1, 2, 3, 4, 5, 6, 7, 8, 9].filter((d) => hasNote(state.notes[i], d)).map((d) => <span key={d}>{d}</span>)}
                     </span>
                   ) : null}
                 </button>

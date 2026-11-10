@@ -579,8 +579,8 @@ html::-webkit-scrollbar, body::-webkit-scrollbar, *::-webkit-scrollbar { display
 .sdk-cell[data-hint="true"] { background: var(--sdk-hint); }
 .sdk-cell[data-wrong="true"] { color: var(--sdk-wrong); background: var(--sdk-wrong-bg); }
 .sdk-cell[data-wrong="true"][data-selected="true"] { background: color-mix(in oklch, var(--sdk-wrong-bg) 60%, var(--sdk-selected)); }
-.sdk-notes { position: absolute; inset: 1px; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); }
-.sdk-notes span { display: grid; place-items: center; font-family: var(--font-sans); font-size: clamp(8px, 2.4vw, 11px); font-weight: 600; color: var(--control-muted); }
+.sdk-notes { position: absolute; top: 2px; right: 3px; left: 3px; display: flex; flex-wrap: wrap; justify-content: flex-end; align-content: flex-start; gap: 0 2px; line-height: 1; }
+.sdk-notes span { font-family: var(--font-sans); font-size: clamp(8px, 2.3vw, 10px); font-weight: 700; color: var(--control-muted); }
 .sdk-paused { position: relative; display: grid; place-items: center; aspect-ratio: 1; width: 100%; border-radius: 12px; background: var(--card); border: 1px solid var(--border); }
 .sdk-tool { display: flex; min-height: 44px; flex: 1; flex-direction: column; align-items: center; justify-content: center; gap: 2px; border-radius: 12px; color: var(--foreground); font-size: 11px; font-weight: 600; transition: transform .1s, background-color .15s; }
 .sdk-tool:active { transform: scale(.95); background: var(--secondary); }
