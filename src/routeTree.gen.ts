@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AdminLoginRouteImport } from './routes/admin-login'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as EffekterRouteImport } from './routes/effekter'
 import { Route as JoinRouteImport } from './routes/join'
 import { Route as PlayRouteImport } from './routes/play'
 import { Route as RulesRouteImport } from './routes/rules'
@@ -40,6 +41,11 @@ const AdminLoginRoute = AdminLoginRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EffekterRoute = EffekterRouteImport.update({
+  id: '/effekter',
+  path: '/effekter',
   getParentRoute: () => rootRouteImport,
 } as any)
 const JoinRoute = JoinRouteImport.update({
@@ -92,6 +98,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin-login': typeof AdminLoginRoute
   '/auth': typeof AuthRoute
+  '/effekter': typeof EffekterRoute
   '/join': typeof JoinRoute
   '/play': typeof PlayRoute
   '/rules': typeof RulesRoute
@@ -106,6 +113,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin-login': typeof AdminLoginRoute
   '/auth': typeof AuthRoute
+  '/effekter': typeof EffekterRoute
   '/join': typeof JoinRoute
   '/play': typeof PlayRoute
   '/rules': typeof RulesRoute
@@ -122,6 +130,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/admin-login': typeof AdminLoginRoute
   '/auth': typeof AuthRoute
+  '/effekter': typeof EffekterRoute
   '/join': typeof JoinRoute
   '/play': typeof PlayRoute
   '/rules': typeof RulesRoute
@@ -138,6 +147,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin-login'
     | '/auth'
+    | '/effekter'
     | '/join'
     | '/play'
     | '/rules'
@@ -152,6 +162,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin-login'
     | '/auth'
+    | '/effekter'
     | '/join'
     | '/play'
     | '/rules'
@@ -167,6 +178,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/admin-login'
     | '/auth'
+    | '/effekter'
     | '/join'
     | '/play'
     | '/rules'
@@ -183,6 +195,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AdminLoginRoute: typeof AdminLoginRoute
   AuthRoute: typeof AuthRoute
+  EffekterRoute: typeof EffekterRoute
   JoinRoute: typeof JoinRoute
   PlayRoute: typeof PlayRoute
   RulesRoute: typeof RulesRoute
@@ -220,6 +233,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/effekter': {
+      id: '/effekter'
+      path: '/effekter'
+      fullPath: '/effekter'
+      preLoaderRoute: typeof EffekterRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/join': {
@@ -306,6 +326,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AdminLoginRoute: AdminLoginRoute,
   AuthRoute: AuthRoute,
+  EffekterRoute: EffekterRoute,
   JoinRoute: JoinRoute,
   PlayRoute: PlayRoute,
   RulesRoute: RulesRoute,

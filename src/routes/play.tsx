@@ -12,7 +12,7 @@ import {
   PEERS, MAX_MISTAKES, completedGroups, isLost, digitCounts, erase, hasNote, hint, isGiven, isWrong, newGame, setValue, toggleNote, undo, type GameState,
 } from "@/lib/sudoku/engine";
 import { LEVEL_KEY, formatTime } from "@/lib/sudoku/format";
-import { loadGame, loadSettings, recordFinish, removeGame, saveGame, startNewGame } from "@/lib/player/storage";
+import { loadGame, loadSettings, loadStats, recordFinish, removeGame, saveGame, startNewGame } from "@/lib/player/storage";
 import { randomId } from "@/lib/random-id";
 import { playLightHaptic, playSuccessHaptic, playDiceLandHaptic } from "@/lib/native/haptics";
 import { useTranslation } from "@/lib/i18n";
@@ -46,6 +46,7 @@ function PlayPage() {
   const holdTimer = useRef<number | null>(null);
   const held = useRef(false);
   const settings = useMemo(() => loadSettings(), []);
+  const stats = useMemo(() => loadStats(), []);
   const finishedDone = useRef(false);
 
   useEffect(() => {
@@ -168,6 +169,9 @@ function PlayPage() {
 
         <div className="flex flex-1 flex-col justify-center gap-3">
         <p className="text-center font-display text-3xl font-bold tabular-nums tracking-wider" aria-label={t("time")}>{formatTime(state.elapsedMs)}</p>
+        <p className="-mt-3 text-center text-xs text-muted-foreground">
+          {t("statBestTime")}: <span className="font-display font-bold tabular-nums text-gold">{stats[state.level].bestMs != null ? formatTime(stats[state.level].bestMs!) : "–"}</span>
+        </p>
         {paused ? (
           <div className="sdk-paused">
             <button onClick={() => setPaused(false)} className="flex flex-col items-center gap-2 rounded-xl p-4 active:scale-95"><Play className="h-12 w-12 text-gold" /><span className="font-display text-lg font-bold">{t("paused")}</span><span className="text-xs text-muted-foreground">{t("tapToResume")}</span></button>

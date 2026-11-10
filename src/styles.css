@@ -546,3 +546,22 @@ html::-webkit-scrollbar, body::-webkit-scrollbar, *::-webkit-scrollbar { display
 .sdk-key small { font-family: var(--font-sans); font-size: 9px; font-weight: 600; color: var(--muted-foreground); }
 .sdk-key:disabled { opacity: .25; }
 .sdk-key[data-notes="true"] { font-size: 17px; color: var(--foreground); }
+
+/* Effect previews (/effekter) — loop so they can be watched. */
+.fx-pop { animation: fx-pop 1.6s ease-out infinite; }
+@keyframes fx-pop { 0%, 10% { transform: scale(.3); opacity: 0; } 25% { transform: scale(1.25); opacity: 1; } 35%, 100% { transform: scale(1); } }
+.fx-wrong { color: var(--sdk-wrong); animation: fx-shake 1.6s ease-in-out infinite; }
+@keyframes fx-shake { 0%, 100% { transform: none; background: transparent; } 5%, 15%, 25% { transform: translateX(-4px); background: var(--sdk-wrong-bg); } 10%, 20% { transform: translateX(4px); background: var(--sdk-wrong-bg); } 35% { transform: none; } }
+.fx-wave { animation: fx-wave 2s ease-in-out infinite; }
+.fx-wave:nth-child(2) { animation-delay: .08s; } .fx-wave:nth-child(3) { animation-delay: .16s; } .fx-wave:nth-child(4) { animation-delay: .24s; } .fx-wave:nth-child(5) { animation-delay: .32s; }
+.fx-wave:nth-child(6) { animation-delay: .4s; } .fx-wave:nth-child(7) { animation-delay: .48s; } .fx-wave:nth-child(8) { animation-delay: .56s; } .fx-wave:nth-child(9) { animation-delay: .64s; }
+@keyframes fx-wave { 0%, 60%, 100% { background: transparent; transform: none; } 25% { background: color-mix(in oklab, var(--game-gold) 70%, transparent); transform: translateY(-3px); } }
+.fx-confetti { position: absolute; top: -8px; width: 6px; height: 10px; border-radius: 2px; background: var(--game-gold); animation: fx-fall 1.6s linear infinite; pointer-events: none; }
+.fx-confetti:nth-child(3n) { background: var(--primary); } .fx-confetti:nth-child(3n+1) { background: var(--game-gold-light); }
+@keyframes fx-fall { from { transform: translateY(0) rotate(0); opacity: 1; } to { transform: translateY(60px) rotate(360deg); opacity: 0; } }
+.fx-done { animation: fx-done 2s ease-in-out infinite; }
+@keyframes fx-done { 0%, 20% { opacity: 1; transform: none; } 50%, 80% { opacity: .3; transform: scale(.9); box-shadow: 0 0 0 2px var(--primary); } 100% { opacity: 1; } }
+.fx-soft { animation: fx-soft 2.4s ease-in-out infinite; }
+@keyframes fx-soft { 0%, 100% { background: transparent; } 40%, 70% { background: var(--sdk-peer); } }
+.fx-glow { color: var(--game-gold); animation: fx-glow 1.6s ease-in-out infinite; }
+@keyframes fx-glow { 0%, 100% { background: var(--sdk-hint); box-shadow: inset 0 0 0 0 transparent; } 50% { background: color-mix(in oklab, var(--game-gold) 45%, transparent); box-shadow: inset 0 0 12px var(--game-gold); } }
