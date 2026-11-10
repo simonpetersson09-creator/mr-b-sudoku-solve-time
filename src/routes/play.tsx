@@ -42,6 +42,9 @@ function PlayPage() {
   const [hintBusy, setHintBusy] = useState(false);
   const [confirmEnd, setConfirmEnd] = useState(false);
   const [flash, setFlash] = useState<Set<number>>(new Set());
+  const [popCell, setPopCell] = useState<{ i: number; k: number } | null>(null);
+  const [shakeCell, setShakeCell] = useState<{ i: number; k: number } | null>(null);
+  const [celebrating, setCelebrating] = useState(false);
   const [holdDigit, setHoldDigit] = useState<number | null>(null);
   const holdTimer = useRef<number | null>(null);
   const held = useRef(false);
@@ -97,7 +100,10 @@ function PlayPage() {
     const next = setValue(before, selected, d, settings.autoRemoveNotes);
     setState(next);
     if (next === before) return;
-    if (next.values[selected] !== before.solution[selected]) { void playDiceLandHaptic(); return; }
+    const k = Date.now();
+    if (next.values[selected] !== before.solution[selected]) { setShakeCell({ i: selected, k }); void playDiceLandHaptic(); return; }
+    setPopCell({ i: selected, k });
+    if (next.finished) { setCelebrating(true); window.setTimeout(() => setCelebrating(false), 1600); }
     const done = completedGroups(next, selected).filter((i) => !completedGroups(before, selected).includes(i));
     if (done.length && !next.finished) {
       setFlash(new Set(done));
@@ -186,7 +192,7 @@ function PlayPage() {
               const wrong = settings.showMistakes && isWrong(state, i);
               return (
                 <button
-                  key={i}
+                  key={popCell?.i === i ? `p${popCell.k}` : shakeCell?.i === i ? `s${shakeCell.k}` : i}
                   role="gridcell"
                   data-r={r} data-c={c}
                   data-given={isGiven(state, i)}
@@ -194,6 +200,10 @@ function PlayPage() {
                   data-peer={selected != null && selected !== i && peers.has(i)}
                   data-same={holdDigit != null ? v === holdDigit : settings.highlightSame && selValue !== 0 && v === selValue && selected !== i}
                   data-flash={flash.has(i)}
+                  data-pop={popCell?.i === i}
+                  data-shake={shakeCell?.i === i}
+                  data-wave={celebrating}
+                  style={{ ["--d" as string]: r + c }}
                   data-wrong={wrong}
                   data-hint={hintCell === i}
                   aria-label={t("cellLabel", { row: r + 1, col: c + 1 }) + (v ? `: ${v}` : "")}
@@ -221,7 +231,7 @@ function PlayPage() {
         <div className="sdk-pad">
           {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((d) => (
             <button
-              key={d} className="sdk-key" data-notes={notesMode} disabled={paused || counts[d] >= 9} aria-label={String(d)}
+              key={d} className="sdk-key" data-notes={notesMode} data-done={counts[d] >= 9} disabled={paused || counts[d] >= 9} aria-label={String(d)}
               onPointerDown={() => { held.current = false; holdTimer.current = window.setTimeout(() => { held.current = true; setHoldDigit(d); void playLightHaptic(); }, 400); }}
               onPointerUp={() => { if (holdTimer.current) window.clearTimeout(holdTimer.current); setHoldDigit(null); }}
               onPointerLeave={() => { if (holdTimer.current) window.clearTimeout(holdTimer.current); setHoldDigit(null); }}
@@ -229,7 +239,7 @@ function PlayPage() {
               onClick={() => { if (held.current) { held.current = false; return; } input(d); }}
             >
               {d}
-              <small>{9 - counts[d]}</small>
+              <small>{counts[d] >= 9 ? "✓" : 9 - counts[d]}</small>
             </button>
           ))}
         </div>
@@ -261,7 +271,8 @@ function PlayPage() {
           </div>
         </div>
       )}
-      {state.finished && <ResultOverlay state={state} onAgain={again} onHome={() => navigate({ to: "/" })} />}
+      {celebrating && Array.from({ length: 28 }, (_, n) => <span key={n} className="sdk-confetti" style={{ left: `${(n * 37) % 100}%`, animationDelay: `${(n % 7) * 0.12}s` }} />)}
+      {state.finished && !celebrating && <ResultOverlay state={state} onAgain={again} onHome={() => navigate({ to: "/" })} />}
     </main>
   );
 }
