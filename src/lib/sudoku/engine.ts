@@ -186,17 +186,22 @@ export type GameState = {
   mistakes: number;
   hints: number;
   elapsedMs: number;
+  /** Undos remaining in this game (max MAX_UNDOS). */
+  undosLeft: number;
   history: Change[][];
   finished: boolean;
   startedAt: number;
   updatedAt: number;
 };
 
+/** Undos allowed per game. */
+export const MAX_UNDOS = 3;
+
 export function newGame(level: Level, seed: number, id: string, now = Date.now()): GameState {
   const p = generate(level, seed);
   return {
     id, level, seed, puzzle: p.puzzle, solution: p.solution, values: p.puzzle.slice(), notes: Array(81).fill(0),
-    mistakes: 0, hints: 0, elapsedMs: 0, history: [], finished: false, startedAt: now, updatedAt: now,
+    mistakes: 0, hints: 0, elapsedMs: 0, undosLeft: MAX_UNDOS, history: [], finished: false, startedAt: now, updatedAt: now,
   };
 }
 
@@ -235,13 +240,13 @@ export function erase(s: GameState, i: number): GameState {
   return apply(s, [{ i, value: 0, notes: 0 }]);
 }
 
-/** Reverts the latest change (digit, note or erase). Hints cannot be undone. */
+/** Reverts the latest change (digit, note or erase). Hints cannot be undone. Limited to MAX_UNDOS per game. */
 export function undo(s: GameState): GameState {
-  if (s.finished || !s.history.length) return s;
+  if (s.finished || !s.history.length || s.undosLeft <= 0) return s;
   const last = s.history[s.history.length - 1];
   const values = s.values.slice(), notes = s.notes.slice();
   for (const c of last) { values[c.i] = c.value; notes[c.i] = c.notes; }
-  return { ...s, values, notes, history: s.history.slice(0, -1) };
+  return { ...s, values, notes, undosLeft: s.undosLeft - 1, history: s.history.slice(0, -1) };
 }
 
 /** Reveals the correct digit: the selected cell when it is open or wrong, else the first such cell. */

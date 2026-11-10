@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { solvableBySingles, LEVELS, GIVENS, countSolutions, generate, newGame, setValue, toggleNote, erase, undo, hint, isWrong, hasNote, isConsistent, solve, PEERS } from "./engine";
+import { solvableBySingles, LEVELS, GIVENS, MAX_UNDOS, countSolutions, generate, newGame, setValue, toggleNote, erase, undo, hint, isWrong, hasNote, isConsistent, solve, PEERS } from "./engine";
 
 describe("puzzle generation", () => {
   for (const level of LEVELS) {
@@ -72,6 +72,18 @@ describe("play", () => {
     expect(s.values[open]).toBe(0);
     s = undo(s);
     expect(s.values[open]).toBe(wrong);
+  });
+  it("allows at most 3 undos per game", () => {
+    let s = g;
+    expect(s.undosLeft).toBe(MAX_UNDOS);
+    const cells = g.puzzle.map((v, i) => (v ? -1 : i)).filter((i) => i >= 0).slice(0, MAX_UNDOS + 1);
+    for (const i of cells) s = setValue(s, i, g.solution[i]);
+    for (let n = 0; n < MAX_UNDOS; n++) s = undo(s);
+    expect(s.undosLeft).toBe(0);
+    const before = s;
+    s = undo(s);
+    expect(s).toBe(before);
+    expect(s.values[cells[0]]).toBe(g.solution[cells[0]]);
   });
   it("hint fills the selected cell with the right digit", () => {
     const { state, cell } = hint(setValue(g, open, wrong), open);

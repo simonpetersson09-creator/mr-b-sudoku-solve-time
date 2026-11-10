@@ -1,4 +1,4 @@
-import { isLevel, LEVELS, type GameState, type Level } from "@/lib/sudoku/engine";
+import { isLevel, LEVELS, MAX_UNDOS, type GameState, type Level } from "@/lib/sudoku/engine";
 
 /** All Sudoku keys live in their own namespace; never shared with Ludo or Yatzy. */
 const NS = "mrb-sudoku:v1:";
@@ -56,7 +56,9 @@ export const selectGame = (id: string) => { try { localStorage.setItem(ACTIVE, i
 export const loadGame = (): GameState | null => {
   if (typeof window === "undefined") return null;
   const id = activeId();
-  return readSaves().find((e) => e.id === id)?.game ?? null;
+  const g = readSaves().find((e) => e.id === id)?.game ?? null;
+  // Saves written before the undo limit get the full allowance.
+  return g && !Number.isFinite(g.undosLeft) ? { ...g, undosLeft: MAX_UNDOS } : g;
 };
 /** Starts a new game without touching the other saved ones. */
 export const startNewGame = (g: GameState, now = Date.now()) => {

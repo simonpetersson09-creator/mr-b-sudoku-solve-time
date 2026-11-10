@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, Eraser, Flag, Lightbulb, Pause, Pencil, Play, Undo2 } from "lucide-react";
+import { ArrowLeft, CircleX, Eraser, Lightbulb, Pause, Pencil, Play, Undo2 } from "lucide-react";
 import mrBLogo from "@/assets/mr-b-sudoku-logo.png";
 import { showOptionalInterstitial } from "@/lib/ads/admob";
 import {
@@ -147,18 +147,19 @@ function PlayPage() {
             <p className="text-xs text-muted-foreground">{t("mistakesN", { n: state.mistakes })}</p>
           </div>
           <span className="font-display text-lg font-bold tabular-nums" aria-label={t("time")}>{formatTime(state.elapsedMs)}</span>
-          <button onClick={() => setConfirmEnd(true)} disabled={state.finished} aria-label={t("endGame")} className="flex h-11 w-11 items-center justify-center rounded-xl bg-secondary/60 active:bg-secondary disabled:opacity-40">
-            <Flag className="h-5 w-5" />
+          <button onClick={() => setConfirmEnd(true)} disabled={state.finished} aria-label={t("endGame")} className="flex h-11 w-11 items-center justify-center rounded-xl bg-destructive/15 text-destructive active:bg-destructive/25 disabled:opacity-40">
+            <CircleX className="h-5 w-5" />
           </button>
           <button onClick={() => setPaused((p) => !p)} disabled={state.finished} aria-label={paused ? t("resume") : t("pause")} className="flex h-11 w-11 items-center justify-center rounded-xl bg-secondary/60 active:bg-secondary disabled:opacity-40">
             {paused ? <Play className="h-5 w-5" /> : <Pause className="h-5 w-5" />}
           </button>
         </div>
 
-        <div className="flex flex-1 flex-col items-center justify-end">
-          <img src={mrBLogo} alt="Mr.B. Sudoku" className="h-24 w-24 object-contain sm:h-28 sm:w-28" />
+        <div className="flex items-center justify-center py-1">
+          <img src={mrBLogo} alt="Mr.B. Sudoku" className="h-20 w-20 object-contain sm:h-24 sm:w-24" />
         </div>
 
+        <div className="flex flex-1 flex-col justify-center gap-3">
         {paused ? (
           <button className="sdk-paused" onClick={() => setPaused(false)}>
             <span className="flex flex-col items-center gap-2"><Play className="h-10 w-10 text-gold" /><span className="font-display text-lg font-bold">{t("paused")}</span><span className="text-xs text-muted-foreground">{t("tapToResume")}</span></span>
@@ -195,7 +196,7 @@ function PlayPage() {
         )}
 
         <div className="flex gap-1">
-          <button className="sdk-tool" onClick={() => act(undo)} disabled={paused || !state.history.length}><Undo2 className="h-5 w-5" />{t("undo")}</button>
+          <button className="sdk-tool relative" onClick={() => act(undo)} disabled={paused || !state.history.length || state.undosLeft <= 0}><Undo2 className="h-5 w-5" />{t("undo")}<span className="sdk-badge">{state.undosLeft}</span></button>
           <button className="sdk-tool" onClick={() => selected != null && act((s) => erase(s, selected))} disabled={paused}><Eraser className="h-5 w-5" />{t("erase")}</button>
           <button className="sdk-tool" aria-pressed={notesMode} onClick={() => setNotesMode((n) => !n)} disabled={paused}><Pencil className="h-5 w-5" />{t("notes")}</button>
           <button className="sdk-tool relative" onClick={() => void doHint()} disabled={paused || hintBusy}><Lightbulb className="h-5 w-5" />{t("hint")}{state.hints > 0 && <span className="sdk-badge">{state.hints}</span>}</button>
@@ -208,6 +209,7 @@ function PlayPage() {
               <small>{9 - counts[d]}</small>
             </button>
           ))}
+        </div>
         </div>
       </div>
       <AlertDialog open={confirmEnd} onOpenChange={setConfirmEnd}>
