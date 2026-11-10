@@ -659,3 +659,12 @@ html::-webkit-scrollbar, body::-webkit-scrollbar, *::-webkit-scrollbar { display
 .sdk-hint-tip:not([data-show="true"]) { background: transparent; border-color: transparent; }
 .sdk-tool:disabled { opacity: .3; pointer-events: none; filter: grayscale(1); }
 .sdk-chip-btn .sdk-chip-label { letter-spacing: .02em; text-overflow: clip; }
+.sdk-back { display: inline-flex; min-height: 44px; flex-shrink: 0; align-items: center; gap: 4px; padding: 0 10px 0 8px; border-radius: 999px; background: var(--card); border: 1px solid var(--border); color: var(--foreground); font-size: 12px; font-weight: 600; transition: transform .1s; }
+.sdk-back svg { color: var(--game-gold); }
+.sdk-back:active { transform: scale(.95); background: var(--secondary); }
+.sdk-hint-tip { height: 22px; min-height: 22px; box-sizing: border-box; line-height: 1; white-space: nowrap; overflow: hidden; max-width: 100%; }
+.sdk-key { min-height: 58px; gap: 2px; border-radius: 14px; font-size: 28px; line-height: 1; color: var(--game-gold-light); background: linear-gradient(180deg, color-mix(in oklab, var(--card) 85%, var(--foreground) 15%), var(--card)); border: 1px solid color-mix(in oklab, var(--game-gold) 22%, var(--border)); box-shadow: 0 2px 0 color-mix(in oklab, var(--background) 70%, transparent), inset 0 1px 0 color-mix(in oklab, var(--foreground) 10%, transparent); }
+.sdk-key small { font-size: 10px; font-weight: 700; color: color-mix(in oklab, var(--foreground) 55%, transparent); }
+.sdk-key[data-done="true"] { opacity: .45; transform: none; color: var(--muted-foreground); background: var(--card); border-color: color-mix(in oklab, var(--primary) 50%, var(--border)); box-shadow: none; }
+.sdk-key[data-done="true"] small { color: var(--primary); }
+.sdk-key:disabled[data-done="true"] { opacity: .45; }

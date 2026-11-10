@@ -166,3 +166,14 @@ describe("smart hint", () => {
     expect(c).toBeGreaterThanOrEqual(0);
   });
 });
+
+import { MAX_HINTS } from "./engine";
+describe("hint limit", () => {
+  it("allows at most 3 hints per game", () => {
+    let s = newGame("easy", 7, "h");
+    for (let i = 0; i < 5; i++) s = markHint(s).state;
+    expect(MAX_HINTS).toBe(3);
+    expect(s.hints).toBe(3);
+    expect(markHint(s).cell).toBeNull();
+  });
+});

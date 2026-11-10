@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, CircleX, Eraser, Lightbulb, Pause, Pencil, Play, Undo2 } from "lucide-react";
+import { ArrowLeft, Check, CircleX, Eraser, Lightbulb, Pause, Pencil, Play, Undo2 } from "lucide-react";
 import { showOptionalInterstitial } from "@/lib/ads/admob";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
@@ -9,7 +9,7 @@ import { AppOpenGameGate } from "@/components/AppOpenGameGate";
 import { usePostMatchExit } from "@/lib/ads/usePostMatchExit";
 import { reportLocalGame } from "@/lib/backend/report";
 import {
-  PEERS, MAX_MISTAKES, MAX_UNDOS, findHintCell, markHint, completedGroups, isLost, digitCounts, erase, hasNote, isGiven, isWrong, newGame, setValue, toggleNote, undo, type GameState, type Level,
+  PEERS, MAX_MISTAKES, MAX_UNDOS, MAX_HINTS, findHintCell, markHint, completedGroups, isLost, digitCounts, erase, hasNote, isGiven, isWrong, newGame, setValue, toggleNote, undo, type GameState, type Level,
 } from "@/lib/sudoku/engine";
 import { LEVEL_KEY, formatTime } from "@/lib/sudoku/format";
 import { loadGame, loadProgress, loadSettings, loadStats, recordFinish, removeGame, saveGame, startNewGame } from "@/lib/player/storage";
@@ -138,7 +138,7 @@ function PlayPage() {
 
   // A hint is preceded by an interstitial ad (app only; skipped silently when none is available).
   const doHint = async () => {
-    if (hintBusy || state.finished || lost) return;
+    if (hintBusy || state.finished || lost || state.hints >= MAX_HINTS) return;
     if (findHintCell(state) == null) return;
     setHintBusy(true);
     setPaused(true);
@@ -169,8 +169,8 @@ function PlayPage() {
     <main className="app-screen flex flex-col" style={{ paddingTop: "calc(8px + env(safe-area-inset-top))", paddingBottom: "calc(20px + env(safe-area-inset-bottom))" }}>
       <div className="mx-auto flex w-full max-w-md flex-1 flex-col gap-3">
         <div className="flex items-center gap-2">
-          <button onClick={() => navigate({ to: "/" })} aria-label={t("back")} className="flex h-11 w-11 items-center justify-center rounded-xl active:bg-secondary/80">
-            <ArrowLeft className="h-5 w-5 text-muted-foreground" />
+          <button onClick={() => navigate({ to: "/" })} aria-label={t("back")} className="sdk-back">
+            <ArrowLeft className="h-4 w-4" /><span>{t("back")}</span>
           </button>
           <div className="grid flex-1 grid-cols-[1.2fr_1.2fr_1fr_1fr] gap-1.5">
             <div className="sdk-chip">
@@ -244,7 +244,7 @@ function PlayPage() {
           <button className="sdk-tool" onClick={() => { setHintCell(null); act(undo); }} disabled={paused || !state.history.length || state.undosLeft <= 0} aria-label={`${t("undo")}: ${state.undosLeft}/${MAX_UNDOS}`}><Undo2 className="h-5 w-5" />{t("undo")}<span className="sdk-pips" aria-hidden="true">{Array.from({ length: MAX_UNDOS }, (_, i) => <span key={i} className="sdk-pip" data-on={i < state.undosLeft} />)}</span></button>
           <button className="sdk-tool" onClick={() => selected != null && act((s) => erase(s, selected))} disabled={paused}><Eraser className="h-5 w-5" />{t("erase")}</button>
           <button className="sdk-tool" aria-pressed={notesMode} onClick={() => setNotesMode((n) => !n)} disabled={paused}><Pencil className="h-5 w-5" />{t("notes")}</button>
-          <button className="sdk-tool relative" onClick={() => void doHint()} disabled={paused || hintBusy}><Lightbulb className="h-5 w-5" />{t("hint")}{state.hints > 0 && <span className="sdk-badge">{state.hints}</span>}</button>
+          <button className="sdk-tool relative" onClick={() => void doHint()} disabled={paused || hintBusy || state.hints >= MAX_HINTS} aria-label={`${t("hint")}: ${MAX_HINTS - state.hints}/${MAX_HINTS}`}><Lightbulb className="h-5 w-5" />{t("hint")}<span className="sdk-pips" aria-hidden="true">{Array.from({ length: MAX_HINTS }, (_, i) => <span key={i} className="sdk-pip" data-on={i < MAX_HINTS - state.hints} />)}</span></button>
         </div>
 
         <div className="sdk-pad">
@@ -258,7 +258,7 @@ function PlayPage() {
               onClick={() => { if (held.current) { held.current = false; return; } input(d); }}
             >
               {d}
-              <small>{counts[d] >= 9 ? "✓" : 9 - counts[d]}</small>
+              <small>{counts[d] >= 9 ? <Check className="h-3 w-3" /> : 9 - counts[d]}</small>
             </button>
           ))}
         </div>

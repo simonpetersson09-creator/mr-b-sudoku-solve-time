@@ -514,6 +514,8 @@ export type GameState = {
 
 /** Undos allowed per game. */
 export const MAX_UNDOS = 3;
+/** Hints allowed per game. */
+export const MAX_HINTS = 3;
 /** Mistakes allowed; the third mistake ends (loses) the game. */
 export const MAX_MISTAKES = 3;
 export const isLost = (s: GameState) => !s.finished && s.mistakes >= MAX_MISTAKES;
@@ -635,6 +637,7 @@ export function findHintCell(s: GameState): number | null {
 
 /** Uses a hint: marks the cell from findHintCell and counts it; the board itself is unchanged. */
 export function markHint(s: GameState): { state: GameState; cell: number | null } {
+  if (s.hints >= MAX_HINTS) return { state: s, cell: null };
   const cell = findHintCell(s);
   return cell == null ? { state: s, cell } : { state: { ...s, hints: s.hints + 1 }, cell };
 }
