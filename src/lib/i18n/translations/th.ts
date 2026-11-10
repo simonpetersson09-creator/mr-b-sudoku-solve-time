@@ -134,6 +134,7 @@ export const th: Record<TranslationKey, string> = {
   levelExpert: "ผู้เชี่ยวชาญ",
   levelUltra: "ผู้เชี่ยวชาญสูงสุด",
   levelImpossible: "เป็นไปไม่ได้",
+  levelMaster: "บัณฑิต",
   rules: "กติกา",
   gameHelp: "วิธีเล่น",
   showMistakes: "แสดงข้อผิดพลาด",

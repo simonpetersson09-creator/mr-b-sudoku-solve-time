@@ -14,7 +14,7 @@ export const setAvatarInput = (d: { image: string | null }) => {
     if (img.length > AVATAR_MAX_CHARS) throw new Error("err:image_too_large");
     return { image: img };
   };
-export const LEVELS = ["easy", "medium", "hard", "expert", "ultra", "impossible"] as const;
+export const LEVELS = ["easy", "medium", "hard", "expert", "ultra", "impossible", "master"] as const;
 export const logEventInput = (d: { kind: string; deviceId?: string; platform?: string; detail?: Record<string, unknown> }) => {
     const kind = ["session", "heartbeat", "session_end", "local_game", "error", "ad"].includes(d.kind) ? d.kind : "session";
     const platform = ["ios", "android", "web"].includes(String(d.platform)) ? String(d.platform) : "web";

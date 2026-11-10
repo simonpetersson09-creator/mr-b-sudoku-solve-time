@@ -134,6 +134,7 @@ export const da: Record<TranslationKey, string> = {
   levelExpert: "Ekspert",
   levelUltra: "Ultraekspert",
   levelImpossible: "Umuligt",
+  levelMaster: "Mester",
   rules: "Regler",
   gameHelp: "Spilhjælp",
   showMistakes: "Vis fejl",

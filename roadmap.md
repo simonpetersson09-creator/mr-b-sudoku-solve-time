@@ -1,3 +1,15 @@
+# Roadmap: Mr.B. Sudoku
+
+## Före släpp
+- [ ] Riktiga annonser: ledtråd, uppstart och efter spel använder fortfarande Googles testannonser
+- [ ] Provning på riktig telefon: Mästare och Omöjlig, paus, avsluta spel, vinstfirande
+- [ ] Liggande läge på spelsidan är inte anpassat
+- [ ] Långa ord på knapparna kan kortas av på vissa språk
+
+## Klart
+- [x] Sju nivåer: Lätt, Medel, Svår, Expert, Ultraexpert, Omöjlig, Mästare – varje nivå låst av en egen teknikkontroll
+- [x] Månadens flitigaste, årstatistik 2026, sparade spel, effekter och felgräns
+
 # Roadmap: Nya onlineregler (spec 2026-11-04) — KLAR
 
 ## Adminstatistik och tekniska fel (2026-11-08)

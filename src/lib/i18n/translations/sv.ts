@@ -147,6 +147,7 @@ export const sv = {
   levelExpert: "Expert",
   levelUltra: "Ultraexpert",
   levelImpossible: "Omöjlig",
+  levelMaster: "Mästare",
   rules: "Regler",
   gameHelp: "Spelhjälp",
   showMistakes: "Visa fel",

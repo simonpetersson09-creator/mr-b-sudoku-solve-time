@@ -117,6 +117,7 @@ export const fi: Record<TranslationKey, string> = {
   levelExpert: "Asiantuntija",
   levelUltra: "Ultraexpert",
   levelImpossible: "Mahdoton",
+  levelMaster: "Mestari",
   rules: "Säännöt",
   gameHelp: "Peliohjeet",
   showMistakes: "Näytä virheet",

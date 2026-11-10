@@ -259,6 +259,7 @@
 .lvl-bar:nth-child(4) { height: 14px; }
 .lvl-bar:nth-child(5) { height: 16px; }
 .lvl-bar:nth-child(6) { height: 18px; }
+.lvl-bar:nth-child(7) { height: 20px; }
 .lvl-bar-on { background: var(--lvl-meter); }
 .lvl-easy {
   --lvl-line: var(--game-success); --lvl-bar: var(--game-success-light); --lvl-meter: var(--game-success-light);
@@ -292,6 +293,13 @@
   --lvl-meter: color-mix(in oklab, var(--destructive) 60%, var(--foreground));
   --lvl-fg: var(--foreground); --lvl-glow: var(--destructive);
   --lvl-bg: linear-gradient(to right, var(--game-ink), color-mix(in oklab, var(--destructive) 20%, var(--game-ink-light)));
+}
+/* Mästare: silver på kolsvart – toppen av stegen. */
+.lvl-master {
+  --lvl-line: var(--foreground); --lvl-bar: var(--foreground);
+  --lvl-meter: color-mix(in oklab, var(--foreground) 75%, var(--muted-foreground));
+  --lvl-fg: var(--foreground); --lvl-glow: var(--game-ink);
+  --lvl-bg: linear-gradient(to right, var(--game-ink), color-mix(in oklab, var(--foreground) 10%, var(--game-ink-light)));
 }
 /* Pågående match-kort – portat från Yatzy: grön när det är din tur, guld när andra har turen. */
 .home-match-card { width: 100%; height: 44px; min-width: 0; display: flex; align-items: center; gap: 8px; padding: 0 12px; border-radius: 10px; overflow: hidden; text-align: left; transition: box-shadow .2s, filter .2s, transform .1s; }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { solvableBySingles, solvableWithPairs, solvableAdvanced, LEVELS, GIVENS, MAX_UNDOS, countSolutions, generate, newGame, setValue, toggleNote, erase, undo, hint, isWrong, hasNote, isConsistent, solve, PEERS, MAX_MISTAKES, isLost, completedGroups, findHintCell, markHint } from "./engine";
+import { solvableBySingles, solvableWithPairs, solvableAdvanced, solvableMaster, LEVELS, GIVENS, MAX_UNDOS, countSolutions, generate, newGame, setValue, toggleNote, erase, undo, hint, isWrong, hasNote, isConsistent, solve, PEERS, MAX_MISTAKES, isLost, completedGroups, findHintCell, markHint } from "./engine";
 
 describe("puzzle generation", () => {
   for (const level of LEVELS) {
@@ -32,6 +32,20 @@ describe("puzzle generation", () => {
       expect(solvableAdvanced(generate("impossible", seed).puzzle)).toBe(false);
     }
   }, 60000);
+  it("master needs more than the whole technique ladder", () => {
+    for (const seed of [11, 12]) {
+      const p = generate("master", seed);
+      expect(countSolutions(p.puzzle, 3)).toBe(1);
+      expect(solvableMaster(p.puzzle)).toBe(false);
+    }
+  }, 60000);
+  it("the master checker finishes everything the weaker checkers finish", () => {
+    for (const seed of [1, 2]) {
+      const p = generate("easy", seed).puzzle;
+      expect(solvableBySingles(p)).toBe(true);
+      expect(solvableMaster(p)).toBe(true);
+    }
+  }, 30000);
   it("harder levels have fewer givens", () => {
     expect(generate("easy", 7).puzzle.filter(Boolean).length).toBeGreaterThan(generate("expert", 7).puzzle.filter(Boolean).length);
   }, 30000);

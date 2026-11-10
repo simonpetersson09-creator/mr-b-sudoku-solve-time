@@ -134,6 +134,7 @@ export const kn: Record<TranslationKey, string> = {
   levelExpert: "ಪರಿಣತ",
   levelUltra: "ಅತಿ ತಜ್ಞ",
   levelImpossible: "ಅಸಾಧ್ಯ",
+  levelMaster: "ಮಾಸ್ಟರ್",
   rules: "ನಿಯಮಗಳು",
   gameHelp: "ಆಟದ ಸಹಾಯ",
   showMistakes: "ತಪ್ಪುಗಳನ್ನು ತೋರಿಸಿ",

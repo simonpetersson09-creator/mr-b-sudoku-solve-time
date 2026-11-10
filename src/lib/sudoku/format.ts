@@ -9,4 +9,4 @@ export function formatTime(ms: number): string {
   return h ? `${h}:${pad(m)}:${pad(s)}` : `${m}:${pad(s)}`;
 }
 
-export const LEVEL_KEY: Record<Level, TranslationKey> = { easy: "levelEasy", medium: "levelMedium", hard: "levelHard", expert: "levelExpert", ultra: "levelUltra", impossible: "levelImpossible" };
+export const LEVEL_KEY: Record<Level, TranslationKey> = { easy: "levelEasy", medium: "levelMedium", hard: "levelHard", expert: "levelExpert", ultra: "levelUltra", impossible: "levelImpossible", master: "levelMaster" };

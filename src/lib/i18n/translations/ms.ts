@@ -134,6 +134,7 @@ export const ms: Record<TranslationKey, string> = {
   levelExpert: "Pakar",
   levelUltra: "Ultra Pakar",
   levelImpossible: "Mustahil",
+  levelMaster: "Mahaguru",
   rules: "Peraturan",
   gameHelp: "Bantuan permainan",
   showMistakes: "Tunjukkan kesilapan",

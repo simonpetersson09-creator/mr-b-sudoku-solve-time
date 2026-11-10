@@ -2,7 +2,7 @@
  * Pure Sudoku engine: no React, DOM or network. A grid is 81 numbers (row-major), 0 = empty.
  * Notes are a 9-bit mask per cell (bit d-1 set = note d).
  */
-export const LEVELS = ["easy", "medium", "hard", "expert", "ultra", "impossible"] as const;
+export const LEVELS = ["easy", "medium", "hard", "expert", "ultra", "impossible", "master"] as const;
 export type Level = (typeof LEVELS)[number];
 export const isLevel = (v: unknown): v is Level => (LEVELS as readonly unknown[]).includes(v);
 
@@ -11,7 +11,7 @@ export const isLevel = (v: unknown): v is Level => (LEVELS as readonly unknown[]
  * Target number of given digits per level. Easy to Expert differ mainly by clue count;
  * Ultra and Impossible keep Expert's 24 but must need deeper techniques (see tooEasy).
  */
-export const GIVENS: Record<Level, number> = { easy: 40, medium: 33, hard: 28, expert: 24, ultra: 24, impossible: 24 };
+export const GIVENS: Record<Level, number> = { easy: 40, medium: 33, hard: 28, expert: 24, ultra: 24, impossible: 24, master: 23 };
 
 export type Grid = number[];
 
@@ -272,6 +272,162 @@ export function solvableAdvanced(grid: Grid): boolean {
   }
 }
 
+/**
+ * True when the whole technique ladder finishes the grid: naked/hidden singles, pointing and
+ * claiming, naked/hidden subsets up to four digits, X-Wing and Swordfish, and simple coloring.
+ * Mästare must need more than that, so a puzzle this solver can finish is not hard enough for it.
+ */
+export function solvableMaster(grid: Grid): boolean {
+  const g = grid.slice();
+  const m = Array.from({ length: 81 }, (_, i) => (g[i] ? bit(g[i]) : candidates(g, i)));
+  const place = (i: number, d: number) => { g[i] = d; m[i] = bit(d); for (const p of PEERS[i]) m[p] &= ~bit(d); };
+  const spotsOf = (u: number[], d: number) => u.filter((i) => !g[i] && m[i] & bit(d));
+  const trim = (i: number, keep: number) => { const before = m[i]; m[i] &= keep; return m[i] !== before; };
+  for (;;) {
+    let progress = false;
+    for (let i = 0; i < 81; i++) {
+      if (g[i]) continue;
+      if (m[i] === 0) return false;
+      if (popcount(m[i]) === 1) { place(i, Math.log2(m[i]) + 1); progress = true; }
+    }
+    // Pointing: in a box, a digit confined to one row or column is ruled out along that line.
+    for (let b = 0; b < 9; b++) {
+      const box = UNITS[18 + b];
+      for (let d = 1; d <= 9; d++) {
+        const spots = spotsOf(box, d);
+        if (spots.length < 2) continue;
+        const row = rowOf(spots[0]), col = colOf(spots[0]);
+        if (spots.every((i) => rowOf(i) === row)) {
+          for (const i of UNITS[row]) if (!box.includes(i) && trim(i, ~bit(d))) progress = true;
+        } else if (spots.every((i) => colOf(i) === col)) {
+          for (const i of UNITS[9 + col]) if (!box.includes(i) && trim(i, ~bit(d))) progress = true;
+        }
+      }
+    }
+    // Claiming: a digit in a row or column confined to one box is ruled out in the rest of that box.
+    for (let l = 0; l < 9; l++) {
+      for (const axis of [0, 1]) {
+        const u = axis === 0 ? UNITS[l] : UNITS[9 + l];
+        for (let d = 1; d <= 9; d++) {
+          const spots = spotsOf(u, d);
+          if (spots.length < 2) continue;
+          const boxes = new Set(spots.map(boxOf));
+          if (boxes.size !== 1) continue;
+          const unit = UNITS[18 + [...boxes][0]];
+          for (const i of unit) if (!u.includes(i) && trim(i, ~bit(d))) progress = true;
+        }
+      }
+    }
+    for (const u of UNITS) {
+      for (let d = 1; d <= 9; d++) {
+        if (u.some((i) => g[i] === d)) continue;
+        const spots = spotsOf(u, d);
+        if (spots.length === 1) { place(spots[0], d); progress = true; }
+      }
+      const open = u.filter((i) => !g[i]);
+      for (const k of [2, 3, 4]) {
+        // Naked subset: only cells holding k digits or fewer can be part of it.
+        const few = open.filter((i) => popcount(m[i]) <= k);
+        for (const c of indexCombos(few.length, k)) {
+          const cells = c.map((x) => few[x]);
+          let union = 0;
+          for (const i of cells) union |= m[i];
+          if (popcount(union) !== k) continue;
+          for (const i of open) if (!cells.includes(i) && trim(i, ~union)) progress = true;
+        }
+        // Hidden subset: k digits that fit only k cells, so those cells hold nothing else.
+        for (const c of indexCombos(9, k)) {
+          const digits = c.map((x) => x + 1).filter((d) => !u.some((i) => g[i] === d));
+          if (digits.length !== k) continue;
+          const spots = new Set<number>();
+          for (const d of digits) spotsOf(u, d).forEach((i) => spots.add(i));
+          if (spots.size !== k) continue;
+          const keep = digits.reduce((acc, d) => acc | bit(d), 0);
+          for (const i of spots) if (trim(i, keep)) progress = true;
+        }
+      }
+    }
+    // Fish: X-Wing (2 lines) and Swordfish (3 lines) per digit, along rows and along columns.
+    for (let d = 1; d <= 9; d++) {
+      const b = bit(d);
+      for (const axis of [0, 1]) {
+        const lines: number[][] = [];
+        for (let l = 0; l < 9; l++) {
+          const u = axis === 0 ? UNITS[l] : UNITS[9 + l];
+          const spots = spotsOf(u, d);
+          lines.push(spots.length >= 2 && spots.length <= 3 ? spots.map((i) => (axis === 0 ? colOf(i) : rowOf(i))) : []);
+        }
+        for (const k of [2, 3]) {
+          for (const c of indexCombos(9, k)) {
+            const chosen = c.map((x) => lines[x]);
+            if (chosen.some((s) => s.length === 0)) continue;
+            const cross = new Set<number>();
+            chosen.forEach((s) => s.forEach((x) => cross.add(x)));
+            if (cross.size !== k) continue;
+            for (const x of cross) {
+              const other = axis === 0 ? UNITS[9 + x] : UNITS[x];
+              for (const i of other) {
+                const line = axis === 0 ? rowOf(i) : colOf(i);
+                if (c.includes(line)) continue;
+                if (m[i] & b && trim(i, ~b)) progress = true;
+              }
+            }
+          }
+        }
+      }
+    }
+    // Simple coloring: one chain of strong links per digit at a time.
+    for (let d = 1; d <= 9; d++) {
+      const b = bit(d);
+      const adj = new Map<number, number[]>();
+      for (const u of UNITS) {
+        const spots = spotsOf(u, d);
+        if (spots.length !== 2) continue;
+        const [a, c] = spots;
+        (adj.get(a) ?? adj.set(a, []).get(a)!).push(c);
+        (adj.get(c) ?? adj.set(c, []).get(c)!).push(a);
+      }
+      const color = new Map<number, number>();
+      for (const start of adj.keys()) {
+        if (color.has(start)) continue;
+        const sets = [new Set<number>(), new Set<number>()];
+        let ok = true;
+        color.set(start, 0); sets[0].add(start);
+        const q = [start];
+        while (q.length && ok) {
+          const x = q.shift()!;
+          for (const y of adj.get(x) ?? []) {
+            const want = color.get(x)! ^ 1;
+            if (color.has(y)) { if (color.get(y) !== want) ok = false; continue; }
+            color.set(y, want); sets[want].add(y); q.push(y);
+          }
+        }
+        if (!ok) continue;
+        // Two cells of one colour that see each other: that colour cannot hold the digit, so the
+        // other colour does – and nothing that sees one of those cells can hold it either.
+        for (const bad of [0, 1]) {
+          const good = bad ^ 1;
+          const list = [...sets[bad]];
+          let clash = false;
+          for (let a = 0; a < list.length; a++) for (let c = a + 1; c < list.length; c++) if (PEERS[list[a]].includes(list[c])) clash = true;
+          if (!clash) continue;
+          for (const i of sets[good]) for (const p of PEERS[i]) if (!g[p] && m[p] & b && !sets[good].has(p) && trim(p, ~b)) progress = true;
+        }
+        // A cell seeing both colours cannot hold the digit.
+        for (let i = 0; i < 81; i++) {
+          if (g[i] || !(m[i] & b)) continue;
+          let s0 = false, s1 = false;
+          for (const p of PEERS[i]) { if (sets[0].has(p)) s0 = true; else if (sets[1].has(p)) s1 = true; }
+          if (s0 && s1 && trim(i, ~b)) progress = true;
+        }
+      }
+    }
+    if (g.every((v) => v)) return true;
+    for (let i = 0; i < 81; i++) if (!g[i] && m[i] === 0) return false;
+    if (!progress) return false;
+  }
+}
+
 function fullGrid(rand: () => number): Grid {
   const g: Grid = Array(81).fill(0);
   const walk = (i: number): boolean => {
@@ -303,7 +459,9 @@ export function generate(level: Level, seed: number): Puzzle {
       ? solvableWithPairs
       : level === "impossible"
         ? solvableAdvanced
-        : solvableBySingles;
+        : level === "master"
+          ? solvableMaster
+          : solvableBySingles;
   let best: Puzzle | null = null;
   let bestGivens = 99;
   /** Best puzzle that passes the technique gate but has too many givens. */

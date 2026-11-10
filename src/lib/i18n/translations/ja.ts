@@ -134,6 +134,7 @@ export const ja: Record<TranslationKey, string> = {
   levelExpert: "エキスパート",
   levelUltra: "ウルトラ上級",
   levelImpossible: "不可能",
+  levelMaster: "名人",
   rules: "ルール",
   gameHelp: "ゲームのヘルプ",
   showMistakes: "間違いを表示",

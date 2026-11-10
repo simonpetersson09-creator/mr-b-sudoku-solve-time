@@ -93,7 +93,7 @@ export type Stats = Record<Level, LevelStats> & { lifetimePlayed: number; year: 
 export const stockholmYear = (now: Date = new Date()) =>
   Number(new Intl.DateTimeFormat("en", { timeZone: "Europe/Stockholm", year: "numeric" }).format(now));
 const emptyLevel = (): LevelStats => ({ played: 0, wins: 0, bestMs: null, totalMs: 0 });
-export const emptyStats = (year: number = stockholmYear()): Stats => ({ easy: emptyLevel(), medium: emptyLevel(), hard: emptyLevel(), expert: emptyLevel(), ultra: emptyLevel(), impossible: emptyLevel(), lifetimePlayed: 0, year });
+export const emptyStats = (year: number = stockholmYear()): Stats => ({ easy: emptyLevel(), medium: emptyLevel(), hard: emptyLevel(), expert: emptyLevel(), ultra: emptyLevel(), impossible: emptyLevel(), master: emptyLevel(), lifetimePlayed: 0, year });
 
 const cleanCount = (v: unknown) => (typeof v === "number" && Number.isFinite(v) && v > 0 ? Math.floor(v) : 0);
 export function cleanStats(raw: unknown, year: number = stockholmYear()): Stats {

@@ -117,6 +117,7 @@ export const el: Record<TranslationKey, string> = {
   levelExpert: "Για ειδικούς",
   levelUltra: "Υπερειδικός",
   levelImpossible: "Αδύνατο",
+  levelMaster: "Μάστορας",
   rules: "Κανόνες",
   gameHelp: "Βοήθεια παιχνιδιού",
   showMistakes: "Εμφάνιση λαθών",

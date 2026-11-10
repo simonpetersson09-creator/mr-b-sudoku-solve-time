@@ -134,6 +134,7 @@ export const mr: Record<TranslationKey, string> = {
   levelExpert: "तज्ज्ञ",
   levelUltra: "अल्ट्रा तज्ज्ञ",
   levelImpossible: "अशक्य",
+  levelMaster: "मास्टर",
   rules: "नियम",
   gameHelp: "खेळाची मदत",
   showMistakes: "चुका दाखवा",

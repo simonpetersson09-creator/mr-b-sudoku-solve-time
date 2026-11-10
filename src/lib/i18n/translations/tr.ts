@@ -134,6 +134,7 @@ export const tr: Record<TranslationKey, string> = {
   levelExpert: "Uzman",
   levelUltra: "Ultra Uzman",
   levelImpossible: "İmkansız",
+  levelMaster: "Usta",
   rules: "Kurallar",
   gameHelp: "Oyun yardımı",
   showMistakes: "Hataları göster",
