@@ -761,7 +761,7 @@ main[data-level="master"] .sdk-level-pill { background: color-mix(in oklab, var(
 @media (prefers-reduced-motion: reduce) { .sdk-record, .sdk-record-trophy { animation: none; } }
 
 .sdk-fixed .sdk-paused { max-width: var(--board-px, 100%); margin-inline: auto; }
-.sdk-round-btn { display: inline-grid; place-items: center; width: 36px; height: 36px; border-radius: 999px; background: var(--card); border: 1px solid var(--border); color: var(--foreground); box-shadow: 0 2px 8px -4px color-mix(in oklab, var(--foreground) 30%, transparent); transition: transform .1s, background .15s; }
+.sdk-round-btn { display: inline-flex; align-items: center; gap: 5px; height: 36px; padding: 0 12px 0 10px; font-size: 12px; font-weight: 600; white-space: nowrap; border-radius: 999px; background: var(--card); border: 1px solid var(--border); color: var(--foreground); box-shadow: 0 2px 8px -4px color-mix(in oklab, var(--foreground) 30%, transparent); transition: transform .1s, background .15s; }
 .sdk-round-btn svg { color: var(--game-gold); }
 .sdk-round-btn:active { transform: scale(.92); background: var(--secondary); }
 .sdk-round-btn:disabled { opacity: .4; }

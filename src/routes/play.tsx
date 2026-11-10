@@ -242,10 +242,10 @@ function PlayPage() {
           </button>
           <div className="ml-auto flex items-center gap-2">
             <button onClick={() => setPaused((p) => !p)} disabled={state.finished} aria-label={paused ? t("resume") : t("pause")} className="sdk-round-btn" data-active={paused}>
-              {paused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
+              {paused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}<span>{paused ? t("resume") : t("pause")}</span>
             </button>
             <button onClick={() => setConfirmEnd(true)} disabled={state.finished} aria-label={t("endGame")} className="sdk-round-btn sdk-round-end">
-              <CircleX className="h-4 w-4" />
+              <CircleX className="h-4 w-4" /><span>{t("endGame")}</span>
             </button>
           </div>
         </div>
