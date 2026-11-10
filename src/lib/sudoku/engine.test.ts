@@ -86,12 +86,19 @@ describe("play", () => {
     const s = setValue(toggleNote(g, peer, right), open, right, false);
     expect(hasNote(s.notes[peer], right)).toBe(true);
   });
-  it("erase removes notes and undo restores them", () => {
+  it("erase removes notes", () => {
     let s = toggleNote(g, open, right);
     s = erase(s, open);
     expect(s.notes[open]).toBe(0);
+  });
+  it("notes and erases are never undoable; undo skips them and reverts the last placed digit", () => {
+    let s = setValue(g, open, right);
+    s = toggleNote(s, open + 1, 3);
+    s = erase(s, open + 1);
+    expect(s.history.length).toBe(1);
     s = undo(s);
-    expect(hasNote(s.notes[open], right)).toBe(true);
+    expect(s.values[open]).toBe(0);
+    expect(s.undosLeft).toBe(MAX_UNDOS - 1);
   });
   it("erase never removes a placed digit, not even a wrong one", () => {
     const s = setValue(g, open, wrong);

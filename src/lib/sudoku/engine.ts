@@ -566,20 +566,21 @@ export function setValue(s: GameState, i: number, d: number, clearPeerNotes = tr
   return d !== s.solution[i] ? { ...next, mistakes: s.mistakes + 1 } : next;
 }
 
-/** Toggles a note on an empty, non-given cell. */
+/** Toggles a note on an empty, non-given cell. Notes are never recorded: undo only applies to placed digits. */
 export function toggleNote(s: GameState, i: number, d: number): GameState {
   if (over(s) || isGiven(s, i) || s.values[i] !== 0 || d < 1 || d > 9) return s;
-  return apply(s, [{ i, value: 0, notes: s.notes[i] ^ bit(d) }]);
+  return apply(s, [{ i, value: 0, notes: s.notes[i] ^ bit(d) }], false);
 }
 
 /** Clears a non-given cell's digit and notes. */
 export function erase(s: GameState, i: number): GameState {
   // Erase removes notes only: a placed digit (even a wrong one) is fixed by typing the right digit.
+  // Like note edits, erasing notes is not undoable.
   if (over(s) || isGiven(s, i) || s.values[i] !== 0 || s.notes[i] === 0) return s;
-  return apply(s, [{ i, value: 0, notes: 0 }]);
+  return apply(s, [{ i, value: 0, notes: 0 }], false);
 }
 
-/** Reverts the latest change (digit, note or erase). Hints cannot be undone. Limited to MAX_UNDOS per game. */
+/** Reverts the latest placed digit (peer note cleanup undone together). Notes, erases and hints cannot be undone. Limited to MAX_UNDOS per game. */
 export function undo(s: GameState): GameState {
   if (over(s) || !s.history.length || s.undosLeft <= 0) return s;
   const last = s.history[s.history.length - 1];
