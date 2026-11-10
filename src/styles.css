@@ -639,13 +639,17 @@ html::-webkit-scrollbar, body::-webkit-scrollbar, *::-webkit-scrollbar { display
 .sdk-key[data-done="true"] { opacity: .3; transform: scale(.92); box-shadow: 0 0 0 2px var(--primary); transition: opacity .4s, transform .4s; }
 .sdk-key[data-done="true"] small { color: var(--primary); }
 
-/* Hint shows the right digit in a gold corner badge; the player still types it. */
+/* Hint shows the right digit as a large gold ghost in the cell; the player still types it. */
 .sdk-hint-digit {
-  position: absolute; top: 1px; right: 1px; z-index: 2;
-  min-width: 1.05em; padding: 0 2px; border-radius: 5px;
-  background: var(--game-gold); color: var(--background);
-  font-size: 0.55em; font-weight: 800; line-height: 1.25; text-align: center;
+  position: absolute; inset: 0; z-index: 2; display: grid; place-items: center;
+  color: var(--game-gold); font-size: 1em; font-weight: 800; opacity: .55;
   pointer-events: none;
 }
+/* The matching number-pad key glows while a hint is shown. */
+.sdk-key[data-hint="true"] { border-color: var(--game-gold); box-shadow: 0 0 0 2px var(--game-gold), 0 0 14px color-mix(in oklab, var(--game-gold) 55%, transparent); animation: sdk-hint-glow 1.4s ease-in-out infinite; }
+/* Undo button: gold pips show how many undos remain. */
+.sdk-pips { display: flex; gap: 3px; }
+.sdk-pip { width: 7px; height: 7px; border-radius: 999px; border: 1.5px solid color-mix(in oklab, var(--muted-foreground) 60%, transparent); transition: background .25s, border-color .25s; }
+.sdk-pip[data-on="true"] { background: var(--game-gold); border-color: var(--game-gold); }
 .lvl-btn:disabled { opacity: 0.45; filter: grayscale(0.6); cursor: not-allowed; }
 .lvl-lock { font-size: 10px; font-weight: 600; opacity: 0.9; }

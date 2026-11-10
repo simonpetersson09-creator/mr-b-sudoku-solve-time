@@ -9,7 +9,7 @@ import { AppOpenGameGate } from "@/components/AppOpenGameGate";
 import { usePostMatchExit } from "@/lib/ads/usePostMatchExit";
 import { reportLocalGame } from "@/lib/backend/report";
 import {
-  PEERS, MAX_MISTAKES, findHintCell, markHint, completedGroups, isLost, digitCounts, erase, hasNote, isGiven, isWrong, newGame, setValue, toggleNote, undo, type GameState, type Level,
+  PEERS, MAX_MISTAKES, MAX_UNDOS, findHintCell, markHint, completedGroups, isLost, digitCounts, erase, hasNote, isGiven, isWrong, newGame, setValue, toggleNote, undo, type GameState, type Level,
 } from "@/lib/sudoku/engine";
 import { LEVEL_KEY, formatTime } from "@/lib/sudoku/format";
 import { loadGame, loadProgress, loadSettings, loadStats, recordFinish, removeGame, saveGame, startNewGame } from "@/lib/player/storage";
@@ -240,7 +240,7 @@ function PlayPage() {
         )}
 
         <div className="flex gap-1">
-          <button className="sdk-tool relative" onClick={() => act(undo)} disabled={paused || !state.history.length || state.undosLeft <= 0}><Undo2 className="h-5 w-5" />{t("undo")}<span className="sdk-badge">{state.undosLeft}</span></button>
+          <button className="sdk-tool" onClick={() => act(undo)} disabled={paused || !state.history.length || state.undosLeft <= 0} aria-label={`${t("undo")}: ${state.undosLeft}/${MAX_UNDOS}`}><Undo2 className="h-5 w-5" />{t("undo")}<span className="sdk-pips" aria-hidden="true">{Array.from({ length: MAX_UNDOS }, (_, i) => <span key={i} className="sdk-pip" data-on={i < state.undosLeft} />)}</span></button>
           <button className="sdk-tool" onClick={() => selected != null && act((s) => erase(s, selected))} disabled={paused}><Eraser className="h-5 w-5" />{t("erase")}</button>
           <button className="sdk-tool" aria-pressed={notesMode} onClick={() => setNotesMode((n) => !n)} disabled={paused}><Pencil className="h-5 w-5" />{t("notes")}</button>
           <button className="sdk-tool relative" onClick={() => void doHint()} disabled={paused || hintBusy}><Lightbulb className="h-5 w-5" />{t("hint")}{state.hints > 0 && <span className="sdk-badge">{state.hints}</span>}</button>
@@ -249,7 +249,7 @@ function PlayPage() {
         <div className="sdk-pad">
           {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((d) => (
             <button
-              key={d} className="sdk-key" data-notes={notesMode} data-done={counts[d] >= 9} disabled={paused || counts[d] >= 9} aria-label={String(d)}
+              key={d} className="sdk-key" data-notes={notesMode} data-done={counts[d] >= 9} data-hint={showHint != null && state.solution[showHint] === d} disabled={paused || counts[d] >= 9} aria-label={String(d)}
               onPointerDown={() => { held.current = false; holdTimer.current = window.setTimeout(() => { held.current = true; setHoldDigit(d); void playLightHaptic(); }, 400); }}
               onPointerUp={() => { if (holdTimer.current) window.clearTimeout(holdTimer.current); setHoldDigit(null); }}
               onPointerLeave={() => { if (holdTimer.current) window.clearTimeout(holdTimer.current); setHoldDigit(null); }}
