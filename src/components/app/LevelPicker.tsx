@@ -1,4 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Lock } from "lucide-react";
+import { loadProgress } from "@/lib/player/storage";
+import { isUnlocked, prevLevel, remainingFor, type Progress } from "@/lib/player/unlock";
 import { LEVELS, type Level } from "@/lib/sudoku/engine";
 import { LEVEL_KEY } from "@/lib/sudoku/format";
 import { useTranslation } from "@/lib/i18n";
@@ -12,6 +15,7 @@ const DIFFICULTY: Record<Level, number> = { easy: 1, medium: 2, hard: 3, expert:
  */
 export function LevelPicker({ onSelect, onClose }: { onSelect: (level: Level) => void; onClose: () => void }) {
   const { t } = useTranslation();
+  const [progress] = useState<Progress>(() => loadProgress());
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
@@ -38,16 +42,23 @@ export function LevelPicker({ onSelect, onClose }: { onSelect: (level: Level) =>
       >
         <p className="mb-3 text-center font-display text-base font-bold text-foreground">{t("chooseLevel")}</p>
         <div className="flex flex-col gap-2">
-          {LEVELS.map((l) => (
-            <button key={l} type="button" onClick={() => onSelect(l)} className={`lvl-btn lvl-${l}`}>
-              <span className="lvl-name font-display">{t(LEVEL_KEY[l])}</span>
+          {LEVELS.map((l) => {
+            const open = isUnlocked(progress, l);
+            const prev = prevLevel(l);
+            return (
+            <button key={l} type="button" disabled={!open} onClick={() => onSelect(l)} className={`lvl-btn lvl-${l}`}>
+              <span className="flex min-w-0 flex-col items-start">
+                <span className="lvl-name font-display flex items-center gap-1.5">{!open && <Lock size={14} />}{t(LEVEL_KEY[l])}</span>
+                {!open && prev && <span className="lvl-lock">{t("lockedNeed", { n: remainingFor(progress, l), level: t(LEVEL_KEY[prev]) })}</span>}
+              </span>
               <span className="lvl-meter" aria-hidden="true">
                 {[1, 2, 3, 4, 5, 6, 7].map((n) => (
                   <span key={n} className={`lvl-bar${n <= DIFFICULTY[l] ? " lvl-bar-on" : ""}`} />
                 ))}
               </span>
             </button>
-          ))}
+            );
+          })}
         </div>
         <button
           type="button"

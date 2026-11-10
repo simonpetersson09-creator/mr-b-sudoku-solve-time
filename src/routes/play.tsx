@@ -9,11 +9,12 @@ import { AppOpenGameGate } from "@/components/AppOpenGameGate";
 import { usePostMatchExit } from "@/lib/ads/usePostMatchExit";
 import { reportLocalGame } from "@/lib/backend/report";
 import {
-  PEERS, MAX_MISTAKES, findHintCell, markHint, completedGroups, isLost, digitCounts, erase, hasNote, isGiven, isWrong, newGame, setValue, toggleNote, undo, type GameState,
+  PEERS, MAX_MISTAKES, findHintCell, markHint, completedGroups, isLost, digitCounts, erase, hasNote, isGiven, isWrong, newGame, setValue, toggleNote, undo, type GameState, type Level,
 } from "@/lib/sudoku/engine";
 import { LEVEL_KEY, formatTime } from "@/lib/sudoku/format";
-import { loadGame, loadSettings, loadStats, recordFinish, removeGame, saveGame, startNewGame } from "@/lib/player/storage";
+import { loadGame, loadProgress, loadSettings, loadStats, recordFinish, removeGame, saveGame, startNewGame } from "@/lib/player/storage";
 import { randomId } from "@/lib/random-id";
+import { newlyUnlocked } from "@/lib/player/unlock";
 import { playLightHaptic, playSuccessHaptic, playDiceLandHaptic } from "@/lib/native/haptics";
 import { useTranslation } from "@/lib/i18n";
 
@@ -40,6 +41,7 @@ function PlayPage() {
   const [paused, setPaused] = useState(false);
   const [hintCell, setHintCell] = useState<number | null>(null);
   const [hintBusy, setHintBusy] = useState(false);
+  const [unlocked, setUnlocked] = useState<Level[]>([]);
   const [confirmEnd, setConfirmEnd] = useState(false);
   const [flash, setFlash] = useState<Set<number>>(new Set());
   const [popCell, setPopCell] = useState<{ i: number; k: number } | null>(null);
@@ -57,6 +59,7 @@ function PlayPage() {
     if (!g) { void navigate({ to: "/setup", replace: true }); return; }
     setState(g);
     finishedDone.current = false;
+    setUnlocked([]);
     if (g.history.length === 0 && g.elapsedMs === 0) reportLocalGame("start", g);
   }, [navigate]);
 
@@ -83,7 +86,9 @@ function PlayPage() {
   useEffect(() => {
     if (!state?.finished || finishedDone.current) return;
     finishedDone.current = true;
+    const before = loadProgress();
     recordFinish(state);
+    setUnlocked(newlyUnlocked(before, loadProgress()));
     reportLocalGame("finish", state);
     void playSuccessHaptic();
   }, [state]);
@@ -153,6 +158,7 @@ function PlayPage() {
     const g = newGame(state.level, Math.floor(Math.random() * 2 ** 31), randomId());
     startNewGame(g);
     finishedDone.current = false;
+    setUnlocked([]);
     reportLocalGame("start", g);
     setSelected(null); setNotesMode(false); setPaused(false);
     setState(g);
@@ -217,10 +223,11 @@ function PlayPage() {
                   style={{ ["--d" as string]: r + c }}
                   data-wrong={wrong}
                   data-hint={showHint === i}
-                  aria-label={t("cellLabel", { row: r + 1, col: c + 1 }) + (v ? `: ${v}` : "")}
+                  aria-label={t("cellLabel", { row: r + 1, col: c + 1 }) + (v ? `: ${v}` : "") + (showHint === i ? ` (${t("hint")}: ${state.solution[i]})` : "")}
                   className="sdk-cell"
                   onClick={() => setSelected(i)}
                 >
+                  {showHint === i && <span className="sdk-hint-digit" aria-hidden="true">{state.solution[i]}</span>}
                   {v ? v : state.notes[i] ? (
                     <span className="sdk-notes" aria-hidden="true">
                       {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((d) => <span key={d}>{hasNote(state.notes[i], d) ? d : ""}</span>)}
@@ -283,12 +290,12 @@ function PlayPage() {
         </div>
       )}
       {celebrating && Array.from({ length: 28 }, (_, n) => <span key={n} className="sdk-confetti" style={{ left: `${(n * 37) % 100}%`, animationDelay: `${(n % 7) * 0.12}s` }} />)}
-      {state.finished && !celebrating && <ResultOverlay state={state} onAgain={again} onHome={() => navigate({ to: "/" })} />}
+      {state.finished && !celebrating && <ResultOverlay state={state} unlocked={unlocked} onAgain={again} onHome={() => navigate({ to: "/" })} />}
     </main>
   );
 }
 
-function ResultOverlay({ state, onAgain, onHome }: { state: GameState; onAgain: () => void; onHome: () => void }) {
+function ResultOverlay({ state, unlocked, onAgain, onHome }: { state: GameState; unlocked: Level[]; onAgain: () => void; onHome: () => void }) {
   const { t } = useTranslation();
   // Post-game interstitial (Yatzy rules): once per finished game.
   const { leaving, leave } = usePostMatchExit(`sudoku:${state.id}`, true, onHome);
@@ -298,6 +305,9 @@ function ResultOverlay({ state, onAgain, onHome }: { state: GameState; onAgain: 
         <p className="text-4xl">🏆</p>
         <h2 className="brand-title mt-1 text-2xl">{t("solvedTitle")}</h2>
         <p className="mt-1 text-sm text-muted-foreground">{t(LEVEL_KEY[state.level])}</p>
+        {unlocked.map((l) => (
+          <p key={l} className="mt-3 rounded-xl border border-gold/40 bg-gold/10 px-3 py-2 text-sm font-semibold text-gold">🔓 {t("levelUnlocked", { level: t(LEVEL_KEY[l]) })}</p>
+        ))}
         <div className="mt-4 grid grid-cols-3 gap-2 text-center">
           {([[t("time"), formatTime(state.elapsedMs)], [t("mistakes"), String(state.mistakes)], [t("hint"), String(state.hints)]] as const).map(([k, v]) => (
             <div key={k} className="rounded-lg bg-surface px-2 py-2"><p className="font-display text-lg font-bold tabular-nums text-gold">{v}</p><p className="text-[11px] text-muted-foreground">{k}</p></div>

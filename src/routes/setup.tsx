@@ -1,9 +1,10 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Lock } from "lucide-react";
 import { LEVELS, GIVENS, newGame, type Level } from "@/lib/sudoku/engine";
 import { LEVEL_KEY } from "@/lib/sudoku/format";
-import { loadLevel, saveLevel, startNewGame } from "@/lib/player/storage";
+import { loadLevel, loadProgress, saveLevel, startNewGame } from "@/lib/player/storage";
+import { emptyProgress, highestUnlocked, isUnlocked, prevLevel, remainingFor, type Progress } from "@/lib/player/unlock";
 import { randomId } from "@/lib/random-id";
 import { useTranslation } from "@/lib/i18n";
 
@@ -13,7 +14,7 @@ export const Route = createFileRoute("/setup")({
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { title: "Nytt spel – Mr.B. Sudoku" },
-      { name: "description", content: "Välj nivå för ett nytt Sudoku: Lätt, Medel, Svår, Expert, Ultraexpert, Omöjlig eller Mästare." },
+      { name: "description", content: "Välj nivå för ett nytt Sudoku: Lätt, Medel, Svår, Expert, Ultraexpert, Omöjlig eller Mr.B Världsmästare." },
       { property: "og:title", content: "Nytt spel – Mr.B. Sudoku" },
       { property: "og:description", content: "Välj nivå för ett nytt Sudoku." },
     ],
@@ -26,7 +27,13 @@ function SetupPage() {
   const { t } = useTranslation();
   const [level, setLevel] = useState<Level>("easy");
   const [busy, setBusy] = useState(false);
-  useEffect(() => setLevel(loadLevel()), []);
+  const [progress, setProgress] = useState<Progress>(emptyProgress);
+  useEffect(() => {
+    const p = loadProgress();
+    setProgress(p);
+    const l = loadLevel();
+    setLevel(isUnlocked(p, l) ? l : highestUnlocked(p));
+  }, []);
 
   const start = () => {
     setBusy(true);
@@ -46,12 +53,16 @@ function SetupPage() {
         <h1 className="brand-title text-3xl">{t("newGameTitle")}</h1>
         <p className="mb-3 text-center text-sm text-muted-foreground">{t("chooseLevel")}</p>
         <div className="flex flex-col gap-[7px]">
-          {LEVELS.map((l) => (
-            <button key={l} aria-pressed={l === level} className={`home-action justify-between ${l === level ? "home-action-gold" : "home-action-ghost"}`} onClick={() => setLevel(l)}>
-              <span>{t(LEVEL_KEY[l])}</span>
-              <span className="text-xs font-medium opacity-75">{t("givensN", { n: GIVENS[l] })}</span>
-            </button>
-          ))}
+          {LEVELS.map((l) => {
+            const open = isUnlocked(progress, l);
+            const prev = prevLevel(l);
+            return (
+              <button key={l} aria-pressed={l === level} disabled={!open} className={`home-action justify-between ${l === level ? "home-action-gold" : "home-action-ghost"} ${open ? "" : "opacity-50"}`} onClick={() => setLevel(l)}>
+                <span className="flex items-center gap-1.5">{!open && <Lock size={14} />}{t(LEVEL_KEY[l])}</span>
+                <span className="text-xs font-medium opacity-75">{open || !prev ? t("givensN", { n: GIVENS[l] }) : t("lockedNeed", { n: remainingFor(progress, l), level: t(LEVEL_KEY[prev]) })}</span>
+              </button>
+            );
+          })}
         </div>
         <button className="home-action home-action-success mt-5" disabled={busy} onClick={start}>{busy ? t("loading") : t("startGame")}</button>
       </div>

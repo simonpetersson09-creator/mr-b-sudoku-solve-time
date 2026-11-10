@@ -1,4 +1,5 @@
 import { isLevel, LEVELS, MAX_UNDOS, isLost, type GameState, type Level } from "@/lib/sudoku/engine";
+import { emptyProgress, type Progress } from "@/lib/player/unlock";
 
 /** All Sudoku keys live in their own namespace; never shared with Ludo or Yatzy. */
 const NS = "mrb-sudoku:v1:";
@@ -138,6 +139,22 @@ export function recordFinish(g: GameState) {
   try { const v: unknown = JSON.parse(localStorage.getItem(COUNTED) ?? "[]"); if (Array.isArray(v)) list = v.filter((x) => typeof x === "string"); } catch { /* damaged list starts over */ }
   if (list.includes(g.id)) return;
   saveStats(addResult(loadStats(), g));
+  const p = loadProgress();
+  saveProgress({ ...p, [g.level]: p[g.level] + 1 });
   write(COUNTED, [...list, g.id].slice(-200));
 }
+
+// ---------- Level unlock progress (lifetime, never reset) ----------
+const PROGRESS = NS + "progress";
+export function loadProgress(): Progress {
+  const out = emptyProgress();
+  if (typeof window === "undefined") return out;
+  let raw: Record<string, unknown> | null = null;
+  try { const v: unknown = JSON.parse(localStorage.getItem(PROGRESS) ?? "null"); if (v && typeof v === "object") raw = v as Record<string, unknown>; } catch { /* damaged */ }
+  // First run: seed from this year's solved games so nobody loses levels they already played.
+  const st = raw ? null : loadStats();
+  for (const l of LEVELS) out[l] = raw ? cleanCount(raw[l]) : st![l].played;
+  return out;
+}
+export const saveProgress = (p: Progress) => write(PROGRESS, p);
 export const resetStats = () => { const s = loadStats(); saveStats({ ...emptyStats(), lifetimePlayed: s.lifetimePlayed }); };
