@@ -1,4 +1,4 @@
-import { isLevel, LEVELS, MAX_UNDOS, type GameState, type Level } from "@/lib/sudoku/engine";
+import { isLevel, LEVELS, MAX_UNDOS, isLost, type GameState, type Level } from "@/lib/sudoku/engine";
 
 /** All Sudoku keys live in their own namespace; never shared with Ludo or Yatzy. */
 const NS = "mrb-sudoku:v1:";
@@ -68,7 +68,7 @@ export const startNewGame = (g: GameState, now = Date.now()) => {
 /** Saves progress of a game (finished games are removed). */
 export const saveGame = (g: GameState, now = Date.now()) => {
   const rest = readSaves().filter((e) => e.id !== g.id);
-  writeSaves(g.finished ? rest : [{ id: g.id, game: g, updatedAt: now }, ...rest]);
+  writeSaves(g.finished || isLost(g) ? rest : [{ id: g.id, game: g, updatedAt: now }, ...rest]);
 };
 /** Removes one game; the others stay. */
 export const removeGame = (id: string) => {

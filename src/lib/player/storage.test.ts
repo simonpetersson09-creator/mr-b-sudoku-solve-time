@@ -76,3 +76,13 @@ describe("yearly stats", () => {
     expect(stockholmYear(new Date("2026-12-31T22:30:00Z"))).toBe(2026);
   });
 });
+
+describe("lost games", () => {
+  it("a game lost on 3 mistakes disappears from the ongoing games", () => {
+    const g = newGame("easy", 21, "lost-1");
+    saveGame(g);
+    expect(listGames().some((e) => e.id === "lost-1")).toBe(true);
+    saveGame({ ...g, mistakes: 3 });
+    expect(listGames().some((e) => e.id === "lost-1")).toBe(false);
+  });
+});

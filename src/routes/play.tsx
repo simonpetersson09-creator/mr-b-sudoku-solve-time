@@ -58,7 +58,7 @@ function PlayPage() {
 
   // Timer: counts only while the screen is visible and not paused.
   useEffect(() => {
-    if (!state || state.finished || paused) return;
+    if (!state || state.finished || isLost(state) || paused) return;
     let last = Date.now();
     const tick = () => {
       const now = Date.now();
@@ -70,10 +70,11 @@ function PlayPage() {
     const onVis = () => { if (document.visibilityState !== "visible") setPaused(true); last = Date.now(); };
     document.addEventListener("visibilitychange", onVis);
     return () => { window.clearInterval(id); document.removeEventListener("visibilitychange", onVis); };
-  }, [state?.finished, paused, state?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [state?.finished, state ? isLost(state) : false, paused, state?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Autosave every change (finished games are removed from the saved list).
-  useEffect(() => { if (state) saveGame({ ...state, updatedAt: Date.now() }); }, [state]);
+  // A lost game is never saved again, so it disappears from the ongoing games.
+  useEffect(() => { if (state && !isLost(state)) saveGame({ ...state, updatedAt: Date.now() }); }, [state]);
 
   useEffect(() => {
     if (!state?.finished || finishedDone.current) return;
