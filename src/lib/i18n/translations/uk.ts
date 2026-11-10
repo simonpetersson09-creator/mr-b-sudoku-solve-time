@@ -157,7 +157,6 @@ export const uk: Record<TranslationKey, string> = {
   mistakes: "Помилки",
   level: "Рівень",
   pause: "Пауза",
-  endShort: "Вийти",
   time: "Час",
   resume: "Продовжити",
   paused: "Пауза",

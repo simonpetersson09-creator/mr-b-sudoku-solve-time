@@ -157,7 +157,6 @@ export const tr: Record<TranslationKey, string> = {
   mistakes: "Hatalar",
   level: "Seviye",
   pause: "Duraklat",
-  endShort: "Çık",
   time: "Süre",
   resume: "Devam et",
   paused: "Duraklatıldı",

@@ -157,7 +157,6 @@ export const gu: Record<TranslationKey, string> = {
   mistakes: "ભૂલો",
   level: "સ્તર",
   pause: "થોભાવો",
-  endShort: "છોડો",
   time: "સમય",
   resume: "ફરી શરૂ કરો",
   paused: "થોભાવેલી",

@@ -140,7 +140,6 @@ export const hr: Record<TranslationKey, string> = {
   mistakes: "Pogreške",
   level: "Razina",
   pause: "Pauziraj",
-  endShort: "Završi",
   time: "Vrijeme",
   resume: "Nastavi",
   paused: "Pauzirano",

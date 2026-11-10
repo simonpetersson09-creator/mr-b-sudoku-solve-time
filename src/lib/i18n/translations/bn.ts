@@ -157,7 +157,6 @@ export const bn: Record<TranslationKey, string> = {
   mistakes: "ভুল",
   level: "স্তর",
   pause: "বিরতি",
-  endShort: "প্রস্থান",
   time: "সময়",
   resume: "আবার শুরু",
   paused: "বিরতি চলছে",

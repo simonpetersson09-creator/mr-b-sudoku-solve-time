@@ -140,7 +140,6 @@ export const ca: Record<TranslationKey, string> = {
   mistakes: "Errors",
   level: "Nivell",
   pause: "Pausa",
-  endShort: "Surt",
   time: "Temps",
   resume: "Continua",
   paused: "En pausa",

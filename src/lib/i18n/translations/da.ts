@@ -157,7 +157,6 @@ export const da: Record<TranslationKey, string> = {
   mistakes: "Fejl",
   level: "Niveau",
   pause: "Pause",
-  endShort: "Afslut",
   time: "Tid",
   resume: "Fortsæt",
   paused: "På pause",

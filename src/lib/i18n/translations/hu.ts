@@ -140,7 +140,6 @@ export const hu: Record<TranslationKey, string> = {
   mistakes: "Hibák",
   level: "Szint",
   pause: "Szünet",
-  endShort: "Kilépés",
   time: "Idő",
   resume: "Folytatás",
   paused: "Szüneteltetve",

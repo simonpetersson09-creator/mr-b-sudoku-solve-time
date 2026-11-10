@@ -157,7 +157,6 @@ export const kn: Record<TranslationKey, string> = {
   mistakes: "ತಪ್ಪುಗಳು",
   level: "ಮಟ್ಟ",
   pause: "ವಿರಾಮ",
-  endShort: "ನಿರ್ಗಮಿಸು",
   time: "ಸಮಯ",
   resume: "ಮುಂದುವರಿಸಿ",
   paused: "ವಿರಾಮದಲ್ಲಿದೆ",

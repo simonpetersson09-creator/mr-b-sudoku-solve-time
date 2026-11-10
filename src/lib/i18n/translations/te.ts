@@ -157,7 +157,6 @@ export const te: Record<TranslationKey, string> = {
   mistakes: "తప్పులు",
   level: "స్థాయి",
   pause: "పాజ్",
-  endShort: "ముగించు",
   time: "సమయం",
   resume: "కొనసాగించు",
   paused: "పాజ్ చేయబడింది",

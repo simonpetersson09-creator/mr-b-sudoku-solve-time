@@ -157,7 +157,6 @@ export const vi: Record<TranslationKey, string> = {
   mistakes: "Lỗi",
   level: "Cấp độ",
   pause: "Tạm dừng",
-  endShort: "Thoát",
   time: "Thời gian",
   resume: "Tiếp tục",
   paused: "Đã tạm dừng",

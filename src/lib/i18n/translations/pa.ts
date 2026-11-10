@@ -157,7 +157,6 @@ export const pa: Record<TranslationKey, string> = {
   mistakes: "ਗਲਤੀਆਂ",
   level: "ਪੱਧਰ",
   pause: "ਵਿਰਾਮ",
-  endShort: "ਛੱਡੋ",
   time: "ਸਮਾਂ",
   resume: "ਜਾਰੀ ਰੱਖੋ",
   paused: "ਵਿਰਾਮ 'ਤੇ",

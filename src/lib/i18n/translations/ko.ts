@@ -157,7 +157,6 @@ export const ko: Record<TranslationKey, string> = {
   mistakes: "실수",
   level: "레벨",
   pause: "일시정지",
-  endShort: "종료",
   time: "시간",
   resume: "계속하기",
   paused: "일시정지됨",

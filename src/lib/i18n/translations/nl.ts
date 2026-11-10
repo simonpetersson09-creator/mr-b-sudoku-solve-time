@@ -140,7 +140,6 @@ export const nl: Record<TranslationKey, string> = {
   mistakes: "Fouten",
   level: "Niveau",
   pause: "Pauzeren",
-  endShort: "Stoppen",
   time: "Tijd",
   resume: "Hervatten",
   paused: "Gepauzeerd",

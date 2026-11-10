@@ -140,7 +140,6 @@ export const fi: Record<TranslationKey, string> = {
   mistakes: "Virheet",
   level: "Taso",
   pause: "Tauko",
-  endShort: "Lopeta",
   time: "Aika",
   resume: "Jatka",
   paused: "Tauolla",

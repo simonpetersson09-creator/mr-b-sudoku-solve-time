@@ -157,7 +157,6 @@ export const ja: Record<TranslationKey, string> = {
   mistakes: "間違い",
   level: "レベル",
   pause: "一時停止",
-  endShort: "終了",
   time: "時間",
   resume: "再開",
   paused: "一時停止中",

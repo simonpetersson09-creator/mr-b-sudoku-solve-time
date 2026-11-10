@@ -157,7 +157,6 @@ export const or: Record<TranslationKey, string> = {
   mistakes: "ଭୁଲ",
   level: "ସ୍ତର",
   pause: "ବିରତି",
-  endShort: "ଛାଡ଼ନ୍ତୁ",
   time: "ସମୟ",
   resume: "ପୁଣି ଆରମ୍ଭ",
   paused: "ବିରତିରେ",

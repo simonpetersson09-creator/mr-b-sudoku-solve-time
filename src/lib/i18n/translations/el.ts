@@ -140,7 +140,6 @@ export const el: Record<TranslationKey, string> = {
   mistakes: "Λάθη",
   level: "Επίπεδο",
   pause: "Παύση",
-  endShort: "Έξοδος",
   time: "Χρόνος",
   resume: "Συνέχεια",
   paused: "Σε παύση",

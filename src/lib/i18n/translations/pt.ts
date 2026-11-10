@@ -157,7 +157,6 @@ export const pt: Record<TranslationKey, string> = {
   mistakes: "Erros",
   level: "Nível",
   pause: "Pausar",
-  endShort: "Sair",
   time: "Tempo",
   resume: "Retomar",
   paused: "Em pausa",

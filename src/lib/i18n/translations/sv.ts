@@ -170,7 +170,6 @@ export const sv = {
   mistakes: "Fel",
   level: "Nivå",
   pause: "Pausa",
-  endShort: "Avsluta",
   time: "Tid",
   resume: "Fortsätt",
   paused: "Pausat",

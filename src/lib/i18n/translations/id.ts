@@ -157,7 +157,6 @@ export const id: Record<TranslationKey, string> = {
   mistakes: "Kesalahan",
   level: "Level",
   pause: "Jeda",
-  endShort: "Keluar",
   time: "Waktu",
   resume: "Lanjutkan",
   paused: "Dijeda",

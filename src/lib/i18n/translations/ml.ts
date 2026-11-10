@@ -157,7 +157,6 @@ export const ml: Record<TranslationKey, string> = {
   mistakes: "തെറ്റുകൾ",
   level: "നില",
   pause: "താൽക്കാലികമായി നിർത്തുക",
-  endShort: "അവസാനിപ്പിക്കുക",
   time: "സമയം",
   resume: "തുടരുക",
   paused: "താൽക്കാലികമായി നിർത്തി",

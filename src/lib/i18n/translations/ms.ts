@@ -157,7 +157,6 @@ export const ms: Record<TranslationKey, string> = {
   mistakes: "Kesilapan",
   level: "Tahap",
   pause: "Jeda",
-  endShort: "Tamat",
   time: "Masa",
   resume: "Sambung",
   paused: "Dijeda",

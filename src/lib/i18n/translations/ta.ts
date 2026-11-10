@@ -157,7 +157,6 @@ export const ta: Record<TranslationKey, string> = {
   mistakes: "தவறுகள்",
   level: "நிலை",
   pause: "இடைநிறுத்து",
-  endShort: "வெளியேறு",
   time: "நேரம்",
   resume: "தொடர்",
   paused: "இடைநிறுத்தப்பட்டது",

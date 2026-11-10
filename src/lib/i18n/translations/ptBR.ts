@@ -140,7 +140,6 @@ export const ptBR: Record<TranslationKey, string> = {
   mistakes: "Erros",
   level: "Nível",
   pause: "Pausar",
-  endShort: "Sair",
   time: "Tempo",
   resume: "Continuar",
   paused: "Pausado",

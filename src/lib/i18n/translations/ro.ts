@@ -157,7 +157,6 @@ export const ro: Record<TranslationKey, string> = {
   mistakes: "Greșeli",
   level: "Nivel",
   pause: "Pauză",
-  endShort: "Încheie",
   time: "Timp",
   resume: "Continuă",
   paused: "În pauză",
