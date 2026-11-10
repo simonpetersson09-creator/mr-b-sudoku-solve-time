@@ -90,7 +90,7 @@ function HomePage() {
   return (
     <main
       className="relative flex min-h-[100dvh] flex-col items-center overflow-x-hidden px-6 py-3"
-      style={{ paddingTop: "calc(12px + env(safe-area-inset-top))", paddingBottom: "calc(12px + env(safe-area-inset-bottom))" }}
+      style={{ paddingTop: "calc(12px + var(--safe-top))", paddingBottom: "calc(12px + env(safe-area-inset-bottom))" }}
     >
      <div className="home-bg" aria-hidden="true"><div className="home-bg-glow" /><div className="home-bg-dice" /></div>
      <div className="home-enter relative z-10 my-auto flex w-full max-w-sm flex-col items-center gap-4 sm:gap-8 after:absolute after:left-0 after:top-[calc(100%+0.5rem)] after:h-40 after:w-px after:content-['']">

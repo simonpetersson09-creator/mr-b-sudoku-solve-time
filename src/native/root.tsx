@@ -21,6 +21,7 @@ function NativeRoot() {
   useEffect(() => {
     let cleanup: (() => void) | undefined;
     let stopped = false;
+    if (/iPhone|iPad|iPod/.test(navigator.userAgent)) document.documentElement.classList.add("native-ios");
     const viewportCleanup = installViewportSync();
     nativeDiagnostic("startup", "ready");
     const activity = startActivityTracking();
@@ -51,5 +52,5 @@ function NativeRoot() {
     });
     return () => { stopped = true; activity.stop(); cleanup?.(); viewportCleanup(); data.subscription.unsubscribe(); window.removeEventListener("online", connect); window.removeEventListener(RESUME_EVENT, connect); window.removeEventListener("error", onError); window.removeEventListener("unhandledrejection", onRejection); };
   }, [router, queryClient]);
-  return <QueryClientProvider client={queryClient}><HeadContent /><AndroidBackButton /><SwipeBack /><Outlet /><Toaster position="top-center" duration={6000} className="toaster group mrb-toaster" offset={{ top: "calc(env(safe-area-inset-top, 0px) + 12px)" }} mobileOffset={{ top: "calc(env(safe-area-inset-top, 0px) + 12px)" }} /></QueryClientProvider>;
+  return <QueryClientProvider client={queryClient}><HeadContent /><AndroidBackButton /><SwipeBack /><Outlet /><Toaster position="top-center" duration={6000} className="toaster group mrb-toaster" offset={{ top: "calc(var(--safe-top) + 12px)" }} mobileOffset={{ top: "calc(var(--safe-top) + 12px)" }} /></QueryClientProvider>;
 }

@@ -202,7 +202,7 @@ function RootComponent() {
           </button>
         </div>
       )}
-      <Toaster position="top-center" duration={6000} offset={{ top: "calc(env(safe-area-inset-top, 0px) + 12px)" }} mobileOffset={{ top: "calc(env(safe-area-inset-top, 0px) + 12px)" }} className="toaster group mrb-toaster" />
+      <Toaster position="top-center" duration={6000} offset={{ top: "calc(var(--safe-top) + 12px)" }} mobileOffset={{ top: "calc(var(--safe-top) + 12px)" }} className="toaster group mrb-toaster" />
     </QueryClientProvider>
   );
 }
