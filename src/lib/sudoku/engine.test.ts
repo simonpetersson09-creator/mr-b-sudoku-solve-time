@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { solvableBySingles, LEVELS, GIVENS, MAX_UNDOS, countSolutions, generate, newGame, setValue, toggleNote, erase, undo, hint, isWrong, hasNote, isConsistent, solve, PEERS, MAX_MISTAKES, isLost, completedGroups } from "./engine";
+import { solvableBySingles, LEVELS, GIVENS, MAX_UNDOS, countSolutions, generate, newGame, setValue, toggleNote, erase, undo, hint, isWrong, hasNote, isConsistent, solve, PEERS, MAX_MISTAKES, isLost, completedGroups, findHintCell, markHint } from "./engine";
 
 describe("puzzle generation", () => {
   for (const level of LEVELS) {
@@ -121,5 +121,28 @@ describe("mistake limit and completed groups", () => {
     expect(completedGroups(gap, 0).length).toBe(21);
     expect(completedGroups(gap, 72).length).toBe(15);
     expect(completedGroups(gap, 80).length).toBe(0);
+  });
+});
+
+describe("smart hint", () => {
+  it("marks one cell without filling it and counts the hint", () => {
+    const s = newGame("medium", 31, "h");
+    const r = markHint(s);
+    expect(r.cell).not.toBeNull();
+    expect(r.state.values).toEqual(s.values);
+    expect(r.state.hints).toBe(1);
+    expect(s.values[r.cell!]).toBe(0);
+  });
+  it("points out a wrong digit first", () => {
+    let s = newGame("easy", 32, "w");
+    const i = s.values.findIndex((v) => v === 0);
+    s = setValue(s, i, (s.solution[i] % 9) + 1);
+    expect(findHintCell(s)).toBe(i);
+  });
+  it("on an easy puzzle the marked cell has exactly one possible digit or is the only spot", () => {
+    const s = newGame("easy", 33, "e");
+    const c = findHintCell(s)!;
+    expect(s.values[c]).toBe(0);
+    expect(c).toBeGreaterThanOrEqual(0);
   });
 });

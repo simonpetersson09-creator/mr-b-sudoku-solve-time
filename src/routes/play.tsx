@@ -9,7 +9,7 @@ import { AppOpenGameGate } from "@/components/AppOpenGameGate";
 import { usePostMatchExit } from "@/lib/ads/usePostMatchExit";
 import { reportLocalGame } from "@/lib/backend/report";
 import {
-  PEERS, MAX_MISTAKES, completedGroups, isLost, digitCounts, erase, hasNote, hint, isGiven, isWrong, newGame, setValue, toggleNote, undo, type GameState,
+  PEERS, MAX_MISTAKES, findHintCell, markHint, completedGroups, isLost, digitCounts, erase, hasNote, isGiven, isWrong, newGame, setValue, toggleNote, undo, type GameState,
 } from "@/lib/sudoku/engine";
 import { LEVEL_KEY, formatTime } from "@/lib/sudoku/format";
 import { loadGame, loadSettings, loadStats, recordFinish, removeGame, saveGame, startNewGame } from "@/lib/player/storage";
@@ -133,20 +133,21 @@ function PlayPage() {
 
   // A hint is preceded by an interstitial ad (app only; skipped silently when none is available).
   const doHint = async () => {
-    if (hintBusy || state.finished) return;
-    const target = hint(state, selected).cell;
-    if (target == null) return;
+    if (hintBusy || state.finished || lost) return;
+    if (findHintCell(state) == null) return;
     setHintBusy(true);
     setPaused(true);
     try { await showOptionalInterstitial(); } catch { /* the hint is never blocked by an ad */ }
     setPaused(false);
     setHintBusy(false);
-    setState((s) => (s ? hint(s, target).state : s));
-    const r = { cell: target };
+    const r = markHint(state);
+    if (r.cell == null) return;
+    setState(r.state);
     setSelected(r.cell);
     setHintCell(r.cell);
-    window.setTimeout(() => setHintCell(null), 1200);
   };
+  // The hint mark stays until that cell holds its correct digit.
+  const showHint = hintCell != null && state.values[hintCell] !== state.solution[hintCell] ? hintCell : null;
 
   const again = () => {
     const g = newGame(state.level, Math.floor(Math.random() * 2 ** 31), randomId());
@@ -164,7 +165,7 @@ function PlayPage() {
           <button onClick={() => navigate({ to: "/" })} aria-label={t("back")} className="flex h-11 w-11 items-center justify-center rounded-xl active:bg-secondary/80">
             <ArrowLeft className="h-5 w-5 text-muted-foreground" />
           </button>
-          <div className="grid flex-1 grid-cols-3 gap-2">
+          <div className="grid flex-1 grid-cols-[1.2fr_1.2fr_1fr_1fr] gap-1.5">
             <div className="sdk-chip">
               <span className="sdk-chip-label">{t("level")}</span>
               <span className="sdk-chip-value text-gold">{t(LEVEL_KEY[state.level])}</span>
@@ -175,9 +176,13 @@ function PlayPage() {
                 {Array.from({ length: MAX_MISTAKES }, (_, k) => <span key={k} className="sdk-dot" data-on={k < state.mistakes} />)}
               </span>
             </div>
-            <button onClick={() => setPaused((p) => !p)} disabled={state.finished} aria-label={paused ? t("resume") : t("pauseMenu")} className="sdk-chip sdk-chip-btn" data-active={paused}>
-              <span className="sdk-chip-label">{paused ? t("resume") : t("pauseMenu")}</span>
-              <span className="sdk-chip-value">{paused ? <Play className="h-4 w-4" /> : <><Pause className="h-4 w-4" /><span className="opacity-40">·</span><CircleX className="h-4 w-4" /></>}</span>
+            <button onClick={() => setPaused((p) => !p)} disabled={state.finished} aria-label={paused ? t("resume") : t("pause")} className="sdk-chip sdk-chip-btn" data-active={paused}>
+              <span className="sdk-chip-label">{paused ? t("resume") : t("pause")}</span>
+              <span className="sdk-chip-value">{paused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}</span>
+            </button>
+            <button onClick={() => setConfirmEnd(true)} disabled={state.finished} aria-label={t("endGame")} className="sdk-chip sdk-chip-btn sdk-chip-end">
+              <span className="sdk-chip-label">{t("endShort")}</span>
+              <span className="sdk-chip-value"><CircleX className="h-4 w-4" /></span>
             </button>
           </div>
         </div>
@@ -190,9 +195,6 @@ function PlayPage() {
         {paused ? (
           <div className="sdk-paused">
             <button onClick={() => setPaused(false)} className="flex flex-col items-center gap-2 rounded-xl p-4 active:scale-95"><Play className="h-12 w-12 text-gold" /><span className="font-display text-lg font-bold">{t("paused")}</span><span className="text-xs text-muted-foreground">{t("tapToResume")}</span></button>
-            <button className="sdk-end absolute inset-x-4 bottom-4" onClick={() => setConfirmEnd(true)} disabled={state.finished}>
-              <CircleX className="h-5 w-5" />{t("endGame")}
-            </button>
           </div>
         ) : (
           <div className="sdk-board" role="grid" aria-label={t("board")}>
@@ -214,7 +216,7 @@ function PlayPage() {
                   data-wave={celebrating}
                   style={{ ["--d" as string]: r + c }}
                   data-wrong={wrong}
-                  data-hint={hintCell === i}
+                  data-hint={showHint === i}
                   aria-label={t("cellLabel", { row: r + 1, col: c + 1 }) + (v ? `: ${v}` : "")}
                   className="sdk-cell"
                   onClick={() => setSelected(i)}

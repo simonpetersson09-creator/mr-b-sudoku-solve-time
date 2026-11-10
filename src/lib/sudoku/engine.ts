@@ -281,6 +281,46 @@ export function hint(s: GameState, selected: number | null): { state: GameState;
   return { state: { ...next, hints: s.hints + 1, history: [] }, cell };
 }
 
+/**
+ * Smart hint: points out ONE cell without filling it. A wrong digit is pointed out first; otherwise a cell
+ * that can be solved right now (only one digit fits, or a digit fits nowhere else in its row/column/box),
+ * else the open cell with the fewest possible digits. Counts as a used hint.
+ */
+export function findHintCell(s: GameState): number | null {
+  if (over(s)) return null;
+  const wrong = s.values.findIndex((_, i) => isWrong(s, i));
+  if (wrong >= 0) return wrong;
+  const known = s.values.map((v, i) => (v === s.solution[i] ? v : 0));
+  const cand = (i: number) => {
+    if (known[i]) return 0;
+    let m = 0x3fe;
+    for (const p of PEERS[i]) if (known[p]) m &= ~bit(known[p]);
+    return m;
+  };
+  const masks = known.map((_, i) => cand(i));
+  const pop = (m: number) => { let n = 0; while (m) { m &= m - 1; n++; } return n; };
+  const single = masks.findIndex((m) => m && pop(m) === 1);
+  if (single >= 0) return single;
+  const units: number[][] = [];
+  for (let k = 0; k < 9; k++) {
+    units.push(Array.from({ length: 9 }, (_, j) => k * 9 + j), Array.from({ length: 9 }, (_, j) => j * 9 + k),
+      Array.from({ length: 9 }, (_, j) => (Math.floor(k / 3) * 3 + Math.floor(j / 3)) * 9 + (k % 3) * 3 + (j % 3)));
+  }
+  for (const u of units) for (let d = 1; d <= 9; d++) {
+    const spots = u.filter((i) => masks[i] & bit(d));
+    if (spots.length === 1) return spots[0];
+  }
+  let best = -1;
+  masks.forEach((m, i) => { if (m && (best < 0 || pop(m) < pop(masks[best]))) best = i; });
+  return best >= 0 ? best : null;
+}
+
+/** Uses a hint: marks the cell from findHintCell and counts it; the board itself is unchanged. */
+export function markHint(s: GameState): { state: GameState; cell: number | null } {
+  const cell = findHintCell(s);
+  return cell == null ? { state: s, cell } : { state: { ...s, hints: s.hints + 1 }, cell };
+}
+
 /** How many of each digit are correctly placed (a digit with 9 is complete). */
 export function digitCounts(s: GameState): number[] {
   const out = Array(10).fill(0);
