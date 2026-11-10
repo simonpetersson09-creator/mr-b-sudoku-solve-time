@@ -150,6 +150,7 @@ export const ml: Record<TranslationKey, string> = {
   statBestTime: "മികച്ച സമയം",
   statAvgTime: "ശരാശരി സമയം",
   statsNote: "പൂർത്തിയാക്കിയ കളികൾ മാത്രമാണ് എണ്ണുന്നത്. സൂചനകളില്ലാതെ പൂർത്തിയാക്കിയാൽ വിജയം.",
+  statsAllTime: "ആകെ",
   hofGamesTitle: "ഈ മാസത്തെ ഏറ്റവും സജീവം",
   hofGamesSubtitle: "ഈ മാസം ഏറ്റവും കൂടുതൽ സുഡോകു പരിഹരിച്ചവർ",
   hofGames: "കളികൾ",

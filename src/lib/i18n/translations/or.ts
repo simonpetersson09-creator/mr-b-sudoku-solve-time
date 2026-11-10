@@ -150,6 +150,7 @@ export const or: Record<TranslationKey, string> = {
   statBestTime: "ସର୍ବୋତ୍ତମ ସମୟ",
   statAvgTime: "ହାରାହାରି ସମୟ",
   statsNote: "କେବଳ ଶେଷ ହୋଇଥିବା ଖେଳ ଗଣାଯାଏ। ବିଜୟ = ସଙ୍କେତ ବିନା ସମାଧାନ।",
+  statsAllTime: "ମୋଟ",
   hofGamesTitle: "ମାସର ସବୁଠାରୁ ସକ୍ରିୟ",
   hofGamesSubtitle: "ଏହି ମାସରେ ସର୍ବାଧିକ ସୁଡୋକୁ ସମାଧାନ ହୋଇଛି",
   hofGames: "ଖେଳ",

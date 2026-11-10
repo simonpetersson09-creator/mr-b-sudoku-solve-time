@@ -150,6 +150,7 @@ export const pa: Record<TranslationKey, string> = {
   statBestTime: "ਸਭ ਤੋਂ ਵਧੀਆ ਸਮਾਂ",
   statAvgTime: "ਔਸਤ ਸਮਾਂ",
   statsNote: "ਸਿਰਫ਼ ਪੂਰੀਆਂ ਹੋਈਆਂ ਗੇਮਾਂ ਗਿਣੀਆਂ ਜਾਂਦੀਆਂ ਹਨ। ਜਿੱਤ = ਬਿਨਾਂ ਇਸ਼ਾਰੇ ਹੱਲ ਕੀਤੀ ਗੇਮ।",
+  statsAllTime: "ਕੁੱਲ",
   hofGamesTitle: "ਇਸ ਮਹੀਨੇ ਦੇ ਸਭ ਤੋਂ ਸਰਗਰਮ",
   hofGamesSubtitle: "ਇਸ ਮਹੀਨੇ ਸਭ ਤੋਂ ਵੱਧ ਸੁਡੋਕੁ ਹੱਲ ਕੀਤੇ",
   hofGames: "ਖੇਡਾਂ",

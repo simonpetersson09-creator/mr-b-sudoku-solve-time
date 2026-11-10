@@ -150,6 +150,7 @@ export const ro: Record<TranslationKey, string> = {
   statBestTime: "Cel mai bun timp",
   statAvgTime: "Timp mediu",
   statsNote: "Sunt numărate doar jocurile încheiate. Victorie = rezolvat fără indicii.",
+  statsAllTime: "Total",
   hofGamesTitle: "Cei mai activi din această lună",
   hofGamesSubtitle: "Cele mai multe sudoku rezolvate luna aceasta",
   hofGames: "jocuri",

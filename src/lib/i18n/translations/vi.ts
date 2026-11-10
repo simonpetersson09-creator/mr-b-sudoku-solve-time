@@ -150,6 +150,7 @@ export const vi: Record<TranslationKey, string> = {
   statBestTime: "Thời gian tốt nhất",
   statAvgTime: "Thời gian trung bình",
   statsNote: "Số ván đã chơi chỉ tính các ván đã hoàn thành. Thắng = giải xong mà không dùng gợi ý.",
+  statsAllTime: "Tổng cộng",
   hofGamesTitle: "Chăm chỉ nhất tháng",
   hofGamesSubtitle: "Giải được nhiều Sudoku nhất tháng này",
   hofGames: "ván",

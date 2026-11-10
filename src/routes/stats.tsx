@@ -8,7 +8,7 @@ import { flag } from "@/lib/backend/profile-options";
 import { PlayerAvatar } from "@/components/app/PlayerAvatar";
 import { LEVELS } from "@/lib/sudoku/engine";
 import { LEVEL_KEY, formatTime } from "@/lib/sudoku/format";
-import { loadStats, type Stats } from "@/lib/player/storage";
+import { loadAllTime, type AllTimeStats } from "@/lib/player/storage";
 import { useTranslation } from "@/lib/i18n";
 
 export const Route = createFileRoute("/stats")({
@@ -27,8 +27,8 @@ export const Route = createFileRoute("/stats")({
 
 function StatsPage() {
   const { t } = useTranslation();
-  const [s, setS] = useState<Stats | null>(null);
-  useEffect(() => setS(loadStats()), []);
+  const [s, setS] = useState<AllTimeStats | null>(null);
+  useEffect(() => setS(loadAllTime()), []);
   return (
     <main className="app-screen">
       <div className="home-stack">
@@ -37,7 +37,7 @@ function StatsPage() {
         {s && (
           <section className="overflow-hidden rounded-2xl border border-border/40 bg-secondary/50 text-sm">
             <div className="grid grid-cols-[1fr_repeat(4,3.6rem)] gap-1 px-3 pb-1 pt-2 text-right text-[10px] text-muted-foreground">
-              <span className="text-left font-display text-[12px] font-bold text-foreground">{s.year}</span>
+              <span className="text-left font-display text-[12px] font-bold text-foreground">{t("statsAllTime")}</span>
               <span>{t("statPlayed")}</span><span>{t("statWins")}</span><span>{t("statBestTime")}</span><span>{t("statAvgTime")}</span>
             </div>
             {LEVELS.map((l) => {

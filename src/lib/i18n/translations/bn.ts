@@ -150,6 +150,7 @@ export const bn: Record<TranslationKey, string> = {
   statBestTime: "সেরা সময়",
   statAvgTime: "গড় সময়",
   statsNote: "শুধু শেষ করা খেলা গণনা করা হয়। জয় = ইঙ্গিত ছাড়া সমাধান।",
+  statsAllTime: "মোট",
   hofGamesTitle: "মাসের সেরা কর্মী",
   hofGamesSubtitle: "এই মাসে সবচেয়ে বেশি সুডোকু সমাধানকারী",
   hofGames: "খেলা",

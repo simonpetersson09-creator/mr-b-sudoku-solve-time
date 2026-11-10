@@ -20,7 +20,7 @@ export function HomeStats() {
   return (
     <div className="relative w-full max-w-md space-y-2.5 px-5 pb-6 pt-4">
       <button type="button" onClick={() => setExpanded((v) => !v)} aria-expanded={expanded} className="mb-1 flex w-full items-center justify-center gap-1.5">
-        <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">{t("statsTitle")}</span>
+        <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">{t("statsTitle")} {s.year}</span>
         <ChevronDown className={`h-3 w-3 text-muted-foreground transition-transform duration-200 ${expanded ? "rotate-180" : ""}`} />
       </button>
       <div className="grid grid-cols-3 gap-2">

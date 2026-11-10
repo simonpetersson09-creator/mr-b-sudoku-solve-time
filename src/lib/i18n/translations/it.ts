@@ -133,6 +133,7 @@ export const it: Record<TranslationKey, string> = {
   statBestTime: "Tempo migliore",
   statAvgTime: "Tempo medio",
   statsNote: "Si contano solo le partite completate. Vittoria = risolto senza suggerimenti.",
+  statsAllTime: "Totale",
   hofGamesTitle: "I più attivi del mese",
   hofGamesSubtitle: "Maggior numero di sudoku risolti questo mese",
   hofGames: "partite",

@@ -163,6 +163,7 @@ export const sv = {
   statBestTime: "Bästa tid",
   statAvgTime: "Snittid",
   statsNote: "Spelade räknar bara färdiga spel. Vinst = löst utan ledtråd.",
+  statsAllTime: "Totalt",
   hofGamesTitle: "Månadens flitigaste",
   hofGamesSubtitle: "Flest lösta Sudoku den här månaden",
   hofGames: "spel",

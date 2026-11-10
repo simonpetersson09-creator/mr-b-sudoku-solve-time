@@ -150,6 +150,7 @@ export const ta: Record<TranslationKey, string> = {
   statBestTime: "சிறந்த நேரம்",
   statAvgTime: "சராசரி நேரம்",
   statsNote: "முடித்த ஆட்டங்கள் மட்டுமே கணக்கிடப்படும். குறிப்பு இல்லாமல் தீர்த்தால் வெற்றி.",
+  statsAllTime: "மொத்தம்",
   hofGamesTitle: "மாதத்தின் மிக சுறுசுறுப்பானவர்கள்",
   hofGamesSubtitle: "இந்த மாதத்தில் அதிக சுடோகு தீர்த்தவர்கள்",
   hofGames: "ஆட்டங்கள்",

@@ -133,6 +133,7 @@ export const nl: Record<TranslationKey, string> = {
   statBestTime: "Beste tijd",
   statAvgTime: "Gemiddelde tijd",
   statsNote: "Gespeeld telt alleen afgeronde spellen. Overwinning = opgelost zonder hints.",
+  statsAllTime: "Totaal",
   hofGamesTitle: "Meest actieve van de maand",
   hofGamesSubtitle: "Meeste sudoku's opgelost deze maand",
   hofGames: "spellen",

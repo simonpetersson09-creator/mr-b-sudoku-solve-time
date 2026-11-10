@@ -133,6 +133,7 @@ export const ptBR: Record<TranslationKey, string> = {
   statBestTime: "Melhor tempo",
   statAvgTime: "Tempo médio",
   statsNote: "Jogadas conta apenas partidas concluídas. Vitória = jogo resolvido sem dicas.",
+  statsAllTime: "Total",
   hofGamesTitle: "Mais ativos do mês",
   hofGamesSubtitle: "Mais sudokus resolvidos este mês",
   hofGames: "partidas",

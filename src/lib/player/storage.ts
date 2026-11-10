@@ -129,6 +129,51 @@ export function addResult(st: Stats, g: GameState): Stats {
   };
 }
 
+// ---------- All-time statistics (never reset by year change) ----------
+export type AllTimeStats = Record<Level, LevelStats>;
+const ALLTIME = NS + "alltime";
+export const emptyAllTime = (): AllTimeStats => ({ easy: emptyLevel(), medium: emptyLevel(), hard: emptyLevel(), expert: emptyLevel(), ultra: emptyLevel(), impossible: emptyLevel(), master: emptyLevel() });
+
+export function cleanAllTime(raw: unknown): AllTimeStats {
+  const out = emptyAllTime();
+  const r = (raw && typeof raw === "object" ? raw : {}) as Record<string, unknown>;
+  for (const l of LEVELS) {
+    const x = (r[l] && typeof r[l] === "object" ? r[l] : {}) as Record<string, unknown>;
+    const played = cleanCount(x["played"]);
+    out[l] = { played, wins: Math.min(cleanCount(x["wins"]), played), bestMs: cleanCount(x["bestMs"]) || null, totalMs: cleanCount(x["totalMs"]) };
+  }
+  return out;
+}
+
+/** Pure: adds a finished game to the all-time numbers. */
+export function addAllTimeResult(at: AllTimeStats, g: GameState): AllTimeStats {
+  if (!g.finished) return at;
+  const l = at[g.level];
+  const win = g.hints === 0;
+  return {
+    ...at,
+    [g.level]: {
+      played: l.played + 1,
+      wins: l.wins + (win ? 1 : 0),
+      bestMs: win ? (l.bestMs == null ? g.elapsedMs : Math.min(l.bestMs, g.elapsedMs)) : l.bestMs,
+      totalMs: l.totalMs + g.elapsedMs,
+    },
+  };
+}
+
+/** First run seeds from the current year's stats so existing players keep their numbers. */
+export function loadAllTime(): AllTimeStats {
+  const raw = read<unknown>(ALLTIME, null);
+  if (raw == null) {
+    const st = loadStats();
+    const seeded = emptyAllTime();
+    for (const l of LEVELS) seeded[l] = { ...st[l] };
+    return seeded;
+  }
+  return cleanAllTime(raw);
+}
+export const saveAllTime = (s: AllTimeStats) => write(ALLTIME, s);
+
 const COUNTED = NS + "counted";
 export const loadStats = (): Stats => cleanStats(read<unknown>(STATS, {}));
 export const saveStats = (s: Stats) => write(STATS, s);
@@ -138,7 +183,9 @@ export function recordFinish(g: GameState) {
   let list: string[] = [];
   try { const v: unknown = JSON.parse(localStorage.getItem(COUNTED) ?? "[]"); if (Array.isArray(v)) list = v.filter((x) => typeof x === "string"); } catch { /* damaged list starts over */ }
   if (list.includes(g.id)) return;
+  const at = loadAllTime(); // load before the yearly save so a first-run seed never double-counts this game
   saveStats(addResult(loadStats(), g));
+  saveAllTime(addAllTimeResult(at, g));
   const p = loadProgress();
   saveProgress({ ...p, [g.level]: p[g.level] + 1 });
   write(COUNTED, [...list, g.id].slice(-200));
@@ -157,4 +204,4 @@ export function loadProgress(): Progress {
   return out;
 }
 export const saveProgress = (p: Progress) => write(PROGRESS, p);
-export const resetStats = () => { const s = loadStats(); saveStats({ ...emptyStats(), lifetimePlayed: s.lifetimePlayed }); };
+export const resetStats = () => { const s = loadStats(); saveStats({ ...emptyStats(), lifetimePlayed: s.lifetimePlayed }); saveAllTime(emptyAllTime()); };

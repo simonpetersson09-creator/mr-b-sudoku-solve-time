@@ -150,6 +150,7 @@ export const ko: Record<TranslationKey, string> = {
   statBestTime: "최고 기록",
   statAvgTime: "평균 시간",
   statsNote: "완료한 게임만 플레이 횟수에 포함됩니다. 승리 = 힌트 없이 풀기.",
+  statsAllTime: "전체",
   hofGamesTitle: "이달의 최다 완료",
   hofGamesSubtitle: "이번 달에 가장 많은 스도쿠를 푼 플레이어",
   hofGames: "게임 수",

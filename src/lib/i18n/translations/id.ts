@@ -150,6 +150,7 @@ export const id: Record<TranslationKey, string> = {
   statBestTime: "Waktu terbaik",
   statAvgTime: "Waktu rata-rata",
   statsNote: "Dimainkan hanya menghitung permainan yang selesai. Menang = selesai tanpa petunjuk.",
+  statsAllTime: "Total",
   hofGamesTitle: "Paling Aktif Bulan Ini",
   hofGamesSubtitle: "Sudoku terbanyak diselesaikan bulan ini",
   hofGames: "game",

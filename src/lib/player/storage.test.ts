@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { beforeEach, describe, expect, it } from "vitest";
 import { newGame, setValue } from "@/lib/sudoku/engine";
-import { MAX_SAVED_GAMES, addResult, cleanStats, emptyStats, stockholmYear, listGames, loadGame, loadStats, recordFinish, removeGame, saveGame, selectGame, startNewGame } from "./storage";
+import { MAX_SAVED_GAMES, addResult, cleanStats, emptyStats, stockholmYear, listGames, loadAllTime, loadGame, loadStats, recordFinish, removeGame, saveGame, selectGame, startNewGame } from "./storage";
 
 const solved = (seed: number) => {
   let g = newGame("easy", seed, "s" + seed);
@@ -56,6 +56,16 @@ describe("statistics per level", () => {
     const g = solved(8);
     recordFinish(g); recordFinish(g);
     expect(loadStats().easy.played).toBe(1);
+  });
+  it("all-time stats count every finished game and survive a year change", () => {
+    recordFinish(solved(9));
+    recordFinish(solved(10));
+    expect(loadAllTime().easy.played).toBe(2);
+    expect(loadAllTime().easy.wins).toBe(2);
+    // A year change only resets the yearly stats, never the all-time ones.
+    const yearly = cleanStats(loadStats(), stockholmYear() + 1);
+    expect(yearly.easy.played).toBe(0);
+    expect(loadAllTime().easy.played).toBe(2);
   });
 });
 

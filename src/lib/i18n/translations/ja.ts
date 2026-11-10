@@ -150,6 +150,7 @@ export const ja: Record<TranslationKey, string> = {
   statBestTime: "ベストタイム",
   statAvgTime: "平均タイム",
   statsNote: "プレイ数は終了したゲームのみを集計します。ヒントなしで解くと勝利になります。",
+  statsAllTime: "合計",
   hofGamesTitle: "今月の最多クリア",
   hofGamesSubtitle: "今月最も多くナンプレを解いたプレイヤー",
   hofGames: "対局数",

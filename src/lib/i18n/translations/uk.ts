@@ -150,6 +150,7 @@ export const uk: Record<TranslationKey, string> = {
   statBestTime: "Найкращий час",
   statAvgTime: "Середній час",
   statsNote: "Зіграними вважаються лише завершені ігри. Перемога — розв’язання без підказок.",
+  statsAllTime: "Всього",
   hofGamesTitle: "Найактивніші цього місяця",
   hofGamesSubtitle: "Найбільше розв'язаних судоку цього місяця",
   hofGames: "ігри",

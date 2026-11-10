@@ -133,6 +133,7 @@ export const hr: Record<TranslationKey, string> = {
   statBestTime: "Najbolje vrijeme",
   statAvgTime: "Prosječno vrijeme",
   statsNote: "Broje se samo završene igre. Pobjeda = riješeno bez savjeta.",
+  statsAllTime: "Ukupno",
   hofGamesTitle: "Najvrjedniji ovog mjeseca",
   hofGamesSubtitle: "Najviše riješenih Sudokua ovog mjeseca",
   hofGames: "igara",

@@ -133,6 +133,7 @@ export const hu: Record<TranslationKey, string> = {
   statBestTime: "Legjobb idő",
   statAvgTime: "Átlagidő",
   statsNote: "A lejátszott játékok száma csak a befejezett játékokat tartalmazza. Győzelem = megoldás tipp nélkül.",
+  statsAllTime: "Összesen",
   hofGamesTitle: "A hónap legszorgalmasabbjai",
   hofGamesSubtitle: "A legtöbb megoldott sudoku ebben a hónapban",
   hofGames: "játék",

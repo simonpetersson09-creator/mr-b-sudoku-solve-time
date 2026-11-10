@@ -133,6 +133,7 @@ export const el: Record<TranslationKey, string> = {
   statBestTime: "Καλύτερος χρόνος",
   statAvgTime: "Μέσος χρόνος",
   statsNote: "Μετρούν μόνο τα ολοκληρωμένα παιχνίδια. Νίκη = λύση χωρίς βοήθειες.",
+  statsAllTime: "Συνολικά",
   hofGamesTitle: "Οι πιο δραστήριοι του μήνα",
   hofGamesSubtitle: "Τα περισσότερα λυμένα Σουντόκου αυτόν τον μήνα",
   hofGames: "παιχν.",

@@ -150,6 +150,7 @@ export const da: Record<TranslationKey, string> = {
   statBestTime: "Bedste tid",
   statAvgTime: "Gennemsnitstid",
   statsNote: "Spillet tæller kun afsluttede spil. Sejr = løst uden tips.",
+  statsAllTime: "I alt",
   hofGamesTitle: "Månedens flittigste",
   hofGamesSubtitle: "Flest løste sudoku denne måned",
   hofGames: "spil",

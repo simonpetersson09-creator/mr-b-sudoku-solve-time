@@ -150,6 +150,7 @@ export const en: Record<TranslationKey, string> = {
   statBestTime: "Best time",
   statAvgTime: "Average time",
   statsNote: "Played counts finished games only. Win = solved without hints.",
+  statsAllTime: "All time",
   hofGamesTitle: "Most Active This Month",
   hofGamesSubtitle: "Most Sudokus solved this month",
   hofGames: "games",

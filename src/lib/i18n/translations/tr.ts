@@ -150,6 +150,7 @@ export const tr: Record<TranslationKey, string> = {
   statBestTime: "En iyi süre",
   statAvgTime: "Ortalama süre",
   statsNote: "Oynanan sayısına yalnızca tamamlanan oyunlar dahildir. Kazanma = ipucu kullanmadan çözme.",
+  statsAllTime: "Toplam",
   hofGamesTitle: "Ayın En Aktifleri",
   hofGamesSubtitle: "Bu ay en çok sudoku çözenler",
   hofGames: "oyun",

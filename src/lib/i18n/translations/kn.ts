@@ -150,6 +150,7 @@ export const kn: Record<TranslationKey, string> = {
   statBestTime: "ಅತ್ಯುತ್ತಮ ಸಮಯ",
   statAvgTime: "ಸರಾಸರಿ ಸಮಯ",
   statsNote: "ಪೂರ್ಣಗೊಳಿಸಿದ ಆಟಗಳನ್ನು ಮಾತ್ರ ಲೆಕ್ಕಿಸಲಾಗುತ್ತದೆ. ಗೆಲುವು = ಸುಳಿವಿಲ್ಲದೆ ಬಿಡಿಸಿದ್ದು.",
+  statsAllTime: "ಒಟ್ಟು",
   hofGamesTitle: "ಈ ತಿಂಗಳ ಅತ್ಯಂತ ಸಕ್ರಿಯರು",
   hofGamesSubtitle: "ಈ ತಿಂಗಳು ಅತಿ ಹೆಚ್ಚು ಸುಡೋಕು ಪರಿಹರಿಸಿದವರು",
   hofGames: "ಆಟಗಳು",

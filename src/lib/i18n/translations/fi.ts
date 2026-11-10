@@ -133,6 +133,7 @@ export const fi: Record<TranslationKey, string> = {
   statBestTime: "Paras aika",
   statAvgTime: "Keskimääräinen aika",
   statsNote: "Pelatuiksi lasketaan vain loppuun pelatut pelit. Voitto = ratkaistu ilman vihjeitä.",
+  statsAllTime: "Kaikkiaan",
   hofGamesTitle: "Kuukauden ahkerimmat",
   hofGamesSubtitle: "Eniten ratkaistuja sudokuja tässä kuussa",
   hofGames: "pelit",

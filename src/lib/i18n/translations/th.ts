@@ -150,6 +150,7 @@ export const th: Record<TranslationKey, string> = {
   statBestTime: "เวลาดีที่สุด",
   statAvgTime: "เวลาเฉลี่ย",
   statsNote: "นับเฉพาะเกมที่เล่นจบ ชนะ = ไขโจทย์ได้โดยไม่ใช้คำใบ้",
+  statsAllTime: "ทั้งหมด",
   hofGamesTitle: "ผู้เล่นที่ขยันที่สุดประจำเดือน",
   hofGamesSubtitle: "แก้ซูโดกุได้มากที่สุดในเดือนนี้",
   hofGames: "เกม",

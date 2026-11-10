@@ -150,6 +150,7 @@ export const ru: Record<TranslationKey, string> = {
   statBestTime: "Лучшее время",
   statAvgTime: "Среднее время",
   statsNote: "Учитываются только завершённые игры. Победа — решение без подсказок.",
+  statsAllTime: "Всего",
   hofGamesTitle: "Самые активные за месяц",
   hofGamesSubtitle: "Больше всего решённых судоку в этом месяце",
   hofGames: "игры",

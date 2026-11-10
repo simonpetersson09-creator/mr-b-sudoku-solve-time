@@ -133,6 +133,7 @@ export const ca: Record<TranslationKey, string> = {
   statBestTime: "Millor temps",
   statAvgTime: "Temps mitjà",
   statsNote: "Només es compten les partides acabades. Victòria = resolta sense pistes.",
+  statsAllTime: "Total",
   hofGamesTitle: "Els més actius del mes",
   hofGamesSubtitle: "Més sudokus resolts aquest mes",
   hofGames: "partides",

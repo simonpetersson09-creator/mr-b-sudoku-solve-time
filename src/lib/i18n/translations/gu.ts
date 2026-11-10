@@ -150,6 +150,7 @@ export const gu: Record<TranslationKey, string> = {
   statBestTime: "શ્રેષ્ઠ સમય",
   statAvgTime: "સરેરાશ સમય",
   statsNote: "માત્ર પૂર્ણ થયેલી રમતો ગણાય છે. જીત = સંકેત વગર ઉકેલેલી રમત.",
+  statsAllTime: "કુલ",
   hofGamesTitle: "મહિનાના સૌથી સક્રિય",
   hofGamesSubtitle: "આ મહિને સૌથી વધુ સુડોકુ ઉકેલ્યા",
   hofGames: "રમતો",

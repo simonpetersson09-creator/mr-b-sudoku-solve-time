@@ -150,6 +150,7 @@ export const te: Record<TranslationKey, string> = {
   statBestTime: "అత్యుత్తమ సమయం",
   statAvgTime: "సగటు సమయం",
   statsNote: "పూర్తి చేసిన ఆటలను మాత్రమే లెక్కిస్తాం. గెలుపు = సూచనలు లేకుండా పరిష్కరించడం.",
+  statsAllTime: "మొత్తం",
   hofGamesTitle: "ఈ నెలలో అత్యంత చురుకైనవారు",
   hofGamesSubtitle: "ఈ నెలలో అత్యధిక సుడోకులను పరిష్కరించారు",
   hofGames: "ఆటలు",

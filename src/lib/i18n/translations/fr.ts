@@ -150,6 +150,7 @@ export const fr: Record<TranslationKey, string> = {
   statBestTime: "Meilleur temps",
   statAvgTime: "Temps moyen",
   statsNote: "Seules les parties terminées sont comptées. Victoire = grille résolue sans indice.",
+  statsAllTime: "Total",
   hofGamesTitle: "Les plus assidus du mois",
   hofGamesSubtitle: "Le plus de sudokus résolus ce mois-ci",
   hofGames: "parties",

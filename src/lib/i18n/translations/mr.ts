@@ -150,6 +150,7 @@ export const mr: Record<TranslationKey, string> = {
   statBestTime: "सर्वोत्तम वेळ",
   statAvgTime: "सरासरी वेळ",
   statsNote: "खेळलेल्यांमध्ये फक्त पूर्ण झालेले खेळ मोजले जातात. विजय = इशाऱ्यांशिवाय सोडवलेले कोडे.",
+  statsAllTime: "एकूण",
   hofGamesTitle: "या महिन्यातील सर्वात सक्रिय",
   hofGamesSubtitle: "या महिन्यात सर्वाधिक सुडोकू सोडवले",
   hofGames: "खेळ",

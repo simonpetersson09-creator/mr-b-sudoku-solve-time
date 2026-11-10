@@ -150,6 +150,7 @@ export const de: Record<TranslationKey, string> = {
   statBestTime: "Bestzeit",
   statAvgTime: "Durchschnittszeit",
   statsNote: "Unter „Gespielt“ zählen nur abgeschlossene Spiele. Sieg = ohne Tipps gelöst.",
+  statsAllTime: "Insgesamt",
   hofGamesTitle: "Fleißigste des Monats",
   hofGamesSubtitle: "Die meisten gelösten Sudokus diesen Monat",
   hofGames: "Spiele",

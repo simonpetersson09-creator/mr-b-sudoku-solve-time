@@ -133,6 +133,7 @@ export const cs: Record<TranslationKey, string> = {
   statBestTime: "Nejlepší čas",
   statAvgTime: "Průměrný čas",
   statsNote: "Odehráno zahrnuje pouze dokončené hry. Výhra = vyřešeno bez nápovědy.",
+  statsAllTime: "Celkem",
   hofGamesTitle: "Nejpilnější tohoto měsíce",
   hofGamesSubtitle: "Nejvíce vyřešených sudoku tento měsíc",
   hofGames: "her",
