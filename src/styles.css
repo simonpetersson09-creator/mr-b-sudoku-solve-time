@@ -574,7 +574,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar, *::-webkit-scrollbar { display
 .sdk-cell[data-r="8"] { border-bottom: 0; }
 .sdk-cell[data-given="true"] { color: var(--sdk-given); font-weight: 700; }
 .sdk-cell[data-peer="true"] { background: var(--sdk-peer); }
-.sdk-cell[data-same="true"] { background: var(--sdk-same); }
+.sdk-cell[data-same="true"] { background: var(--sdk-same); color: var(--sdk-same-fg, var(--game-ink)); font-weight: 800; box-shadow: inset 0 0 0 2px var(--game-gold); }
 .sdk-cell[data-selected="true"] { background: var(--sdk-selected); }
 .sdk-cell[data-hint="true"] { background: var(--sdk-hint); }
 .sdk-cell[data-wrong="true"] { color: var(--sdk-wrong); background: var(--sdk-wrong-bg); }
@@ -653,7 +653,18 @@ html::-webkit-scrollbar, body::-webkit-scrollbar, *::-webkit-scrollbar { display
 .sdk-pips { display: flex; gap: 3px; }
 .sdk-pip { width: 7px; height: 7px; border-radius: 999px; border: 1.5px solid color-mix(in oklab, var(--muted-foreground) 60%, transparent); transition: background .25s, border-color .25s; }
 .sdk-pip[data-on="true"] { background: var(--game-gold); border-color: var(--game-gold); }
-.lvl-btn:disabled { opacity: 0.45; filter: grayscale(0.6); cursor: not-allowed; }
+.lvl-meter { margin-left: auto; align-self: center; }
+.lvl-btn:disabled {
+  cursor: not-allowed; filter: none; opacity: 1;
+  background: repeating-linear-gradient(135deg, color-mix(in oklab, var(--muted) 70%, transparent) 0 8px, color-mix(in oklab, var(--muted) 45%, transparent) 8px 16px);
+  border: 1.5px dashed color-mix(in oklab, var(--muted-foreground) 55%, transparent);
+  box-shadow: none; color: var(--muted-foreground);
+}
+.lvl-btn:disabled::before { background: color-mix(in oklab, var(--muted-foreground) 35%, transparent); }
+.lvl-btn:disabled .lvl-name { color: var(--muted-foreground); }
+.lvl-btn:disabled .lvl-name svg { color: var(--game-gold); }
+.lvl-btn:disabled .lvl-bar-on { background: color-mix(in oklab, var(--muted-foreground) 45%, transparent); }
+.lvl-btn:not(:disabled) { box-shadow: 0 0 0 1.5px color-mix(in oklab, var(--lvl-line) 80%, transparent), 0 6px 18px color-mix(in oklab, var(--lvl-glow) 40%, transparent); }
 .lvl-lock { font-size: 10px; font-weight: 600; opacity: 0.9; }
 .sdk-hint-tip { display: flex; align-items: center; justify-content: center; gap: 6px; margin: 4px auto 0; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; text-align: center; color: var(--game-gold); background: color-mix(in oklab, var(--game-gold) 14%, transparent); border: 1px solid color-mix(in oklab, var(--game-gold) 45%, transparent); }
 .sdk-hint-tip { min-height: 22px; visibility: hidden; }
@@ -747,7 +758,8 @@ main[data-level="master"] .sdk-level-pill { background: color-mix(in oklab, var(
   --sdk-given: oklch(0.93 0.03 85);
   --sdk-thin: oklch(0.38 0.03 200);
   --sdk-peer: oklch(0.29 0.04 200);
-  --sdk-same: oklch(0.38 0.07 85);
+  --sdk-same: oklch(0.42 0.09 85);
+  --sdk-same-fg: oklch(0.97 0.04 85);
   --sdk-selected: oklch(0.45 0.09 85);
   --sdk-hint: oklch(0.36 0.08 150);
 }

@@ -50,6 +50,7 @@ function PlayPage() {
   const [shakeCell, setShakeCell] = useState<{ i: number; k: number } | null>(null);
   const [celebrating, setCelebrating] = useState(false);
   const [hinted, setHinted] = useState<Set<number>>(new Set());
+  const [lockedHints, setLockedHints] = useState<Set<number>>(new Set());
   const [holdDigit, setHoldDigit] = useState<number | null>(null);
   const holdTimer = useRef<number | null>(null);
   const held = useRef(false);
@@ -128,6 +129,7 @@ function PlayPage() {
     const k = Date.now();
     if (next.values[selected] !== before.solution[selected]) {
       setShakeCell({ i: selected, k });
+      setPopCell(null);
       void playDiceLandHaptic();
       // The wrong digit fades away by itself after a moment; the cell empties but the mistake still counts.
       const cell = selected;
@@ -141,6 +143,7 @@ function PlayPage() {
       }, 1800);
       return;
     }
+    setShakeCell(null);
     setPopCell({ i: selected, k });
     if (next.finished) { setCelebrating(true); window.setTimeout(() => setCelebrating(false), 1600); }
     const done = completedGroups(next, selected).filter((i) => !completedGroups(before, selected).includes(i));
@@ -276,7 +279,7 @@ function PlayPage() {
                   key={popCell?.i === i ? `p${popCell.k}` : shakeCell?.i === i ? `s${shakeCell.k}` : i}
                   role="gridcell"
                   data-r={r} data-c={c}
-                  data-given={isGiven(state, i)}
+                  data-given={isGiven(state, i) || (lockedHints.has(i) && v === state.solution[i])}
                   data-selected={selected === i}
                   data-peer={selected != null && selected !== i && peers.has(i)}
                   data-same={holdDigit != null ? v === holdDigit : settings.highlightSame && sameDigit !== null && v === sameDigit && selected !== i}
@@ -286,10 +289,14 @@ function PlayPage() {
                   data-wave={celebrating}
                   style={{ ["--d" as string]: r + c }}
                   data-wrong={wrong}
-                  data-hint={showHint === i} data-hint-zone={hintZone?.has(i) || undefined} data-hinted={(hinted.has(i) && v === state.solution[i]) || undefined}
+                  data-hint={showHint === i} data-hint-zone={hintZone?.has(i) || undefined} data-hinted={(hinted.has(i) && !lockedHints.has(i) && v === state.solution[i]) || undefined}
                   aria-label={t("cellLabel", { row: r + 1, col: c + 1 }) + (v ? `: ${v}` : "") + (showHint === i ? ` (${t("hint")}: ${state.solution[i]})` : "")}
                   className="sdk-cell"
-                  onClick={() => { setSelected(i); setSameDigit(v !== 0 ? v : null); }}
+                  onClick={() => {
+                    if (hinted.has(i) && !lockedHints.has(i) && v === state.solution[i]) { setLockedHints((s) => new Set(s).add(i)); void playLightHaptic(); }
+                    if (selected === i && v !== 0 && sameDigit === v) { setSelected(null); setSameDigit(null); return; }
+                    setSelected(i); setSameDigit(v !== 0 ? v : null);
+                  }}
                 >
                   {showHint === i && <span className="sdk-hint-digit" aria-hidden="true">{state.solution[i]}</span>}
                   {v ? v : state.notes[i] ? (
