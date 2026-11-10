@@ -702,12 +702,23 @@ main[data-level="master"] .sdk-level-pill { background: color-mix(in oklab, var(
 @keyframes sdk-board-out { to { opacity: .25; filter: grayscale(1) blur(1px); transform: scale(.97); } }
 @media (prefers-reduced-motion: reduce) { .sdk-board[data-lost="true"], .sdk-dot[data-on="true"] { animation: none; } }
 
+/* Board header: level on the left, mistakes on the right. */
+.sdk-board-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0 2px; }
+.sdk-fel-pill { display: inline-flex; align-items: center; gap: 7px; min-height: 26px; padding: 0 12px; border-radius: 999px; background: color-mix(in oklab, var(--card) 92%, transparent); border: 1px solid var(--border); transition: border-color .25s, background-color .25s; }
+.sdk-fel-label { font-family: var(--font-display); font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted-foreground); }
+.sdk-fel-dots { display: flex; gap: 4px; }
+.sdk-fel-pill[data-bad="true"] { background: color-mix(in oklab, var(--destructive) 12%, var(--card)); border-color: color-mix(in oklab, var(--destructive) 45%, var(--border)); }
+.sdk-fel-pill[data-bad="true"] .sdk-fel-label { color: color-mix(in oklab, var(--destructive) 62%, var(--foreground)); }
+
 /* Spelsidan är fast: ingen scroll */
 .sdk-fixed { position: fixed; inset: 0; height: 100dvh; min-height: 0; overflow: hidden; overscroll-behavior: none; touch-action: manipulation; }
 .sdk-fixed .sdk-board { width: 100%; max-width: min(100%, max(200px, calc(100dvh - 280px - var(--safe-top) - env(safe-area-inset-bottom)))); margin-inline: auto; }
 /* Compact play screen: smaller header, tools and keys give the board more room. */
 .sdk-fixed .sdk-chip { height: 40px; border-radius: 12px; }
 .sdk-fixed .sdk-level-pill { min-height: 22px; font-size: 11px; }
+.sdk-fixed .sdk-fel-pill { min-height: 22px; padding: 0 10px; gap: 6px; }
+.sdk-fixed .sdk-fel-label { font-size: 10px; }
+.sdk-fixed .sdk-dot { width: 8px; height: 8px; }
 .sdk-fixed .sdk-tool { min-height: 38px; font-size: 10px; gap: 1px; }
 .sdk-fixed .sdk-tool svg { height: 18px; width: 18px; }
 .sdk-fixed .sdk-key { min-height: 46px; font-size: 24px; border-radius: 12px; }

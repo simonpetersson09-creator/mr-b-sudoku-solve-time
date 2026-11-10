@@ -205,13 +205,7 @@ function PlayPage() {
           <button onClick={() => navigate({ to: "/" })} aria-label={t("back")} className="sdk-back">
             <ArrowLeft className="h-4 w-4" /><span>{t("back")}</span>
           </button>
-          <div className="grid flex-1 grid-cols-3 gap-1.5">
-            <div className="sdk-chip" data-bad={state.mistakes > 0}>
-              <span className="sdk-chip-label">{t("mistakes")}</span>
-              <span className="sdk-chip-value">
-                {Array.from({ length: MAX_MISTAKES }, (_, k) => <span key={k} className="sdk-dot" data-on={k < state.mistakes} />)}
-              </span>
-            </div>
+          <div className="grid flex-1 grid-cols-2 gap-1.5">
             <button onClick={() => setPaused((p) => !p)} disabled={state.finished} aria-label={paused ? t("resume") : t("pause")} className="sdk-chip sdk-chip-btn" data-active={paused}>
               <span className="sdk-chip-label">{paused ? t("resume") : t("pause")}</span>
               <span className="sdk-chip-value">{paused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}</span>
@@ -224,11 +218,17 @@ function PlayPage() {
         </div>
 
         <div className="flex flex-1 flex-col justify-center gap-2">
-        <div className="flex justify-center"><span className="sdk-level-pill" aria-label={`${t("level")}: ${t(LEVEL_KEY[state.level])}`}>{t(LEVEL_KEY[state.level])}</span></div>
         <p className="-mt-1 text-center font-display text-2xl font-bold tabular-nums tracking-wider" aria-label={t("time")}>{formatTime(state.elapsedMs)}</p>
         <p className="-mt-2 text-center text-[11px] text-muted-foreground">
           {t("statBestTime")}: <span className="font-display font-bold tabular-nums text-gold">{stats[state.level].bestMs != null ? formatTime(stats[state.level].bestMs!) : "–"}</span>
         </p>
+        <div className="sdk-board-head">
+          <span className="sdk-level-pill" aria-label={`${t("level")}: ${t(LEVEL_KEY[state.level])}`}>{t(LEVEL_KEY[state.level])}</span>
+          <span className="sdk-fel-pill" data-bad={state.mistakes > 0} aria-label={`${t("mistakes")}: ${state.mistakes}/${MAX_MISTAKES}`}>
+            <span className="sdk-fel-label">{t("mistakes")}</span>
+            <span className="sdk-fel-dots">{Array.from({ length: MAX_MISTAKES }, (_, k) => <span key={k} className="sdk-dot" data-on={k < state.mistakes} />)}</span>
+          </span>
+        </div>
         {paused ? (
           <div className="sdk-paused">
             <button onClick={() => setPaused(false)} className="flex flex-col items-center gap-2 rounded-xl p-4 active:scale-95"><Play className="h-12 w-12 text-gold" /><span className="font-display text-lg font-bold">{t("paused")}</span><span className="text-xs text-muted-foreground">{t("tapToResume")}</span></button>
