@@ -294,7 +294,7 @@ function PlayPage() {
                   className="sdk-cell"
                   onClick={() => {
                     if (hinted.has(i) && !lockedHints.has(i) && v === state.solution[i]) { setLockedHints((s) => new Set(s).add(i)); void playLightHaptic(); }
-                    if (selected === i && v !== 0 && sameDigit === v) { setSelected(null); setSameDigit(null); return; }
+                    if (selected === i && v !== 0) { setSelected(null); setSameDigit(null); void playLightHaptic(); return; }
                     setSelected(i); setSameDigit(v !== 0 ? v : null);
                   }}
                 >
