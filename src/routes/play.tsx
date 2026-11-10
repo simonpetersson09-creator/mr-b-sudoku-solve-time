@@ -147,9 +147,6 @@ function PlayPage() {
             <p className="text-xs text-muted-foreground">{t("mistakesN", { n: state.mistakes })}</p>
           </div>
           <span className="font-display text-lg font-bold tabular-nums" aria-label={t("time")}>{formatTime(state.elapsedMs)}</span>
-          <button onClick={() => setConfirmEnd(true)} disabled={state.finished} aria-label={t("endGame")} className="flex h-11 w-11 items-center justify-center rounded-xl bg-destructive/15 text-destructive active:bg-destructive/25 disabled:opacity-40">
-            <CircleX className="h-5 w-5" />
-          </button>
           <button onClick={() => setPaused((p) => !p)} disabled={state.finished} aria-label={paused ? t("resume") : t("pause")} className="flex h-11 w-11 items-center justify-center rounded-xl bg-secondary/60 active:bg-secondary disabled:opacity-40">
             {paused ? <Play className="h-5 w-5" /> : <Pause className="h-5 w-5" />}
           </button>
@@ -210,6 +207,10 @@ function PlayPage() {
             </button>
           ))}
         </div>
+
+        <button className="sdk-end" onClick={() => setConfirmEnd(true)} disabled={state.finished}>
+          <CircleX className="h-5 w-5" />{t("endGame")}
+        </button>
         </div>
       </div>
       <AlertDialog open={confirmEnd} onOpenChange={setConfirmEnd}>

@@ -520,6 +520,18 @@ html::-webkit-scrollbar, body::-webkit-scrollbar, *::-webkit-scrollbar { display
 .sdk-tool:disabled { opacity: .4; }
 .sdk-badge { position: absolute; top: 2px; right: 10%; min-width: 16px; padding: 0 4px; border-radius: 9999px; background: var(--game-gold); color: var(--primary-foreground); font-size: 10px; line-height: 16px; }
 .sdk-pad { display: grid; grid-template-columns: repeat(9, 1fr); gap: 4px; }
+.sdk-end {
+  display: flex; min-height: 44px; align-items: center; justify-content: center; gap: 8px;
+  border-radius: 12px; border: 1px solid color-mix(in oklab, var(--destructive) 30%, transparent);
+  background: color-mix(in oklab, var(--destructive) 12%, var(--background));
+  color: var(--destructive); font-size: 14px; font-weight: 600; transition: transform .1s, background-color .15s;
+}
+.sdk-end:active { transform: scale(.98); background: color-mix(in oklab, var(--destructive) 20%, var(--background)); }
+.sdk-end:disabled { opacity: .4; }
+/* Short phones: shrink the board so the number row and the end-game button stay on screen. */
+@media (orientation: portrait) {
+  .sdk-board { max-width: min(100%, max(200px, calc(100dvh - 350px))); margin-inline: auto; }
+}
 .sdk-key { display: flex; min-height: 52px; flex-direction: column; align-items: center; justify-content: center; border-radius: 12px; background: var(--card); border: 1px solid var(--border); color: var(--game-gold-light); font-family: var(--font-display); font-size: 24px; font-weight: 700; transition: transform .1s; }
 .sdk-key:active { transform: scale(.94); background: var(--secondary); }
 .sdk-key small { font-family: var(--font-sans); font-size: 9px; font-weight: 600; color: var(--muted-foreground); }
