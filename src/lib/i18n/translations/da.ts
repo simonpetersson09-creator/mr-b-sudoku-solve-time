@@ -154,4 +154,6 @@ export const da: Record<TranslationKey, string> = {
   notes: "Noter",
   hint: "Tip",
   solvedTitle: "Løst!",
+  endGame: "Afslut spil",
+  endGameBody: "Spillet slettes og tæller ikke med i din statistik.",
 };

@@ -137,4 +137,6 @@ export const ca: Record<TranslationKey, string> = {
   notes: "Notes",
   hint: "Pista",
   solvedTitle: "Resolt!",
+  endGame: "Finalitza la partida",
+  endGameBody: "La partida s'eliminarà i no comptarà a les teves estadístiques.",
 };

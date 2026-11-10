@@ -1,6 +1,11 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, Eraser, Lightbulb, Pause, Pencil, Play, Undo2 } from "lucide-react";
+import { ArrowLeft, Eraser, Flag, Lightbulb, Pause, Pencil, Play, Undo2 } from "lucide-react";
+import mrBLogo from "@/assets/mr-b-sudoku-logo.png";
+import { showOptionalInterstitial } from "@/lib/ads/admob";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { AppOpenGameGate } from "@/components/AppOpenGameGate";
 import { usePostMatchExit } from "@/lib/ads/usePostMatchExit";
 import { reportLocalGame } from "@/lib/backend/report";
@@ -8,7 +13,7 @@ import {
   PEERS, digitCounts, erase, hasNote, hint, isGiven, isWrong, newGame, setValue, toggleNote, undo, type GameState,
 } from "@/lib/sudoku/engine";
 import { LEVEL_KEY, formatTime } from "@/lib/sudoku/format";
-import { loadGame, loadSettings, recordFinish, saveGame, startNewGame } from "@/lib/player/storage";
+import { loadGame, loadSettings, recordFinish, removeGame, saveGame, startNewGame } from "@/lib/player/storage";
 import { randomId } from "@/lib/random-id";
 import { playLightHaptic, playSuccessHaptic, playDiceLandHaptic } from "@/lib/native/haptics";
 import { useTranslation } from "@/lib/i18n";
@@ -35,6 +40,8 @@ function PlayPage() {
   const [notesMode, setNotesMode] = useState(false);
   const [paused, setPaused] = useState(false);
   const [hintCell, setHintCell] = useState<number | null>(null);
+  const [hintBusy, setHintBusy] = useState(false);
+  const [confirmEnd, setConfirmEnd] = useState(false);
   const settings = useMemo(() => loadSettings(), []);
   const finishedDone = useRef(false);
 
@@ -102,10 +109,18 @@ function PlayPage() {
   const selValue = selected != null ? state.values[selected] : 0;
   const peers = selected != null ? new Set(PEERS[selected]) : new Set<number>();
 
-  const doHint = () => {
-    const r = hint(state, selected);
-    if (r.cell == null) return;
-    setState(r.state);
+  // A hint is preceded by an interstitial ad (app only; skipped silently when none is available).
+  const doHint = async () => {
+    if (hintBusy || state.finished) return;
+    const target = hint(state, selected).cell;
+    if (target == null) return;
+    setHintBusy(true);
+    setPaused(true);
+    try { await showOptionalInterstitial(); } catch { /* the hint is never blocked by an ad */ }
+    setPaused(false);
+    setHintBusy(false);
+    setState((s) => (s ? hint(s, target).state : s));
+    const r = { cell: target };
     setSelected(r.cell);
     setHintCell(r.cell);
     window.setTimeout(() => setHintCell(null), 1200);
@@ -121,8 +136,8 @@ function PlayPage() {
   };
 
   return (
-    <main className="app-screen" style={{ paddingTop: "calc(8px + env(safe-area-inset-top))", paddingBottom: "calc(12px + env(safe-area-inset-bottom))" }}>
-      <div className="mx-auto flex w-full max-w-md flex-col gap-3">
+    <main className="app-screen flex flex-col" style={{ paddingTop: "calc(8px + env(safe-area-inset-top))", paddingBottom: "calc(20px + env(safe-area-inset-bottom))" }}>
+      <div className="mx-auto flex w-full max-w-md flex-1 flex-col gap-3">
         <div className="flex items-center gap-2">
           <button onClick={() => navigate({ to: "/" })} aria-label={t("back")} className="flex h-11 w-11 items-center justify-center rounded-xl active:bg-secondary/80">
             <ArrowLeft className="h-5 w-5 text-muted-foreground" />
@@ -132,9 +147,16 @@ function PlayPage() {
             <p className="text-xs text-muted-foreground">{t("mistakesN", { n: state.mistakes })}</p>
           </div>
           <span className="font-display text-lg font-bold tabular-nums" aria-label={t("time")}>{formatTime(state.elapsedMs)}</span>
+          <button onClick={() => setConfirmEnd(true)} disabled={state.finished} aria-label={t("endGame")} className="flex h-11 w-11 items-center justify-center rounded-xl bg-secondary/60 active:bg-secondary disabled:opacity-40">
+            <Flag className="h-5 w-5" />
+          </button>
           <button onClick={() => setPaused((p) => !p)} disabled={state.finished} aria-label={paused ? t("resume") : t("pause")} className="flex h-11 w-11 items-center justify-center rounded-xl bg-secondary/60 active:bg-secondary disabled:opacity-40">
             {paused ? <Play className="h-5 w-5" /> : <Pause className="h-5 w-5" />}
           </button>
+        </div>
+
+        <div className="flex flex-1 flex-col items-center justify-end">
+          <img src={mrBLogo} alt="Mr.B. Sudoku" className="h-24 w-24 object-contain sm:h-28 sm:w-28" />
         </div>
 
         {paused ? (
@@ -176,7 +198,7 @@ function PlayPage() {
           <button className="sdk-tool" onClick={() => act(undo)} disabled={paused || !state.history.length}><Undo2 className="h-5 w-5" />{t("undo")}</button>
           <button className="sdk-tool" onClick={() => selected != null && act((s) => erase(s, selected))} disabled={paused}><Eraser className="h-5 w-5" />{t("erase")}</button>
           <button className="sdk-tool" aria-pressed={notesMode} onClick={() => setNotesMode((n) => !n)} disabled={paused}><Pencil className="h-5 w-5" />{t("notes")}</button>
-          <button className="sdk-tool relative" onClick={doHint} disabled={paused}><Lightbulb className="h-5 w-5" />{t("hint")}{state.hints > 0 && <span className="sdk-badge">{state.hints}</span>}</button>
+          <button className="sdk-tool relative" onClick={() => void doHint()} disabled={paused || hintBusy}><Lightbulb className="h-5 w-5" />{t("hint")}{state.hints > 0 && <span className="sdk-badge">{state.hints}</span>}</button>
         </div>
 
         <div className="sdk-pad">
@@ -188,6 +210,18 @@ function PlayPage() {
           ))}
         </div>
       </div>
+      <AlertDialog open={confirmEnd} onOpenChange={setConfirmEnd}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t("endGame")}</AlertDialogTitle>
+            <AlertDialogDescription>{t("endGameBody")}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
+            <AlertDialogAction onClick={() => { removeGame(state.id); void navigate({ to: "/" }); }}>{t("endGame")}</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       {state.finished && <ResultOverlay state={state} onAgain={again} onHome={() => navigate({ to: "/" })} />}
     </main>
   );

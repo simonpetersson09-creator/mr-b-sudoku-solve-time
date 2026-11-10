@@ -154,4 +154,6 @@ export const fr: Record<TranslationKey, string> = {
   notes: "Notes",
   hint: "Indice",
   solvedTitle: "Grille résolue !",
+  endGame: "Terminer la partie",
+  endGameBody: "La partie est supprimée et n’est pas prise en compte dans vos statistiques.",
 };

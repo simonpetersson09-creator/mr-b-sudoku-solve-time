@@ -154,4 +154,6 @@ export const gu: Record<TranslationKey, string> = {
   notes: "નોંધો",
   hint: "સંકેત",
   solvedTitle: "ઉકેલાઈ ગયું!",
+  endGame: "રમત સમાપ્ત કરો",
+  endGameBody: "રમત કાઢી નાખવામાં આવશે અને તમારા આંકડામાં ગણાશે નહીં.",
 };

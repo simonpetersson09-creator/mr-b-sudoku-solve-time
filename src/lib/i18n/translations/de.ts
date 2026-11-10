@@ -154,4 +154,6 @@ export const de: Record<TranslationKey, string> = {
   notes: "Notizen",
   hint: "Tipp",
   solvedTitle: "Gelöst!",
+  endGame: "Spiel beenden",
+  endGameBody: "Das Spiel wird gelöscht und zählt nicht für deine Statistik.",
 };

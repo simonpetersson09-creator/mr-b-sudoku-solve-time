@@ -137,4 +137,6 @@ export const nl: Record<TranslationKey, string> = {
   notes: "Notities",
   hint: "Hint",
   solvedTitle: "Opgelost!",
+  endGame: "Spel beëindigen",
+  endGameBody: "Het spel wordt verwijderd en telt niet mee in je statistieken.",
 };

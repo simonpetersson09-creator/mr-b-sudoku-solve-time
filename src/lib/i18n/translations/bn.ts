@@ -154,4 +154,6 @@ export const bn: Record<TranslationKey, string> = {
   notes: "নোট",
   hint: "ইঙ্গিত",
   solvedTitle: "সমাধান হয়েছে!",
+  endGame: "গেম শেষ করুন",
+  endGameBody: "গেমটি মুছে যাবে এবং আপনার পরিসংখ্যানে যোগ হবে না।",
 };

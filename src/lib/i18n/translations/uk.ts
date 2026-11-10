@@ -154,4 +154,6 @@ export const uk: Record<TranslationKey, string> = {
   notes: "Нотатки",
   hint: "Підказка",
   solvedTitle: "Розв’язано!",
+  endGame: "Завершити гру",
+  endGameBody: "Гру буде видалено, і вона не враховуватиметься у вашій статистиці.",
 };

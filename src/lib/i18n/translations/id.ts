@@ -154,4 +154,6 @@ export const id: Record<TranslationKey, string> = {
   notes: "Catatan",
   hint: "Petunjuk",
   solvedTitle: "Selesai!",
+  endGame: "Akhiri permainan",
+  endGameBody: "Permainan akan dihapus dan tidak dihitung dalam statistik Anda.",
 };

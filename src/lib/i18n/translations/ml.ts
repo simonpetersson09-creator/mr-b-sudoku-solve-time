@@ -154,4 +154,6 @@ export const ml: Record<TranslationKey, string> = {
   notes: "കുറിപ്പുകൾ",
   hint: "സൂചന",
   solvedTitle: "പൂർത്തിയായി!",
+  endGame: "കളി അവസാനിപ്പിക്കുക",
+  endGameBody: "കളി ഇല്ലാതാക്കപ്പെടും; നിങ്ങളുടെ സ്ഥിതിവിവരക്കണക്കുകളിൽ ഉൾപ്പെടില്ല.",
 };

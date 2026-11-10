@@ -154,4 +154,6 @@ export const es: Record<TranslationKey, string> = {
   notes: "Notas",
   hint: "Pista",
   solvedTitle: "¡Resuelto!",
+  endGame: "Terminar partida",
+  endGameBody: "La partida se elimina y no cuenta en tus estadísticas.",
 };

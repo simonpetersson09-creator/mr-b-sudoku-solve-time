@@ -137,4 +137,6 @@ export const it: Record<TranslationKey, string> = {
   notes: "Note",
   hint: "Suggerimento",
   solvedTitle: "Risolto!",
+  endGame: "Termina partita",
+  endGameBody: "La partita viene eliminata e non viene conteggiata nelle statistiche.",
 };

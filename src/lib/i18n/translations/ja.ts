@@ -154,4 +154,6 @@ export const ja: Record<TranslationKey, string> = {
   notes: "メモ",
   hint: "ヒント",
   solvedTitle: "クリア！",
+  endGame: "ゲームを終了",
+  endGameBody: "このゲームは削除され、統計には反映されません。",
 };

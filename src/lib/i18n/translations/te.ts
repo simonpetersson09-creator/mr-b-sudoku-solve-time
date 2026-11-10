@@ -154,4 +154,6 @@ export const te: Record<TranslationKey, string> = {
   notes: "నోట్స్",
   hint: "సూచన",
   solvedTitle: "పరిష్కరించారు!",
+  endGame: "ఆటను ముగించు",
+  endGameBody: "ఆట తొలగించబడుతుంది, మీ గణాంకాల్లో లెక్కించబడదు.",
 };

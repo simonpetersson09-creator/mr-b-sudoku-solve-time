@@ -167,6 +167,8 @@ export const sv = {
   notes: "Anteckningar",
   hint: "Ledtråd",
   solvedTitle: "Löst!",
+  endGame: "Avsluta spel",
+  endGameBody: "Spelet raderas och räknas inte i statistiken.",
 };
 
 export type TranslationKey = keyof typeof sv;

@@ -137,4 +137,6 @@ export const ptBR: Record<TranslationKey, string> = {
   notes: "Anotações",
   hint: "Dica",
   solvedTitle: "Resolvido!",
+  endGame: "Encerrar jogo",
+  endGameBody: "O jogo será excluído e não contará nas suas estatísticas.",
 };

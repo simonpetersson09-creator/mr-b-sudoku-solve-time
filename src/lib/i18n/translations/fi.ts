@@ -137,4 +137,6 @@ export const fi: Record<TranslationKey, string> = {
   notes: "Muistiinpanot",
   hint: "Vihje",
   solvedTitle: "Ratkaistu!",
+  endGame: "Lopeta peli",
+  endGameBody: "Peli poistetaan eikä sitä lasketa tilastoihisi.",
 };

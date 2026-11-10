@@ -154,4 +154,6 @@ export const ta: Record<TranslationKey, string> = {
   notes: "குறிப்புகள்",
   hint: "குறிப்பு",
   solvedTitle: "தீர்த்துவிட்டீர்கள்!",
+  endGame: "விளையாட்டை முடி",
+  endGameBody: "இந்த விளையாட்டு நீக்கப்படும்; உங்கள் புள்ளிவிவரங்களில் சேர்க்கப்படாது.",
 };

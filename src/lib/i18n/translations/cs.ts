@@ -137,4 +137,6 @@ export const cs: Record<TranslationKey, string> = {
   notes: "Poznámky",
   hint: "Nápověda",
   solvedTitle: "Vyřešeno!",
+  endGame: "Ukončit hru",
+  endGameBody: "Hra bude smazána a nezapočítá se do statistik.",
 };

@@ -137,4 +137,6 @@ export const sl: Record<TranslationKey, string> = {
   notes: "Zapiski",
   hint: "Namig",
   solvedTitle: "Rešeno!",
+  endGame: "Končaj igro",
+  endGameBody: "Igra bo izbrisana in ne bo upoštevana v tvoji statistiki.",
 };
