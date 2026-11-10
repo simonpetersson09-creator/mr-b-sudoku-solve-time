@@ -42,3 +42,9 @@ export const adminPinLogin = createServerFn({ method: "POST" }).middleware([requ
   const { adminPinLoginAction } = await import("./online-actions");
   return timed("adminPinLogin", () => adminPinLoginAction({ data, context }));
 });
+
+export const getMonthlyMostActive = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth]).handler(async ({ context }) => {
+  const { data, error } = await context.supabase.rpc("get_monthly_most_active", { _limit: 10 });
+  if (error) throw new Error("err:bad_action");
+  return { me: context.userId, rows: data ?? [] };
+});

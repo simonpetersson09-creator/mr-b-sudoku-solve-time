@@ -87,6 +87,6 @@ export function reportAdEvent(name: string, data: Record<string, unknown> = {}):
 }
 
 /** A local game started or finished on this phone (admin counts all play, not only online). */
-export function reportLocalGame(phase: "start" | "finish", state: { level: string }): void {
-  void send("local_game", { phase, level: state.level });
+export function reportLocalGame(phase: "start" | "finish", state: { level: string; id?: string }): void {
+  void send("local_game", { phase, level: state.level, ...(state.id ? { gid: state.id.slice(0, 40) } : {}) });
 }

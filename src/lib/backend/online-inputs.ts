@@ -29,7 +29,8 @@ export const logEventInput = (d: { kind: string; deviceId?: string; platform?: s
       detail = { ...sid, ...(Number.isFinite(secs) && secs >= 0 ? { seconds: Math.min(secs, 4 * 3600) } : {}), ...v };
     } else if (kind === "local_game") {
       const level = (LEVELS as readonly string[]).includes(String(raw["level"])) ? String(raw["level"]) : "easy";
-      detail = { phase: raw["phase"] === "finish" ? "finish" : "start", level, ...v };
+      const gid = typeof raw["gid"] === "string" && /^[A-Za-z0-9_-]{1,40}$/.test(raw["gid"]) ? { gid: raw["gid"] } : {};
+      detail = { phase: raw["phase"] === "finish" ? "finish" : "start", level, ...gid, ...v };
     } else detail = JSON.parse(JSON.stringify(raw).slice(0, 2000) || "{}");
     return { kind, platform, deviceId: String(d.deviceId ?? "").slice(0, 64) || null, detail };
   };

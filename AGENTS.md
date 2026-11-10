@@ -13,7 +13,7 @@
 
 - Standalone app: never share code, storage, backend, ad or native identities with Mr. B Ludo or Mr. B Yatzy; shared ideas are copied, never linked.
 - Sudoku rules live in `src/lib/sudoku/engine.ts` as pure functions (no React/DOM/network); generation is seeded, always verifies exactly one solution, and levels are checked by `solvableBySingles` (Easy/Medium yes, Hard/Expert no).
-- All play is local against the computer; there is no online play, matchmaking, friends, leaderboards or push, so the backend holds only profiles, roles, app events and admin activity.
+- All play is local against the computer; there is no online play, matchmaking, friends or push. The only shared list is "Månadens flitigaste", computed by `get_monthly_most_active` from app-only `local_game` finish reports (distinct game id, Stockholm month, test devices excluded).
 - Saved games (max 10) and per-level statistics live in browser/device storage under the `mrb-sudoku:v1:` namespace; "played" counts finished games only and each game id is counted once.
 - Board styling uses `--sudoku-*` tokens in `src/styles.css`; components never hardcode colors.
 - `noUncheckedIndexedAccess` is off: the engine indexes fixed-size 81-cell arrays heavily.
