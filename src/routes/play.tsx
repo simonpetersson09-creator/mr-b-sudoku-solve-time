@@ -183,7 +183,7 @@ function PlayPage() {
         const board = col.querySelector<HTMLElement>(".sdk-board, .sdk-paused");
         const first = col.firstElementChild as HTMLElement | null;
         if (!board || !first) return;
-        const free = first.getBoundingClientRect().top - col.getBoundingClientRect().top - 6;
+        const free = (first.getBoundingClientRect().top - col.getBoundingClientRect().top) * 2 - 6;
         const size = Math.max(200, Math.min(col.clientWidth, board.getBoundingClientRect().width + free));
         col.style.setProperty("--board-px", `${Math.floor(size)}px`);
       });
@@ -302,6 +302,7 @@ function PlayPage() {
             })}
           </div>
         )}
+        </div>
 
         <div className="sdk-tools flex gap-1">
           <button className="sdk-tool" onClick={() => { setHintInfo(null); setSameDigit(null); act(undo); }} disabled={paused || !state.history.length || state.undosLeft <= 0} aria-label={`${t("undo")}: ${state.undosLeft}/${MAX_UNDOS}`}><Undo2 className="h-5 w-5" />{t("undo")}<span className="sdk-pips" aria-hidden="true">{Array.from({ length: MAX_UNDOS }, (_, i) => <span key={i} className="sdk-pip" data-on={i < state.undosLeft} />)}</span></button>
@@ -326,8 +327,6 @@ function PlayPage() {
           ))}
         </div>
         <p className="sdk-hint-tip" role="status" data-show={hintText != null}>{hintText != null && <><Lightbulb className="h-3 w-3 shrink-0" /><span>{hintText}</span></>}</p>
-
-        </div>
       </div>
       <AlertDialog open={confirmEnd} onOpenChange={setConfirmEnd}>
         <AlertDialogContent>
