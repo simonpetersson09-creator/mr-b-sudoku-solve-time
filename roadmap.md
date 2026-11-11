@@ -1,14 +1,15 @@
 # Roadmap: Mr.B. Sudoku
 
 ## A4–A11 från senaste lanseringsgranskningen (2026-11-11)
-- [ ] A4: Unikhetsvalidera sparade pussel med prestandasäkert återställningsflöde och cache.
-- [ ] A5/A11: Beständiga spelrapporter, racesäker kö, korrekt ursprungstid och separata diagnostikgränser.
-- [ ] A6: Fullständigt profilunderlag och dagsspecifik appretention med testundantag.
-- [ ] A7: Robust dataradering som inte tappar historik vid misslyckad identitetsradering.
-- [ ] A8: Tidsgräns och avbrott för nativeanrop utan automatisk mutationsretry.
-- [ ] A9: Androidproduktion avstängd utan egna godkända ID; begär externa uppgifter.
-- [ ] A10: Native-dokumentets språk följer spelarens val.
-- [ ] Stegvisa regressioner, hela testsviten och slutrapport; ingen publicering eller ändring i Ludo/Yatzy.
+- [x] A4: Cachad unikhetskontroll med hårt söknodstak; 350 pussel accepterade, högsta första kontroll 17,8ms i denna miljö.
+- [x] A5/A11: Write-ahead-kö med stabila ID, endast kvitterat objekt bort, spelrapporter utan diagnostikens 30/7-dagars-/sessionstak, 550ms mellan leveranser och återförsök efter serverfel; validerad originaltid styr dag/månad.
+- [x] A6: Alla profiler pagineras; hela appkohorten efter nollställning läses, inklusive icke-återvändare; retention kräver exakt Stockholm-dag och färdig observationsdag.
+- [x] A7: Profiltrigger städar egna appdata i samma transaktion som identitetsradering; fel återställer allt. Migrationskedjans rapportsekvensbehörighet säkrad.
+- [x] A8: 20s tidsgräns för identitet, fetch och svarsläsning; abort och ingen automatisk mutationsretry.
+- [x] A9: Androidproduktion avstängd utan egna godkända ID, Google-prov kvar endast i utveckling. Ägaren har bekräftat endast iOS-lansering nu; inga Android-ID krävs för detta släpp.
+- [x] A10: Native-dokumentets språk initieras och följer spelarens språkval med befintlig språkprenumeration.
+- [x] Stegvisa regressioner; 435 ordinarie + 4 isolerade databastester godkända. Native-källkontroll och förhandsvisning godkända; autentiserad admin manuell/fokus/60s och spel/sparning omprovade utan sidfel. Ingen publicering eller ändring i Ludo/Yatzy.
+- [ ] Installerad iOS: fysisk annons-, VoiceOver-, nätverks- och offlineraderingstest kräver telefon/Xcode; återstående K-/D-fynd utanför A4–A11 ändras inte.
 
 ## A1–A3 från senaste lanseringsgranskningen (2026-11-11)
 - [x] A1: Läs migrationsunderlaget före resultatskrivning; varje avslutat spel räknas en gång utan återställning av framsteg.
