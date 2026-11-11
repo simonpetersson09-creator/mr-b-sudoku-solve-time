@@ -388,7 +388,7 @@ export function PlayPage() {
         <p className="sdk-hint-tip" role="status" data-show={hintText != null}>{hintText != null && <><Lightbulb className="h-3 w-3 shrink-0" /><span>{hintText}</span></>}</p>
       </div>
       <AlertDialog open={hintOffer} onOpenChange={setHintOffer}>
-        <AlertDialogContent>
+        <AlertDialogContent className="max-w-[calc(100%-32px)] rounded-lg bg-card sm:max-w-md">
           <AlertDialogHeader>
             <AlertDialogTitle>{t("hint")}</AlertDialogTitle>
             <AlertDialogDescription>{t("hintAdOffer")}</AlertDialogDescription>

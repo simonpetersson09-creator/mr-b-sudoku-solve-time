@@ -1,9 +1,9 @@
 # Roadmap: Mr.B. Sudoku
 
 ## Belöningsannonser för ledtrådar (2026-11-11)
-- [ ] Inför godkänt iOS Rewarded-ID, frivilligt erbjudande på 40 språk och exakt en spelbunden ledtråd per SDK-belöning.
-- [ ] Verifiera fel, dubbelhändelser, spelbyte, sparning, treledtrådsgräns och hela tillgängliga testsviten; skriv slutrapport.
-- [ ] Verklig iPhone: SDK-visning, kontots belöningsinställningar, bakgrund och UMP/ATT kräver installerat osignerat/testsignerat telefonbygge och native-verktyg.
+- [x] Inför godkänt iOS Rewarded-ID, frivilligt erbjudande på 40 språk och exakt en spelbunden ledtråd per SDK-belöning.
+- [x] Verifiera fel, dubbelhändelser, spelbyte, sparning och treledtrådsgräns: 291 vanliga tester och 2 isolerade databastester godkända, native-källkontroll och iOS-patchkontroll godkända; slutrapport sparad.
+- [ ] Verklig iPhone: SDK-visning, kontots belöningsinställningar, bakgrund och UMP/ATT kräver installerad testapp och native-verktyg. Inget signerats eller publicerats.
 
 ## iOS AdMob-produktionsuppgifter (2026-11-11)
 - [x] Bekräftade iOS-ID:n införda; Android oförändrat och Googles enheter används i utveckling. Synkskydd och UMP-ordning verifierade.
@@ -34,7 +34,7 @@
 - [x] Förladda lokala sidor, korta startsidans intoning och skapa brickor i browser worker med engångsförberedelse. 217 tester godkända; sju nivåer, spelstart, paus och sparning verifierade i telefonstor webbläsare. Installerad iPhone återstår.
 
 ## Före släpp
-- [ ] Riktiga annonser: ledtråd, uppstart och efter spel använder fortfarande Googles testannonser
+- [ ] Riktiga annonser på installerad telefon: iOS-produktions-ID:n är införda för Rewarded, uppstart och efter spel; utveckling använder Google-testannonser, Android har inga godkända produktions-ID:n.
 - [ ] Provning på riktig telefon: Mästare och Omöjlig, paus, avsluta spel, vinstfirande
 - [ ] Liggande läge på spelsidan är inte anpassat
 - [ ] Långa ord på knapparna kan kortas av på vissa språk
