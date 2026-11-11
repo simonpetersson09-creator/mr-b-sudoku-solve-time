@@ -1,5 +1,11 @@
 # Roadmap: Mr.B. Sudoku
 
+## Förenklade inställningar och tydligare regler (2026-11-11)
+- [x] Profilgenväg och profilrubrik borttagna; namn och bildval behållna. Vald bild sparad och återläst med autentiserad session i telefonstor webbläsare.
+- [x] Rätt siffra avmarkerar rutan direkt; endast mörk bricka och vibration valbara, äldre hjälpreglage normaliseras till på.
+- [x] Regler rättade på 40 språk; 295 tester godkända och mobilvy kontrollerad utan sidfel.
+- [ ] Bildbibliotekets systemruta i installerad iPhone-app: kräver riktig telefon; befintlig filväljare utan kameratvång behållen.
+
 ## Belöningsannonser för ledtrådar (2026-11-11)
 - [x] Inför godkänt iOS Rewarded-ID, frivilligt erbjudande på 40 språk och exakt en spelbunden ledtråd per SDK-belöning.
 - [x] Verifiera fel, dubbelhändelser, spelbyte, sparning och treledtrådsgräns: 291 vanliga tester och 2 isolerade databastester godkända, native-källkontroll och iOS-patchkontroll godkända; slutrapport sparad.

@@ -1,13 +1,25 @@
 // @vitest-environment jsdom
 import { beforeEach, describe, expect, it } from "vitest";
 import { newGame, setValue } from "@/lib/sudoku/engine";
-import { MAX_SAVED_GAMES, addResult, cleanStats, emptyStats, stockholmYear, listGames, loadAllTime, loadGame, loadStats, recordFinish, removeGame, saveGame, selectGame, startNewGame } from "./storage";
+import { MAX_SAVED_GAMES, addResult, cleanStats, emptyStats, stockholmYear, listGames, loadAllTime, loadGame, loadStats, recordFinish, removeGame, saveGame, selectGame, startNewGame, loadSettings, saveSettings } from "./storage";
 
 const solved = (seed: number) => {
   let g = newGame("easy", seed, "s" + seed);
   g.puzzle.forEach((v, i) => { if (!v) g = setValue(g, i, g.solution[i]); });
   return { ...g, elapsedMs: 120_000 };
 };
+
+describe("fixed game assistance", () => {
+  beforeEach(() => localStorage.clear());
+  it.each(["showMistakes", "highlightSame", "autoRemoveNotes"] as const)("%s stays enabled even for a legacy saved choice", key => {
+    localStorage.setItem("mrb-sudoku:v1:settings", JSON.stringify({ [key]: false, darkBoard: true, haptics: false }));
+    expect(loadSettings()[key]).toBe(true);
+    saveSettings({ ...loadSettings(), [key]: false });
+    expect(loadSettings()[key]).toBe(true);
+    expect(loadSettings().darkBoard).toBe(true);
+    expect(loadSettings().haptics).toBe(false);
+  });
+});
 
 describe("saved games", () => {
   beforeEach(() => localStorage.clear());

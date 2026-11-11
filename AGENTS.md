@@ -17,6 +17,7 @@
 - Saved games (max 10) and per-level statistics live in browser/device storage under the `mrb-sudoku:v1:` namespace; "played" counts finished games only and each game id is counted once.
 - Board styling uses `--sudoku-*` tokens in `src/styles.css`; components never hardcode colors.
 - Board cells are memoized with primitive visual props and a stable selection callback so clock ticks do not re-render all 81 cells.
+- Normalize legacy gameplay-help settings on both reads and writes; hidden choices must not preserve different game behavior across devices.
 - `noUncheckedIndexedAccess` is off: the engine indexes fixed-size 81-cell arrays heavily.
 - i18n lives in `src/lib/i18n/`: sv.ts is the key source of truth; every one of the 40 dictionaries must have identical keys and placeholders and no unused keys (enforced by `i18n.test.ts`). Server functions throw stable `err:<code>` strings translated by `errorMessage()`.
 - App-owned auth goes through `src/lib/auth/client.ts` (anonymous identity; namespaced Keychain/Keystore storage on native); startup never discards a saved identity on storage/network failure, and server middleware verifies every private request.

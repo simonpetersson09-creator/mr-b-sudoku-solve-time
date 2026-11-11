@@ -16,7 +16,7 @@ export const Route = createFileRoute("/rules")({
   component: RulesPage,
 });
 
-const RULE_KEYS: TranslationKey[] = ["rule1", "rule2", "rule3", "rule4", "rule5", "rule6"];
+const RULE_KEYS: TranslationKey[] = ["rule1", "rule2", "rule3", "rule4", "rule5", "rule7", "rule6"];
 
 function RulesPage() {
   const { t } = useTranslation();

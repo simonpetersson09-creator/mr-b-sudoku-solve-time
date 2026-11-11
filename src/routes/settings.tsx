@@ -2,7 +2,7 @@ import { knownConsentRows } from "@/lib/ads/ad-consent";
 import { syncProfileName } from "@/lib/player/profile-name";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { ArrowLeft, BarChart3, Camera, Check, ChevronRight, Eraser, Moon, Globe, Highlighter, ShieldCheck, Trash2, TriangleAlert, User, UserCog, Vibrate } from "lucide-react";
+import { ArrowLeft, BarChart3, Camera, Check, ChevronRight, Moon, Globe, ShieldCheck, Trash2, User, Vibrate } from "lucide-react";
 import { AppVersion } from "@/components/AppVersion";
 import { Button } from "@/components/ui/button";
 import { DeletePlayerDataDialog } from "@/components/app/DeletePlayerDataDialog";
@@ -113,7 +113,7 @@ function SettingsPage() {
           <h1 className="font-display text-2xl font-bold">{t("settingsTitle")}</h1>
         </div>
 
-        <Section title={t("profile")}>
+        <div className="space-y-1.5">
           <div className="flex items-center gap-3 rounded-2xl border border-border/40 bg-secondary/50 p-3">
             <button
               type="button"
@@ -127,7 +127,7 @@ function SettingsPage() {
                 <Camera className="h-6 w-6 text-white" />
               </span>
             </button>
-            <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={pick} />
+            <input ref={fileRef} type="file" accept="image/*" aria-label={t("changeAvatar")} className="hidden" onChange={pick} />
             <div className="min-w-0 flex-1">
               <p className="truncate font-display text-sm font-bold">{s.name}</p>
               <div className="mt-1 flex flex-wrap gap-1.5">
@@ -168,23 +168,11 @@ function SettingsPage() {
                 </div>
               </button>
             )}
-            <div className="border-t border-border/40" />
-            <Link to="/profile" className={rowCls}>
-              <UserCog className="h-4 w-4 text-muted-foreground" />
-              <span className="flex-1 text-sm font-medium">{t("profileTitle")}</span>
-              <ChevronRight className="h-4 w-4 text-muted-foreground" />
-            </Link>
           </Card>
-        </Section>
+        </div>
 
         <Section title={t("gameHelp")}>
           <Card>
-            <ToggleRow icon={<TriangleAlert className="h-4 w-4 shrink-0 text-primary" />} label={t("showMistakes")} description={t("showMistakesDesc")} value={s.showMistakes} onChange={(v) => update({ showMistakes: v })} />
-            <div className="border-t border-border/40" />
-            <ToggleRow icon={<Highlighter className="h-4 w-4 shrink-0 text-primary" />} label={t("highlightSame")} value={s.highlightSame} onChange={(v) => update({ highlightSame: v })} />
-            <div className="border-t border-border/40" />
-            <ToggleRow icon={<Eraser className="h-4 w-4 shrink-0 text-primary" />} label={t("autoRemoveNotes")} value={s.autoRemoveNotes} onChange={(v) => update({ autoRemoveNotes: v })} />
-            <div className="border-t border-border/40" />
             <ToggleRow icon={<Moon className="h-4 w-4 shrink-0 text-primary" />} label={t("darkBoard")} description={t("darkBoardDesc")} value={s.darkBoard} onChange={(v) => update({ darkBoard: v })} />
             <div className="border-t border-border/40" />
             <ToggleRow icon={<Vibrate className="h-4 w-4 shrink-0 text-primary" />} label={t("haptics")} value={s.haptics} onChange={(v) => update({ haptics: v })} />

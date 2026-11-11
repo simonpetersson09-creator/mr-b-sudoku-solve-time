@@ -24,6 +24,16 @@ beforeEach(() => {
 });
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 async function offer() { fireEvent.click(await screen.findByRole('button', { name: 'Ledtråd: 3/3' })); await screen.findByRole('alertdialog'); }
+it('placing a correct digit clears the selection immediately and saves the digit', async () => {
+  const game = loadGame(); if (!game) throw new Error('fixture');
+  const i = game.values.findIndex(v => v === 0);
+  render(<PlayPage />);
+  const cells = await screen.findAllByRole('gridcell');
+  fireEvent.click(cells[i]);
+  fireEvent.click(screen.getByRole('button', { name: String(game.solution[i]) }));
+  expect(loadGame()?.values[i]).toBe(game.solution[i]);
+  expect(screen.getAllByRole('gridcell').filter(c => c.dataset['selected'] === 'true')).toHaveLength(0);
+});
 it('a voluntary offer can be cancelled without displaying an ad or using a hint', async () => {
   render(<PlayPage />); await offer(); expect(ads.show).not.toHaveBeenCalled();
   fireEvent.click(screen.getByRole('button', { name: 'Avbryt' }));

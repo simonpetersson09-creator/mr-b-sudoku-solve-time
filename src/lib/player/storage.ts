@@ -77,8 +77,10 @@ export const removeGame = (id: string) => {
   if (activeId() === id) { try { localStorage.removeItem(ACTIVE); } catch { /* noop */ } }
 };
 
-export const loadSettings = () => read(SETTINGS, DEFAULT_SETTINGS);
-export const saveSettings = (s: Settings) => write(SETTINGS, s);
+// Legacy saved switches cannot disable the now fixed gameplay assistance.
+const fixedHelp = (s: Settings): Settings => ({ ...s, showMistakes: true, highlightSame: true, autoRemoveNotes: true });
+export const loadSettings = () => fixedHelp(read(SETTINGS, DEFAULT_SETTINGS));
+export const saveSettings = (s: Settings) => write(SETTINGS, fixedHelp(s));
 
 export const loadLevel = (): Level => {
   if (typeof window === "undefined") return "easy";

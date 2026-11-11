@@ -184,6 +184,7 @@ export function PlayPage() {
       }, 1800);
       return;
     }
+    setSelected(null);
     setShakeCell(null);
     setPopCell({ i: selected, k });
     // Let the gold ripple finish, then let the cell return to its normal look.

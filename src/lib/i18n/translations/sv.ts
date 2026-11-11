@@ -51,7 +51,6 @@ export const sv = {
   pinCode: "PIN",
 
   // Online-lobby
-  profile: "Profil",
   admin: "Admin",
 
   // Väntrum
@@ -128,9 +127,10 @@ export const sv = {
   rateBody: "Du har löst flera Sudoku! Ett betyg hjälper oss enormt. 💛",
   rule1: "Fyll rutnätet så att varje rad, kolumn och 3×3-ruta innehåller siffrorna 1–9 exakt en gång.",
   rule2: "Varje pussel har exakt en lösning. Givna siffror kan inte ändras.",
-  rule3: "Tryck på en ruta och sedan på en siffra. Felaktiga siffror markeras i rött.",
+  rule3: "Tryck på en ruta och sedan på en siffra. Felaktiga siffror markeras i rött. Det tredje felet avslutar spelet.",
   rule4: "Slå på Anteckningar för att skriva små kandidatsiffror i en ruta.",
-  rule5: "Ångra tar tillbaka senaste draget. En ledtråd fyller i rätt siffra men räknas inte som vinst.",
+  rule5: "Du kan ångra placerade siffror högst 3 gånger per spel, inte anteckningar eller ledtrådar.",
+  rule7: "Du kan få högst 3 ledtrådar per spel. Varje ledtråd fyller en rätt siffra efter en frivillig annons med bekräftad belöning. Utan belöning förbrukas ingen ledtråd. Ett löst spel med ledtråd räknas som spelat, men inte som vinst, felfritt eller bästa tid.",
   rule6: "Spelet sparas automatiskt. Du kan ha upp till 10 pågående spel.",
   statPlayed: "Spelade",
   adminInMatch: "Aktiva nu",
@@ -156,14 +156,10 @@ export const sv = {
   levelUnlocked: "Ny nivå upplåst: {level}",
   rules: "Regler",
   gameHelp: "Spelhjälp",
-  showMistakes: "Visa fel",
-  showMistakesDesc: "Felaktiga siffror markeras i rött",
-  highlightSame: "Markera samma siffror",
   darkBoard: "Mörk bricka",
   darkBoardDesc: "Mörkare färger för kvällsspel",
   newRecord: "Nytt rekord!",
   previousBest: "Tidigare bästa: {time}",
-  autoRemoveNotes: "Ta bort anteckningar automatiskt",
   statBestTime: "Bästa tid",
   statAvgTime: "Snittid",
   statsNote: "Spelade räknar bara färdiga spel. Vinst = löst utan ledtråd.",
