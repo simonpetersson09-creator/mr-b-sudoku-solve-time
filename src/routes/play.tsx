@@ -8,10 +8,11 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { AppOpenGameGate } from "@/components/AppOpenGameGate";
+import { SudokuCell } from "@/components/app/SudokuCell";
 import { usePostMatchExit } from "@/lib/ads/usePostMatchExit";
 import { reportLocalGame } from "@/lib/backend/report";
 import {
-  PEERS, MAX_MISTAKES, MAX_UNDOS, MAX_HINTS, explainHint, type HintInfo, completedGroups, isLost, digitCounts, erase, hasNote, isGiven, isWrong, setValue, toggleNote, undo, type GameState, type Level,
+  PEERS, MAX_MISTAKES, MAX_UNDOS, MAX_HINTS, explainHint, type HintInfo, completedGroups, isLost, digitCounts, erase, isGiven, isWrong, setValue, toggleNote, undo, type GameState, type Level,
 } from "@/lib/sudoku/engine";
 import { LEVEL_KEY, formatTime } from "@/lib/sudoku/format";
 import { loadGame, loadProgress, loadSettings, loadStats, recordFinish, removeGame, saveGame, startNewGame } from "@/lib/player/storage";
@@ -51,6 +52,18 @@ export function PlayPage() {
   const [adState, setAdState] = useState(getRewardedState);
   const currentGame = useRef<GameState | null>(null);
   currentGame.current = state;
+  // A stable cell handler reads the current tap context without invalidating every cell on clock ticks.
+  const cellContext = useRef({ state, adBusy: false, hintOffer, selected, hinted: new Set<number>(), lockedHints: new Set<number>() });
+  const selectCell = useCallback((i: number) => {
+    const ctx = cellContext.current;
+    if (!ctx.state || ctx.adBusy || ctx.hintOffer) return;
+    const v = ctx.state.values[i];
+    if (ctx.hinted.has(i) && !ctx.lockedHints.has(i) && v === ctx.state.solution[i]) {
+      setLockedHints((s) => new Set(s).add(i)); void playLightHaptic();
+    }
+    if (ctx.selected === i) { setSelected(null); setSameDigit(null); void playLightHaptic(); return; }
+    setSelected(i); setSameDigit(v !== 0 ? v : null);
+  }, []);
   const mounted = useRef(false);
   useEffect(() => { mounted.current = true; return () => { mounted.current = false; currentGame.current = null; }; }, []);
   useEffect(() => subscribeRewardedState(setAdState), []);
@@ -73,6 +86,7 @@ export function PlayPage() {
   const [hinted, setHinted] = useState<Set<number>>(new Set());
   const [lockedHints, setLockedHints] = useState<Set<number>>(new Set());
   const [holdDigit, setHoldDigit] = useState<number | null>(null);
+  cellContext.current = { state, adBusy, hintOffer, selected, hinted, lockedHints };
   const holdTimer = useRef<number | null>(null);
   const held = useRef(false);
   const settings = useMemo(() => loadSettings(), []);
@@ -227,10 +241,10 @@ export function PlayPage() {
     return () => { cancelAnimationFrame(raf); ro.disconnect(); window.removeEventListener("resize", fit); };
   }, [paused]);
 
-  if (!state) return <main className="app-screen" />;
+  const counts = useMemo(() => state ? digitCounts(state) : [], [state?.values]);
+  const peers = useMemo(() => selected != null ? new Set(PEERS[selected]) : new Set<number>(), [selected]);
 
-  const counts = digitCounts(state);
-  const peers = selected != null ? new Set(PEERS[selected]) : new Set<number>();
+  if (!state) return <main className="app-screen" />;
 
   // The offer is separate from acceptance. Only a tagged SDK reward can mutate the game.
   const doHint = async () => {
@@ -326,37 +340,18 @@ export function PlayPage() {
               const r = Math.floor(i / 9), c = i % 9;
               const wrong = settings.showMistakes && isWrong(state, i);
               return (
-                <button
+                <SudokuCell
                   key={popCell?.i === i ? `p${popCell.k}` : shakeCell?.i === i ? `s${shakeCell.k}` : i}
-                  role="gridcell"
-                  data-r={r} data-c={c}
-                  data-given={isGiven(state, i) || (lockedHints.has(i) && v === state.solution[i])}
-                  data-selected={selected === i}
-                  data-peer={selected != null && selected !== i && peers.has(i)}
-                  data-same={holdDigit != null ? v === holdDigit : settings.highlightSame && sameDigit !== null && v === sameDigit && selected !== i}
-                  data-flash={flash.has(i)}
-                  data-pop={popCell?.i === i}
-                  data-shake={shakeCell?.i === i}
-                  data-wave={celebrating}
-                  style={{ ["--d" as string]: r + c }}
-                  data-wrong={wrong}
-                  data-hint={showHint === i} data-hint-zone={hintZone?.has(i) || undefined} data-hinted={(hinted.has(i) && !lockedHints.has(i) && v === state.solution[i]) || undefined}
-                  aria-label={t("cellLabel", { row: r + 1, col: c + 1 }) + (v ? `: ${v}` : "") + (showHint === i ? ` (${t("hint")}: ${state.solution[i]})` : "")}
-                  className="sdk-cell"
-                  onClick={() => {
-                    if (adBusy || hintOffer) return;
-                    if (hinted.has(i) && !lockedHints.has(i) && v === state.solution[i]) { setLockedHints((s) => new Set(s).add(i)); void playLightHaptic(); }
-                    if (selected === i) { setSelected(null); setSameDigit(null); void playLightHaptic(); return; }
-                    setSelected(i); setSameDigit(v !== 0 ? v : null);
-                  }}
-                >
-                  {showHint === i && <span className="sdk-hint-digit" aria-hidden="true">{state.solution[i]}</span>}
-                  {v ? v : state.notes[i] ? (
-                    <span className="sdk-notes" aria-hidden="true">
-                      {[1, 2, 3, 4, 5, 6, 7, 8, 9].filter((d) => hasNote(state.notes[i], d)).map((d) => <span key={d}>{d}</span>)}
-                    </span>
-                  ) : null}
-                </button>
+                  index={i} value={v} notes={state.notes[i]} solution={state.solution[i]}
+                  given={isGiven(state, i) || (lockedHints.has(i) && v === state.solution[i])}
+                  selected={selected === i} peer={selected != null && selected !== i && peers.has(i)}
+                  same={holdDigit != null ? v === holdDigit : settings.highlightSame && sameDigit !== null && v === sameDigit && selected !== i}
+                  flash={flash.has(i)} pop={popCell?.i === i} shake={shakeCell?.i === i} wave={celebrating}
+                  wrong={wrong} hint={showHint === i} zone={hintZone?.has(i) ?? false}
+                  hinted={hinted.has(i) && !lockedHints.has(i) && v === state.solution[i]}
+                  label={t("cellLabel", { row: r + 1, col: c + 1 }) + (v ? `: ${v}` : "") + (showHint === i ? ` (${t("hint")}: ${state.solution[i]})` : "")}
+                  onSelect={selectCell}
+                />
               );
             })}
           </div>
