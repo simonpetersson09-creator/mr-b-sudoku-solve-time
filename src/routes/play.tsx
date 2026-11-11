@@ -75,7 +75,9 @@ export function PlayPage() {
     const next = clock.current.stop(g);
     currentGame.current = next;
     // Do not resurrect an explicitly removed game or overwrite a replacement during unmount.
-    if (loadGame()?.id === g.id) saveGame(next);
+    if (!next.finished && loadGame()?.id === g.id) {
+      try { saveGame(next); } catch { /* Existing durable save remains; the mounted autosave reports failure. */ }
+    }
     if (mounted.current && next !== g) setState(next);
   }, []);
   useEffect(() => { mounted.current = true; return () => { mounted.current = false; stopClock(); currentGame.current = null; }; }, [stopClock]);

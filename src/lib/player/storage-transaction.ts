@@ -25,7 +25,7 @@ function apply(intent: Writes) {
 export function transactPlayerStorage(values: Record<string, unknown>) {
   const old = pending();
   if (old) apply(old); // No new result may overwrite a partially applied result.
-  const intent: Writes = Object.fromEntries(Object.entries(values).map(([k, v]) => [k, v === undefined ? null : JSON.stringify(v)]));
+  const intent: Writes = Object.fromEntries(Object.entries(values).map(([k, v]) => [k, v === undefined ? null : k === 'mrb-sudoku:v1:active-game-id' && typeof v === 'string' ? v : JSON.stringify(v)]));
   localStorage.setItem(JOURNAL, JSON.stringify(intent)); // Atomic commit point; quota failure leaves old data untouched.
   try { apply(intent); } catch { /* durable intent remains and all reads see the committed data */ }
 }

@@ -762,6 +762,7 @@ main[data-level="master"] .sdk-level-pill { background: color-mix(in oklab, var(
 .sdk-fixed .sdk-key { min-height: 46px; font-size: 24px; border-radius: 12px; }
 .sdk-fixed .sdk-key small { font-size: 9px; }
 .sdk-fixed .sdk-hint-tip { height: 26px; min-height: 26px; font-size: 10px; }
+.sdk-fixed .sdk-hint-tip > span { display: block; max-height: 20px; overflow-y: auto; -webkit-line-clamp: unset; scrollbar-width: none; }
 
 /* Dark board (setting) */
 .sdk-board[data-dark="true"] {

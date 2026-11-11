@@ -43,7 +43,7 @@
 - All new-game entry points use the browser worker generation helper; prepared puzzles are consumed once and start timestamps are reset on delivery, keeping solver work off the UI thread without changing the pure engine.
 - Generation workers have a bounded lifetime and terminate on every outcome; failures never fall back to synchronous solving, and generation rejects rather than returning a puzzle that fails its level gate.
 - Delayed play callbacks are game-ID-bound and cleaned on game replacement/unmount; keyboard and cell input share dialog/background/fullscreen blocking.
-- Reports use the existing atomic per-user server counter and strict event validation; database write failures remain failures, and repeat game reports are checked against stored user/game/phase before insertion.
+- Reports use atomic rate limits and server-only advisory-locked game/phase inserts; legacy duplicates remain stored.
 - Admin refresh polls only visible online pages and catches up on foreground/network return, without overlapping requests; activity pagination has no silent cutoff and duplicate game phases count once per identity.
 - Home preloads only public local content routes; protected pages and authentication are not part of background navigation warming.
 - Native permission copy lives in `scripts/ios-permission-copy.js`; iOS sync regenerates and registers all 40 `InfoPlist.strings` resources so system prompts follow iOS language preferences independently of the in-game language.
@@ -52,4 +52,7 @@
 - Queue games before sending; remove acknowledged IDs only, preserve original dates and avoid diagnostic eviction.
 - Retention uses full app cohorts and exact Stockholm return days, including nonreturners.
 - Profile deletion triggers transactional app cleanup so failure retains identity and history.
-- Native calls abort at 20s without mutation retry; native lang follows player preferences.
+- Native calls abort at 20s; bodies are stream-byte-bounded and origins approved-only.
+- Multi-key saves/results use a durable intent journal to prevent partial-write recounts.
+- Admin events use ID keysets/ceiling; unavailable installation/version metrics stay unknown.
+- Native activity uses pause/resume; background network recovery cannot resume it.

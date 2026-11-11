@@ -1,13 +1,14 @@
 # Roadmap: Mr.B. Sudoku
 
 ## D1–D14 från lanseringsgranskningen (2026-11-11)
-- [ ] Kontrollera tidigare rättningar och styrk varje risk före ändring; D10-regler och D12-annonsformat/frekvens lämnas oförändrade.
-- [ ] D2–D4: Stabil paginering, full diagnostik och verifierbara adminkolumner.
-- [ ] D7: Reproducera partiella lagringsfel och skydda resultat/sparning från dataförlust och dubbelräkning.
-- [ ] D8–D9: Rätta gamla texter, isolera avstängd kod och förbättra verifierad tangent-/texttillgänglighet.
-- [ ] D11/D13/D14: Begränsad bodyläsning, godkänd serveradress, atomiskt rapportskydd och native-aktivitet.
-- [ ] D1/D5/D6/D10/D12: Individuell bedömning med beslut/telefonprovning där koden inte bevisar ett fel.
-- [ ] Regressioner efter varje rättning, hela testsviten och individuella D1–D14-statusar; ingen publicering eller produktionsdatatest.
+- [x] Tidigare rättningar kontrollerade; D1-dialogpaus efter ägarens beslut, D10-regler och D12-annonsformat/frekvens orörda.
+- [x] D2/D3: ID-nyckelpaginering och full diagnostik; D4 verifierbara dagliga appkolumner kopplade.
+- [x] D7: Partiella skrivfel reproducerade; durable intent-journal skyddar resultat/ledger/progression/sparningar.
+- [x] D8/D9: Sju nivåer på 40 språk, död bannerkod bort, ärvd historik städad, rovingfokus/rader och lång hinttext.
+- [x] D11/D13/D14: Bytebegränsad body, godkänd serveradress, atomiskt rapportskydd och native-aktivitet; nätverk kan inte återuppta bakgrund.
+- [x] 452 ordinarie + 5 isolerade databastester godkända; admin/spelvyer och native source-only verifierade; individuell rapport i docs/launch-d1-d14-fixes.md. Inget publicerat.
+- [ ] D4/D10/D13: Ägarbeslut krävs för installation-/version-/annonsmätning, ny svårighetsklassificering eller full offline anti-fusk.
+- [ ] D5/D6/D9/D12/D14: Installerad iPhone/iPad/Xcode krävs för OS-språk, safe-area, root-initiering, VoiceOver/touchmål och saknade SDK-sluthändelser.
 
 ## A4–A11 från senaste lanseringsgranskningen (2026-11-11)
 - [x] A4: Cachad unikhetskontroll med hårt söknodstak; 350 pussel accepterade, högsta första kontroll 17,8ms i denna miljö.

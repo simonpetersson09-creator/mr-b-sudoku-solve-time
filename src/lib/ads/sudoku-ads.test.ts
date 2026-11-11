@@ -26,6 +26,12 @@ describe("Mr.B. Sudoku ad configuration", () => {
     const { BANNER_IDS } = await import("./admob");
     expect(BANNER_IDS).toEqual({ ios: null, android: null });
   });
+  it('inert banner compatibility calls never request an ad', async () => {
+    const { showGameBanner, hideGameBanner } = await import('./admob');
+    await expect(showGameBanner()).resolves.toBeUndefined();
+    await expect(hideGameBanner()).resolves.toBeUndefined();
+    expect(readFileSync('src/lib/ads/admob.ts','utf8')).not.toContain('mod.AdMob.showBanner');
+  });
   it("uses the family games' 1.5 second startup delay", async () => {
     const { STARTUP_AD_DELAY_MS } = await import("./home-ads");
     expect(STARTUP_AD_DELAY_MS).toBe(1500);

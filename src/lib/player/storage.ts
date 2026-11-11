@@ -67,7 +67,7 @@ const activeId = () => { try { const raw = readPlayerStorage(ACTIVE); return raw
 
 /** Unfinished games, most recently played first. */
 export const listGames = (): SavedGame[] => capSaves(readSaves());
-export const selectGame = (id: string) => { try { localStorage.setItem(ACTIVE, id); } catch { /* noop */ } };
+export const selectGame = (id: string) => transactPlayerStorage({ [ACTIVE]: id });
 export const loadGame = (): GameState | null => {
   if (typeof window === "undefined") return null;
   const id = activeId();
