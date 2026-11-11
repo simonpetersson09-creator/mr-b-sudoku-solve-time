@@ -1,5 +1,10 @@
 # Roadmap: Mr.B. Sudoku
 
+## K1: iOS-produktionspaket för MacinCloud/Xcode (2026-11-11)
+- [x] Native-importregressioner och 452 ordinarie + 5 isolerade datatester godkända; produktionspaket byggt och Capacitor iOS synkat.
+- [x] iOS-paketets 114 originalfiler jämförda, åtta Swift-plugins/resurser kontrollerade och fristående Xcode-överlämning förberedd. 455 + 5 tester godkända; lokalt pakets start/nivåval/81-rutorsspel utan extern trafik verifierat.
+- [ ] Faktisk Xcode-kompilering och installerad iPhone/iPad-provning kräver Mac/Xcode och enheter; K1 förblir öppet. Ingen publicering/signering.
+
 ## D1–D14 från lanseringsgranskningen (2026-11-11)
 - [x] Tidigare rättningar kontrollerade; D1-dialogpaus efter ägarens beslut, D10-regler och D12-annonsformat/frekvens orörda.
 - [x] D2/D3: ID-nyckelpaginering och full diagnostik; D4 verifierbara dagliga appkolumner kopplade.

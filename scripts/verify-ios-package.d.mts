@@ -1,0 +1,1 @@
+export function verifyIosPackage(root?: string): void;
