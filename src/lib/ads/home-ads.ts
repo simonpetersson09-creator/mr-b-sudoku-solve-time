@@ -1,19 +1,27 @@
 /**
  * Yatzy HomePage App Open rules, ported unchanged:
  * - cold start: once per launch, preload immediately, try after 1.5 s, only on Home;
- * - Sudoku has no return ads: only one App Open opportunity per launch;
+ * - return: only when away ≥ 20 s (Yatzy) and back on Home; not ready → skipped, never deferred;
  * - leaving Home or backgrounding invalidates the pending opportunity.
  */
-import { isAdMobAvailable, preloadAppOpenAd, showAppOpenAd } from "./admob";
+import { isAdMobAvailable, preloadAppOpenAd, showAppOpenAd, trackAdOpportunity } from "./admob";
 import { trackEvent } from "./analytics";
 
+export const RESUME_AD_MIN_AWAY_MS = 20_000;
 export const STARTUP_AD_DELAY_MS = 1500;
 
 let startupAdChecked = false;
+let backgroundedAt = 0;
 let resumeHomeEpoch = 0;
 let resumeWatcherInstalled = false;
 
 const onStartScreen = () => window.location.pathname === "/" && document.visibilityState === "visible";
+
+async function tryShowResumeAd() {
+  if (!onStartScreen()) { trackAdOpportunity("appOpen", "resume", "skipped", "not_on_home"); return; }
+  const epoch = resumeHomeEpoch;
+  if (await showAppOpenAd(() => epoch === resumeHomeEpoch && onStartScreen(), "resume")) trackEvent("resume_ad");
+}
 
 function installResumeAdWatcher() {
   if (resumeWatcherInstalled) return;
@@ -23,7 +31,14 @@ function installResumeAdWatcher() {
     await App.addListener("appStateChange", ({ isActive }) => {
       if (!isActive) {
         resumeHomeEpoch++;
+        backgroundedAt = Date.now();
+        if (window.location.pathname === "/") void preloadAppOpenAd("background");
+        return;
       }
+      const away = backgroundedAt ? Date.now() - backgroundedAt : 0;
+      backgroundedAt = 0;
+      if (away < RESUME_AD_MIN_AWAY_MS) { if (away > 0) trackAdOpportunity("appOpen", "resume", "skipped", "away_too_short"); return; }
+      void tryShowResumeAd();
     });
   })();
 }
