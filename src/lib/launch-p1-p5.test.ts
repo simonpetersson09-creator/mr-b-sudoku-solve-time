@@ -28,10 +28,12 @@ vi.setConfig({ testTimeout: 30_000 }); // fake-timer queue drains with dynamic i
 
 // ---------- P1 ----------
 const finish = (id: string) => ({ id, kind: "local_game", detail: { gid: id, phase: "finish", level: "easy" }, at: Date.now() });
+// Load every module delivery imports before faking timers; module loading under fake timers can stall.
+const warm = async () => { await Promise.all([import("./backend/report"), import("./backend/telemetry"), import("./backend/online.functions"), import("@capacitor/app"), import("@capacitor/core")]); vi.useFakeTimers(); };
 const limit = () => Promise.reject(new Error("err:daily_finish_limit"));
 
 it("P1: a finish over the daily limit stays queued while errors, ads and game starts are still sent", async () => {
-  vi.useFakeTimers();
+  await warm();
   m.log.mockImplementation(({ data }) => data.kind === "local_game" && data.detail.phase === "finish" ? limit() : Promise.resolve({ ok: true }));
   localStorage.setItem(QKEY, JSON.stringify([finish("f1"),
     { id: "e", kind: "error", detail: { source: "x", message: "m" }, at: Date.now() },
@@ -64,7 +66,7 @@ it("P1: deferred finishes are delivered once the limit allows, each exactly once
 });
 
 it("P1: concurrent flushes and reports queued mid-flush are not lost or double-sent", async () => {
-  vi.useFakeTimers();
+  await warm();
   m.log.mockImplementation(({ data }) => data.detail.phase === "finish" ? limit() : Promise.resolve({ ok: true }));
   localStorage.setItem(QKEY, JSON.stringify([finish("f1")]));
   const r = await import("./backend/report");
