@@ -18,7 +18,7 @@ export function stockholmDays(now: number, periodStart: number): string[] {
 export type ActivityEvent = { kind: string; device_id: string | null; platform: string | null; detail: unknown; created_at: string };
 const APP = (p: string | null) => p === "ios" || p === "android";
 const VISIT_KINDS = new Set(["session", "heartbeat", "session_end"]);
-const det = (e: ActivityEvent) => (e.detail && typeof e.detail === "object" ? e.detail : {}) as { sid?: unknown; seconds?: unknown; phase?: unknown };
+const det = (e: ActivityEvent) => (e.detail && typeof e.detail === "object" ? e.detail : {}) as { sid?: unknown; seconds?: unknown; phase?: unknown; gid?: unknown };
 
 export type DayActivity = { appDevices: number; appSessions: number; avgMinutes: number | null; localStarted: number; localFinished: number };
 
@@ -27,7 +27,8 @@ export function activityByDay(events: ActivityEvent[], days: string[]): Map<stri
   const devices = new Map<string, Set<string>>();
   // visit key -> first day and longest reported foreground time
   const visits = new Map<string, { day: string; at: string; seconds: number }>();
-  events.forEach((e, i) => {
+  const games = new Set<string>();
+  [...events].sort((a, b) => a.created_at.localeCompare(b.created_at)).forEach((e, i) => {
     if (!APP(e.platform)) return;
     const day = stockholmDate(e.created_at);
     const row = out.get(day);
@@ -35,6 +36,12 @@ export function activityByDay(events: ActivityEvent[], days: string[]): Map<stri
     if (e.device_id && e.device_id !== "unknown") (devices.get(day) ?? devices.set(day, new Set()).get(day)!).add(e.device_id);
     const x = det(e);
     if (e.kind === "local_game") {
+      if (typeof x.gid === "string" && x.gid) {
+        const user = "user_id" in e ? String(e.user_id) : e.device_id;
+        const key = JSON.stringify([user, x.gid, x.phase]);
+        if (games.has(key)) return;
+        games.add(key);
+      }
       if (x.phase === "start") row.localStarted++;
       else if (x.phase === "finish") row.localFinished++;
       return;

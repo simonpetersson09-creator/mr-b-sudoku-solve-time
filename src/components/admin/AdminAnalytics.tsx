@@ -92,7 +92,7 @@ export default function AdminAnalytics({ data, loading, onRefresh }: { data: Awa
         <div>
           <h1 className="text-xl font-semibold">{diagram ? "Linjediagram" : "Statistik per dag"}{data.days[0] ? ` – från ${fmtDay(data.days[0].date)}` : ""}</h1>
           <p className="text-sm text-muted-foreground">
-            Bara appen (iPhone/Android). Datum enligt befintliga loggar (UTC). Dagens rad är inte komplett. — när ett helt underlag saknas.
+            Bara appen (iOS/Android). Datum enligt Stockholmstid. Dagens rad är inte komplett. — när ett helt underlag saknas.
           </p>
         </div>
         <div className="flex gap-2">
@@ -106,7 +106,7 @@ export default function AdminAnalytics({ data, loading, onRefresh }: { data: Awa
         </div>
       </div>
       <AdminAdDiagnostics />
-      <p className="my-3 text-sm text-muted-foreground">Mätningen är nollställd. Saknat underlag visas som —.</p>
+      <p className="my-3 text-sm text-muted-foreground">Senaste 30 dagarna, begränsat av eventuell nollställning. Saknat underlag visas som —.</p>
       {diagram ? <AdminLineChart rows={rows} /> : <>
       <div ref={wrapRef} className="relative overflow-x-auto rounded-lg border border-border">
         <svg

@@ -107,9 +107,10 @@ export const adminOverviewAction = async ({ context }: { context: OnlineContext 
     db.from("admin_activity_exclusions").select("user_id, device_id"),
   ]);
   if (exclusions.error) throw exclusions.error;
+  if (events.error || profiles.error) throw new Error("err:bad_action");
   // Visit/local-game reports are read in full pages so busy diagnostics can never crowd them out.
   const visitRows: ActivityEvent[] = [];
-  for (let offset = 0; offset < 100_000; offset += 1000) {
+  for (let offset = 0; ; offset += 1000) {
     const { data: page, error } = await db.from("app_events").select("kind, user_id, device_id, platform, detail, created_at")
       .in("kind", ["session", "heartbeat", "session_end", "local_game"]).gte("created_at", sinceStats)
       .order("created_at").order("id").range(offset, offset + 999);
@@ -125,7 +126,8 @@ export const adminOverviewAction = async ({ context }: { context: OnlineContext 
   const reportDays = adminReportingDays(now, periodStart);
   const byDay = activityByDay(adminActivityEvents(visitRows as (ActivityEvent & { user_id: string | null })[], exclusions.data ?? []), reportDays);
   const days = reportDays.map((d) => {
-    const a = byDay.get(d)!;
+    const a = byDay.get(d);
+    if (!a) throw new Error("err:bad_action");
     return { date: d, appSessions: a.appSessions, avgMinutes: a.avgMinutes, started: a.localStarted, finished: a.localFinished, appDevices: a.appDevices };
   });
   // Keep existing identities intact; the player cohort restarts at the reset.

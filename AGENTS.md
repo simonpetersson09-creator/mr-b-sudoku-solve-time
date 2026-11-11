@@ -41,6 +41,7 @@
 - Generation workers have a bounded lifetime and terminate on every outcome; failures never fall back to synchronous solving, and generation rejects rather than returning a puzzle that fails its level gate.
 - Delayed play callbacks are game-ID-bound and cleaned on game replacement/unmount; keyboard and cell input share dialog/background/fullscreen blocking.
 - Reports use the existing atomic per-user server counter and strict event validation; database write failures remain failures, and repeat game reports are checked against stored user/game/phase before insertion.
+- Admin refresh polls only visible online pages and catches up on foreground/network return, without overlapping requests; activity pagination has no silent cutoff and duplicate game phases count once per identity.
 - Home preloads only public local content routes; protected pages and authentication are not part of background navigation warming.
 - Native permission copy lives in `scripts/ios-permission-copy.js`; iOS sync regenerates and registers all 40 `InfoPlist.strings` resources so system prompts follow iOS language preferences independently of the in-game language.
 - Profile images use the existing HTML file picker and canvas conversion, not a camera plugin or photo-library capability; only the chosen file is read and the existing local/server avatar flow is retained.

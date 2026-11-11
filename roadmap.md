@@ -1,5 +1,11 @@
 # Roadmap: Mr.B. Sudoku
 
+## Adminstatistik och uppdatering (2026-11-11)
+- [x] Automatisk uppdatering var 60s endast synlig/online, samt fokus/nätverk/native-återkomst; inga överlappande anrop eller uppdateringar efter avmontering. Tillfälliga hämtningsfel visas inte som saknad adminbehörighet och gamla data behålls.
+- [x] Läsfel för profil/loggar får inte visas som nollor, aktivitetsläsning fortsätter förbi 100000 rader, unika spel-ID/fas/identitet räknas en gång. Appfilter och testundantag bevarade; Stockholmstid och 30-dagarsperiod rätt angivna. Ej tillgängliga kolumner förblir —.
+- [x] 400 ordinarie + 2 isolerade databastester godkända. Autentiserad adminsida och rå adminläsning verifierade: manuell/fokus/60s hämtning når servern, inga sidfel. 0 appenheter idag och under alla senaste 30 dagarna, 0 färdiga spel; ingen syntetisk produktionsaktivitet eller publicering.
+- [ ] Ny aktivitet från installerad iOS/Android återstår att läsa tillbaka: fysisk enhet och uppdaterad publicerad server/app krävs, befintligt underlag saknar appaktivitet.
+
 ## Språk, iPad och förnyad lanseringskontroll (2026-11-11)
 - [x] Automatiskt språk följer enheten vid start, languagechange och native-återkomst; manuella/äldre val bevaras. Dokumentets språk följer gränssnittet. Tre nya regressionstester och verkligt franska→manuellt svenska-flöde godkända.
 - [x] iPad stående/liggande och delad skärm verifierade på 768×1024, 1024×768, 820×1180, 1180×820, 1024×1366, 1366×1024 och 507×768; inmatning, paus/sparning och återöppning fungerar. iPhone-måtten oförändrade.

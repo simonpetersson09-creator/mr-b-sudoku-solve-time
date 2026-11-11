@@ -3,6 +3,17 @@ import { activityByDay, stockholmDate, stockholmDays } from "./activity-stats";
 import { logEventInput } from "./online-inputs";
 
 describe("admin activity", () => {
+  it("counts each app game phase once across duplicate reports, retaining independent players", () => {
+    const e = (user_id: string, phase: string, created_at: string, platform = "ios") => ({ kind: "local_game", user_id, platform, device_id: user_id, detail: { gid: "game-a", phase }, created_at });
+    const rows = activityByDay([
+      e("a", "finish", "2026-11-10T10:00:00Z"), e("a", "finish", "2026-11-09T10:00:00Z"),
+      e("a", "start", "2026-11-09T09:00:00Z"), e("a", "start", "2026-11-09T09:01:00Z"),
+      e("b", "finish", "2026-11-09T11:00:00Z", "android"), e("web", "finish", "2026-11-09T11:00:00Z", "web"),
+    ], ["2026-11-09", "2026-11-10"]);
+    expect(rows.get("2026-11-09")?.localStarted).toBe(1);
+    expect(rows.get("2026-11-09")?.localFinished).toBe(2);
+    expect(rows.get("2026-11-10")?.localFinished).toBe(0);
+  });
   it("buckets days in Stockholm time, not UTC", () => {
     expect(stockholmDate("2026-11-09T23:30:00Z")).toBe("2026-11-10");
     expect(stockholmDays(Date.parse("2026-11-09T23:30:00Z"), Date.parse("2026-11-08T09:43:00Z"))).toEqual(["2026-11-08", "2026-11-09", "2026-11-10"]);

@@ -1,9 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { adminOverview } from "@/lib/backend/online.functions";
 import { useTranslation } from "@/lib/i18n";
 import AdminAnalytics from "@/components/admin/AdminAnalytics";
+import { startAdminRefresh } from "@/lib/backend/admin-refresh";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -26,17 +27,27 @@ function AdminPage() {
   const [d, setD] = useState<Data | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const load = async () => {
+  const pending = useRef(false);
+  const active = useRef(false);
+  const load = useCallback(async () => {
+    if (pending.current || !active.current) return;
+    pending.current = true;
     setLoading(true); setErr(null);
-    try { setD(await adminOverview()); } catch { setErr("noAdmin"); }
-    finally { setLoading(false); }
-  };
-  useEffect(() => { void load(); }, []);
+    try { const next = await adminOverview(); if (active.current) setD(next); }
+    catch (error) { if (active.current) setErr(error instanceof Error && error.message === "err:forbidden" ? "noAdmin" : "genericError"); }
+    finally { pending.current = false; if (active.current) setLoading(false); }
+  }, []);
+  useEffect(() => {
+    active.current = true;
+    void load();
+    const stop = startAdminRefresh(() => { void load(); });
+    return () => { active.current = false; stop(); };
+  }, [load]);
   return (
     <main className="admin-screen bg-background p-4 text-foreground md:p-8">
       <div className="w-full">
         <Link to="/" className="mb-2 flex items-center gap-1 text-sm text-muted-foreground"><ArrowLeft size={16} /> {t("back")}</Link>
-        {err && <><p className="text-sm text-destructive">{t("noAdmin")}</p><Link to="/admin-login" className="home-action">{t("signIn")}</Link></>}
+        {err && <><p role="alert" className="text-sm text-destructive">{t(err === "noAdmin" ? "noAdmin" : "genericError")}</p>{err === "noAdmin" && <Link to="/admin-login" className="home-action">{t("signIn")}</Link>}</>}
         {!d && !err && <p className="text-sm text-muted-foreground">{t("loading")}</p>}
         {d && (<>
           <AdminAnalytics data={d} loading={loading} onRefresh={load} />
