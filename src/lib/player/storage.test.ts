@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { beforeEach, describe, expect, it } from "vitest";
 import { newGame, setValue, toggleNote, undo } from "@/lib/sudoku/engine";
+import { isUnlocked, emptyProgress } from './unlock';
 import { MAX_SAVED_GAMES, addResult, cleanStats, emptyStats, stockholmYear, listGames, loadAllTime, loadGame, loadStats, loadProgress, isValidSave, recordFinish, removeGame, saveGame, selectGame, startNewGame, loadSettings, saveSettings } from "./storage";
 
 const solved = (seed: number) => {
@@ -116,6 +117,29 @@ describe("statistics per level", () => {
     const g = solved(8);
     recordFinish(g); recordFinish(g);
     expect(loadStats().easy.played).toBe(1);
+  });
+  it('first-run progression counts once and Medium opens only after three different Easy finishes', () => {
+    const g = solved(8);
+    for (let n = 1; n <= 3; n++) {
+      const result = { ...g, id: `first-${n}` };
+      recordFinish(result); recordFinish(result);
+      expect(loadProgress().easy).toBe(n);
+      expect(loadStats().easy.played).toBe(n);
+      expect(loadAllTime().easy.played).toBe(n);
+      expect(isUnlocked(loadProgress(), 'medium')).toBe(n === 3);
+    }
+  });
+  it('seeds missing progress from legacy stats before adding the new finish', () => {
+    localStorage.setItem('mrb-sudoku:v1:stats', JSON.stringify({ ...emptyStats(), easy: { played: 2, wins: 2, perfect: 2, bestMs: 120000, totalMs: 240000 } }));
+    recordFinish(solved(8));
+    expect(loadProgress().easy).toBe(3);
+    expect(loadAllTime().easy.played).toBe(3);
+    expect(loadStats().easy.played).toBe(3);
+  });
+  it('preserves existing lifetime progress rather than rebuilding it from yearly stats', () => {
+    localStorage.setItem('mrb-sudoku:v1:progress', JSON.stringify({ ...emptyProgress(), easy: 37, medium: 12 }));
+    recordFinish(solved(8)); recordFinish(solved(8));
+    expect(loadProgress()).toEqual({ ...emptyProgress(), easy: 38, medium: 12 });
   });
   it("never recounts the oldest game after more than 200 finished games, including after reload", () => {
     const g = solved(18);

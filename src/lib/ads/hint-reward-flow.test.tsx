@@ -1,7 +1,7 @@
 import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { newGame } from '@/lib/sudoku/engine';
-import { loadGame, removeGame, startNewGame } from '@/lib/player/storage';
+import { loadGame, loadStats, removeGame, startNewGame } from '@/lib/player/storage';
 const ads = vi.hoisted(() => ({ show: vi.fn(), reward: null as (() => void) | null, resolve: null as ((r: string) => void) | null }));
 vi.mock('@tanstack/react-router', () => ({ createFileRoute: () => (o: unknown) => o, useNavigate: () => navigate }));
 const navigate = vi.fn();
@@ -22,7 +22,7 @@ beforeEach(() => {
   vi.stubGlobal('ResizeObserver', class { observe() {} disconnect() {} });
   startNewGame(newGame('easy', 321, 'ui-game'));
 });
-afterEach(() => { cleanup(); vi.useRealTimers(); vi.unstubAllGlobals(); });
+afterEach(() => { cleanup(); vi.restoreAllMocks(); vi.useRealTimers(); vi.unstubAllGlobals(); });
 async function offer() { fireEvent.click(await screen.findByRole('button', { name: 'Ledtråd: 3/3' })); await screen.findByRole('alertdialog'); }
 it('placing a correct digit clears the selection immediately and saves the digit', async () => {
   const game = loadGame(); if (!game) throw new Error('fixture');
@@ -100,8 +100,8 @@ it('an ad finishing after native background cannot resume the paused board', asy
   expect(loadGame()?.hints).toBe(0);
 });
 it('native pause persists the partial clock tick once even when visibility also changes', async () => {
-  const now = Date.now();
-  const clock = vi.spyOn(Date, 'now').mockReturnValue(now);
+  const now = performance.now();
+  const clock = vi.spyOn(performance, 'now').mockReturnValue(now);
   render(<PlayPage />); await screen.findAllByRole('gridcell');
   clock.mockReturnValue(now + 500);
   const before = loadGame()?.elapsedMs ?? 0;
@@ -112,6 +112,57 @@ it('native pause persists the partial clock tick once even when visibility also 
   expect(loadGame()?.elapsedMs).toBe(before + 500);
   clock.mockRestore();
   Object.defineProperty(document, 'visibilityState', { configurable: true, value: 'visible' });
+});
+it('manual pause/resume counts all four 700ms intervals and excludes the pauses in the saved game', async () => {
+  let now = 0;
+  vi.spyOn(performance, 'now').mockImplementation(() => now);
+  render(<PlayPage />); await screen.findAllByRole('gridcell');
+  for (let n = 0; n < 4; n++) {
+    now += 700;
+    fireEvent.click(screen.getByRole('button', { name: 'Pausa' }));
+    expect(loadGame()?.elapsedMs).toBe((n + 1) * 700);
+    now += 10000;
+    fireEvent.click(screen.getByRole('button', { name: 'Fortsätt' }));
+  }
+  expect(loadGame()?.elapsedMs).toBe(2800);
+});
+it('the final correct digit records the partial tick before statistics and stops result time', async () => {
+  let now = 0;
+  vi.spyOn(performance, 'now').mockImplementation(() => now);
+  const g = loadGame(); if (!g) throw new Error('fixture');
+  const i = g.values.findIndex(v => !v); const values = g.solution.slice(); values[i] = 0;
+  startNewGame({ ...g, values, elapsedMs: 1000 });
+  render(<PlayPage />); const cells = await screen.findAllByRole('gridcell');
+  now = 725;
+  fireEvent.click(cells[i]); fireEvent.click(screen.getByRole('button', { name: String(g.solution[i]) }));
+  expect(loadStats().easy.totalMs).toBe(1725);
+  expect(loadStats().easy.bestMs).toBe(1725);
+  now = 10000; cleanup();
+  expect(loadStats().easy.totalMs).toBe(1725);
+});
+it('hint waiting excludes time, preserves partial play and the actual rewarded UI cannot undo the hint', async () => {
+  let now = 0;
+  vi.spyOn(performance, 'now').mockImplementation(() => now);
+  render(<PlayPage />); await screen.findAllByRole('gridcell');
+  now = 350; await offer();
+  expect(loadGame()?.elapsedMs).toBe(350);
+  now = 20000; fireEvent.click(screen.getByRole('button', { name: 'Se annons' }));
+  now = 90000;
+  await act(async () => { ads.reward?.(); ads.resolve?.('rewarded'); });
+  expect(loadGame()?.elapsedMs).toBe(350);
+  expect(screen.getByRole('button', { name: 'Ångra: 3/3' })).toBeDisabled();
+  now += 250; fireEvent.click(screen.getByRole('button', { name: 'Pausa' }));
+  expect(loadGame()?.elapsedMs).toBe(600);
+});
+it('unmount saves partial time but never resurrects an explicitly ended game', async () => {
+  let now = 0;
+  vi.spyOn(performance, 'now').mockImplementation(() => now);
+  render(<PlayPage />); await screen.findAllByRole('gridcell');
+  now = 675; cleanup();
+  expect(loadGame()?.elapsedMs).toBe(675);
+  render(<PlayPage />); await screen.findAllByRole('gridcell');
+  removeGame('ui-game'); now += 300; cleanup();
+  expect(loadGame()).toBeNull();
 });
 it('blocks arrows, digits and deletion behind the hint dialog', async () => {
   render(<PlayPage />); const cells = await screen.findAllByRole('gridcell');

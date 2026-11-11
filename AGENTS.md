@@ -20,6 +20,9 @@
 - Normalize legacy gameplay-help settings on both reads and writes; hidden choices must not preserve different game behavior across devices.
 - Validate saved puzzle/solution, note masks, undo entries and counters before exposing a game to play; reject corrupt entries individually while retaining the legacy missing-undo-allowance migration.
 - Keep finished-game IDs without eviction in the existing local ledger so yearly/all-time statistics and unlock progress cannot recount older results.
+- Read all statistics/progression migration baselines before writing a finish result so the first result cannot seed itself twice; never rebuild saved lifetime progress.
+- Rewarded hint commits use a non-recording digit write and clear prior undo history, matching the engine hint boundary so older peer snapshots cannot overwrite the reward.
+- Play time uses a game-bound monotonic clock consumed before moves and every stop/unmount; pause/ad waiting is excluded and final partial ticks are included without a foreground-time cap.
 - Native background and document hiding share synchronous pause-and-save handling; foreground never resumes play without an explicit player action, and duplicate lifecycle signals cannot charge the clock twice.
 - `noUncheckedIndexedAccess` is off: the engine indexes fixed-size 81-cell arrays heavily.
 - i18n lives in `src/lib/i18n/`: sv.ts is the key source of truth; every one of the 40 dictionaries must have identical keys and placeholders and no unused keys (enforced by `i18n.test.ts`). Server functions throw stable `err:<code>` strings translated by `errorMessage()`.

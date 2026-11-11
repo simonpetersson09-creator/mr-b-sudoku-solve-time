@@ -1,5 +1,5 @@
 import { beforeEach, expect, it } from 'vitest';
-import { newGame, MAX_HINTS } from '@/lib/sudoku/engine';
+import { newGame, MAX_HINTS, setValue, toggleNote, undo, PEERS } from '@/lib/sudoku/engine';
 import { loadGame, saveGame, startNewGame, recordFinish, loadStats, loadProgress } from '@/lib/player/storage';
 import { createHintReward } from './hint-reward';
 
@@ -22,6 +22,36 @@ it('a confirmed reward fills exactly one correct cell and uses one hint; duplica
 it('without a reward the three-hint allowance and saved game are unchanged', () => {
   const f = fixture(); expect(f.game().hints).toBe(0); expect(f.commits()).toBe(0);
   expect(loadGame()?.values).toEqual(f.game().values); expect(loadGame()?.hints).toBe(0);
+});
+it('a rewarded hint cannot be undone and does not consume an undo', () => {
+  const f = fixture();
+  f.claim();
+  expect(f.game().history).toHaveLength(0);
+  expect(undo(f.game())).toEqual(f.game());
+  expect(f.game().undosLeft).toBe(3);
+  expect(f.game().values[f.cell]).toBe(f.game().solution[f.cell]);
+});
+it('older digit and peer-note snapshots cannot overwrite a rewarded hint after reload', () => {
+  const f = fixture();
+  const peer = PEERS[f.cell].find(i => f.game().values[i] === 0);
+  if (peer == null) throw new Error('missing open peer');
+  let game = toggleNote(f.game(), f.cell, f.game().solution[peer]);
+  game = setValue(game, peer, game.solution[peer]); // history includes the hint cell's former empty value
+  expect(game.history[0].some(c => c.i === f.cell)).toBe(true);
+  f.replace(game);
+  expect(f.claim()).toBe(true);
+  const restored = loadGame();
+  if (!restored) throw new Error('missing save');
+  expect(restored.history).toHaveLength(0);
+  expect(undo(restored).values[f.cell]).toBe(restored.solution[f.cell]);
+  const nextCell = restored.values.findIndex(v => v === 0);
+  const moved = setValue(restored, nextCell, restored.solution[nextCell]);
+  const undone = undo(moved);
+  expect(undone.values[nextCell]).toBe(0);
+  expect(undone.values[f.cell]).toBe(restored.solution[f.cell]);
+  expect(undo(undone).values[f.cell]).toBe(restored.solution[f.cell]);
+  expect(undone.hints).toBe(1);
+  expect(undone.undosLeft).toBe(2);
 });
 it('never applies an old reward to a new game', () => {
   const f = fixture(); f.replace(newGame('easy', 124, 'different'));

@@ -1,5 +1,12 @@
 # Roadmap: Mr.B. Sudoku
 
+## A1–A3 från senaste lanseringsgranskningen (2026-11-11)
+- [x] A1: Läs migrationsunderlaget före resultatskrivning; varje avslutat spel räknas en gång utan återställning av framsteg.
+- [x] A2: Belönad ledtråd skapar ingen Ångra-post och äldre historik kan inte skriva över den. Ångra för senare vanliga drag fungerar fortsatt.
+- [x] A3: Räkna delsekunder vid paus, dialog/annons, bakgrund, navigation och sista draget; återupptagning räknar inte paustid. Avslutat/raderat spel återuppstår inte vid avmontering.
+- [x] 415 ordinarie + 2 isolerade databastester godkända; 15 nya regressionstester. Verklig spelvy: fyra korta spelpass, fryst paus, inmatning, tillbaka/sparning och återöppning utan sidfel; förhandsvisningens byggkontroll godkänd. Ingen publicering.
+- [ ] Installerad telefon och riktiga SDK-belöningar: kräver fysisk enhet; tidigare felräknade framsteg och äldre ledtrådshistorik saknar säkert identifierbart underlag och skrivs inte om.
+
 ## Adminstatistik och uppdatering (2026-11-11)
 - [x] Automatisk uppdatering var 60s endast synlig/online, samt fokus/nätverk/native-återkomst; inga överlappande anrop eller uppdateringar efter avmontering. Tillfälliga hämtningsfel visas inte som saknad adminbehörighet och gamla data behålls.
 - [x] Läsfel för profil/loggar får inte visas som nollor, aktivitetsläsning fortsätter förbi 100000 rader, unika spel-ID/fas/identitet räknas en gång. Appfilter och testundantag bevarade; Stockholmstid och 30-dagarsperiod rätt angivna. Ej tillgängliga kolumner förblir —.

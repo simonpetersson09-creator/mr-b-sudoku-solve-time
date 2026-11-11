@@ -201,9 +201,9 @@ export function recordFinish(g: GameState) {
   try { const v: unknown = JSON.parse(localStorage.getItem(COUNTED) ?? "[]"); if (Array.isArray(v)) list = v.filter((x) => typeof x === "string"); } catch { /* damaged list starts over */ }
   if (list.includes(g.id)) return;
   const at = loadAllTime(); // load before the yearly save so a first-run seed never double-counts this game
+  const p = loadProgress(); // migrate from the old stats, not stats already containing this result
   saveStats(addResult(loadStats(), g));
   saveAllTime(addAllTimeResult(at, g));
-  const p = loadProgress();
   saveProgress({ ...p, [g.level]: p[g.level] + 1 });
   // Keep the existing list format for older installations, but never evict a recorded ID.
   write(COUNTED, [...list, g.id]);
@@ -218,7 +218,7 @@ export function loadProgress(): Progress {
   try { const v: unknown = JSON.parse(localStorage.getItem(PROGRESS) ?? "null"); if (v && typeof v === "object") raw = v as Record<string, unknown>; } catch { /* damaged */ }
   // First run: seed from this year's solved games so nobody loses levels they already played.
   const st = raw ? null : loadStats();
-  for (const l of LEVELS) out[l] = raw ? cleanCount(raw[l]) : st![l].played;
+  for (const l of LEVELS) out[l] = raw ? cleanCount(raw[l]) : (st?.[l].played ?? 0);
   return out;
 }
 export const saveProgress = (p: Progress) => write(PROGRESS, p);

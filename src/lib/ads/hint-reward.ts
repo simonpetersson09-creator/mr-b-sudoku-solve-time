@@ -12,7 +12,8 @@ export function createHintReward(gameId: string, cell: number, autoRemoveNotes: 
     if (!info) return false;
     const marked = markHint(current, cell);
     if (marked.cell == null) return false;
-    const next = setValue(marked.state, cell, info.digit, autoRemoveNotes, true);
+    // Match the engine's hint boundary: no undo entry, and no older snapshot may restore this cell.
+    const next = { ...setValue(marked.state, cell, info.digit, autoRemoveNotes, false), history: [] };
     commit(next, info);
     return true;
   };
