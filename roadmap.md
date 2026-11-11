@@ -1,5 +1,12 @@
 # Roadmap: Mr.B. Sudoku
 
+## Språk, iPad och förnyad lanseringskontroll (2026-11-11)
+- [x] Automatiskt språk följer enheten vid start, languagechange och native-återkomst; manuella/äldre val bevaras. Dokumentets språk följer gränssnittet. Tre nya regressionstester och verkligt franska→manuellt svenska-flöde godkända.
+- [x] iPad stående/liggande och delad skärm verifierade på 768×1024, 1024×768, 820×1180, 1180×820, 1024×1366, 1366×1024 och 507×768; inmatning, paus/sparning och återöppning fungerar. iPhone-måtten oförändrade.
+- [x] Ludo läst skrivskyddat: samma direkta autentiserade anslutning till egen publicerad /api/public/native finns redan i Sudoku; ingen extra proxy eller omdirigering införs.
+- [x] 393 ordinarie + 2 isolerade databastester godkända, tidigare skydd kvar; fokus/dialogtangentblockering och autentiserad auth→hem omprovade. Native-källkontroll godkänd; full native:verify stoppar på osynkade Android-resurser. Inget publicerat/signerat.
+- [ ] Installerad iPad/iPhone/Android och slutlig paketering: fysisk utrustning/Xcode/Android SDK saknas; native-synk och installerat testbygge återstår.
+
 ## Återstående tekniska säkerhetsåtgärder (2026-11-11)
 - [x] Helskärmsägarskap och sena stängningslyssnare kvar efter deadline; SDK-stängning/fel frigör. App Open släpps inte av 90s-timer.
 - [x] Spelbundna fördröjningar städas; dialoger/bakgrund/annonser blockerar tangent- och cellinmatning.
@@ -63,7 +70,7 @@
 ## Före släpp
 - [ ] Riktiga annonser på installerad telefon: iOS-produktions-ID:n är införda för Rewarded, uppstart och efter spel; utveckling använder Google-testannonser, Android har inga godkända produktions-ID:n.
 - [ ] Provning på riktig telefon: Mästare och Omöjlig, paus, avsluta spel, vinstfirande
-- [ ] Liggande läge på spelsidan är inte anpassat
+- [x] Liggande spelsida anpassad och verifierad i telefon- och iPad-storlekar; installerad enhet återstår ovan.
 - [ ] Långa ord på knapparna kan kortas av på vissa språk
 
 ## Klart

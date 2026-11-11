@@ -802,6 +802,24 @@ main[data-level="master"] .sdk-level-pill { background: color-mix(in oklab, var(
 }
 .sdk-fixed .sdk-back { min-height: 36px; }
 
+/* Tablets: use the extra space without stretching the phone's controls across the screen. */
+@media (min-width: 700px) and (min-height: 601px) {
+  .sdk-fixed .sdk-play-stack { max-width: 660px; }
+  .sdk-fixed .sdk-key { min-height: 64px; font-size: 28px; }
+  .sdk-fixed .sdk-tool { min-height: 48px; font-size: 12px; }
+  .sdk-fixed .sdk-tool svg { width: 22px; height: 22px; }
+  .sdk-fixed .sdk-cell { font-size: 32px; }
+  .sdk-fixed .sdk-notes span { font-size: 12px; }
+}
+@media (min-width: 900px) and (min-height: 601px) and (orientation: landscape) {
+  .sdk-fixed .sdk-play-stack { display: grid; max-width: 1180px; grid-template-columns: minmax(0, 1fr) 280px; grid-template-rows: 36px minmax(0, 1fr); column-gap: 32px; row-gap: 12px; }
+  .sdk-fixed .sdk-topbar { grid-column: 1 / -1; }
+  .sdk-fixed .sdk-board-column { min-width: 0; }
+  .sdk-fixed .sdk-controls { min-width: 0; min-height: 0; justify-content: center; gap: 16px; }
+  .sdk-fixed .sdk-tools, .sdk-fixed .sdk-pad { margin-top: 0; }
+  .sdk-fixed .sdk-pad { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+}
+
 /* Landscape phones: board and input occupy separate columns, never below the viewport. */
 @media (orientation: landscape) and (max-height: 600px) {
   .sdk-fixed .sdk-play-stack { display: grid; max-width: 960px; grid-template-columns: minmax(0, 1fr) minmax(240px, 1fr); grid-template-rows: 36px minmax(0, 1fr); column-gap: 20px; row-gap: 4px; }

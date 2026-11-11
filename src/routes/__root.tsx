@@ -119,7 +119,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="sv">
       <head>
         {/* Runs before the app's modules: if an outdated module fails to load after an update, reload a few times instead of a blank screen. */}
         <script
@@ -140,7 +140,8 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
+  useEffect(() => { document.documentElement.lang = lang; }, [lang]);
   // The reloads ran out and the app landed here instead of the screen that failed: say so.
   const [stale, setStale] = useState(false);
   useEffect(() => {

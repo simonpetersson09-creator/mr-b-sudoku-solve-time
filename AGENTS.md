@@ -23,6 +23,8 @@
 - Native background and document hiding share synchronous pause-and-save handling; foreground never resumes play without an explicit player action, and duplicate lifecycle signals cannot charge the clock twice.
 - `noUncheckedIndexedAccess` is off: the engine indexes fixed-size 81-cell arrays heavily.
 - i18n lives in `src/lib/i18n/`: sv.ts is the key source of truth; every one of the 40 dictionaries must have identical keys and placeholders and no unused keys (enforced by `i18n.test.ts`). Server functions throw stable `err:<code>` strings translated by `errorMessage()`.
+- Automatic language choices re-detect device preferences on languagechange/native resume; manual and legacy choices win, and the document language follows the translated UI for screen readers.
+- Tablet play uses bounded portrait width and separate board/control columns in wide landscape; board sizing remains measured from available space so phone and split-screen layouts stay contained.
 - App-owned auth goes through `src/lib/auth/client.ts` (anonymous identity; namespaced Keychain/Keystore storage on native); startup never discards a saved identity on storage/network failure, and server middleware verifies every private request.
 - Admin access is granted only by the server-secret PIN (rate-limited, constant-time) to the caller's own anonymous identity; admin UI never signs out.
 - Admin activity: durable device number, per-visit heartbeats, `local_game` reports, Stockholm days in pure `activity-stats.ts`; app errors/ad events reach admin only via `src/lib/backend/report.ts` → `app_events`.

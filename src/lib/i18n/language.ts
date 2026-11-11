@@ -128,12 +128,11 @@ export function getLanguage(): Language {
   if (typeof window === "undefined") return "sv";
   try {
     const v = localStorage.getItem(LANG_KEY) as Language | null;
-    if (v && LANGUAGES.some((l) => l.code === v)) return v;
+    if (v && LANGUAGES.some((l) => l.code === v) && isLanguageManuallySet()) return v;
   } catch {
     // Device detection must still work if storage is unavailable.
   }
-  // First launch: pick the device language (Swedish fallback) and remember it
-  // as an automatic choice, so a later manual pick always wins.
+  // Automatic choices follow the current device language; manual/legacy choices win.
   const auto = detectDeviceLanguage();
   try {
     localStorage.setItem(LANG_KEY, auto);
@@ -169,8 +168,12 @@ export function subscribeLanguageChanges(cb: () => void): () => void {
   const handler = () => cb();
   window.addEventListener("mrb-sudoku-language-changed", handler);
   window.addEventListener("storage", handler);
+  window.addEventListener("languagechange", handler);
+  window.addEventListener("mrb-sudoku:resume", handler);
   return () => {
     window.removeEventListener("mrb-sudoku-language-changed", handler);
     window.removeEventListener("storage", handler);
+    window.removeEventListener("languagechange", handler);
+    window.removeEventListener("mrb-sudoku:resume", handler);
   };
 }
