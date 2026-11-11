@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
-const ads = vi.hoisted(() => ({ preload: vi.fn(async () => true), show: vi.fn(async (allowed: () => boolean) => allowed()), listener: null as null | ((state: { isActive: boolean }) => void) }));
+const ads = vi.hoisted(() => ({ preload: vi.fn(async () => true), show: vi.fn(async (allowed: () => boolean, _source?: string) => allowed()), listener: null as null | ((state: { isActive: boolean }) => void) }));
 vi.mock("./admob", () => ({ isAdMobAvailable: () => true, preloadAppOpenAd: ads.preload, showAppOpenAd: ads.show, trackAdOpportunity: vi.fn() }));
 vi.mock("./analytics", () => ({ trackEvent: vi.fn() }));
 vi.mock("@capacitor/app", () => ({ App: { addListener: async (_name: string, listener: typeof ads.listener) => { ads.listener = listener; } } }));
