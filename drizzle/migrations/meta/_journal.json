@@ -15,6 +15,20 @@
       "when": 1794311149981,
       "tag": "0001_monthly_most_active",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794392140994,
+      "tag": "0002_atomic_player_cleanup",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1794392580330,
+      "tag": "0003_report_sequence_access",
+      "breakpoints": true
     }
   ]
 }

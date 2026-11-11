@@ -62,11 +62,14 @@ export function isConsistent(g: Grid): boolean {
 }
 
 /** Counts solutions up to `limit` (2 is enough to prove uniqueness). */
-export function countSolutions(grid: Grid, limit = 2): number {
+export function countSolutions(grid: Grid, limit = 2, maxNodes = Infinity): number {
   const g = grid.slice();
   if (!isConsistent(g)) return 0;
   let count = 0;
+  let nodes = 0;
+  let exhausted = false;
   const walk = (): boolean => {
+    if (++nodes > maxNodes) { exhausted = true; return true; }
     let best = -1, bestMask = 0, bestN = 10;
     for (let i = 0; i < 81; i++) {
       if (g[i]) continue;
@@ -85,7 +88,7 @@ export function countSolutions(grid: Grid, limit = 2): number {
     return false;
   };
   walk();
-  return count;
+  return exhausted ? -1 : count;
 }
 
 /** Solves a grid, or returns null when it has no solution. */

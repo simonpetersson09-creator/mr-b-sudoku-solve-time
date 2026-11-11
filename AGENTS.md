@@ -48,3 +48,8 @@
 - Home preloads only public local content routes; protected pages and authentication are not part of background navigation warming.
 - Native permission copy lives in `scripts/ios-permission-copy.js`; iOS sync regenerates and registers all 40 `InfoPlist.strings` resources so system prompts follow iOS language preferences independently of the in-game language.
 - Profile images use the existing HTML file picker and canvas conversion, not a camera plugin or photo-library capability; only the chosen file is read and the existing local/server avatar flow is retained.
+- Cache bounded puzzle uniqueness checks so autosave never repeats solving.
+- Queue games before sending; remove acknowledged IDs only, preserve original dates and avoid diagnostic eviction.
+- Retention uses full app cohorts and exact Stockholm return days, including nonreturners.
+- Profile deletion triggers transactional app cleanup so failure retains identity and history.
+- Native calls abort at 20s without mutation retry; native lang follows player preferences.

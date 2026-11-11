@@ -13,9 +13,11 @@ import { supabase } from "@/lib/auth/client";
 import { startNativeRuntime, RESUME_EVENT } from "@/lib/native/runtime";
 import { installViewportSync } from "@/lib/native/viewport";
 import { nativeDiagnostic } from "@/lib/native/diagnostics";
+import { useDocumentLanguage } from '@/lib/i18n/document-language';
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({ component: NativeRoot });
 function NativeRoot() {
+  useDocumentLanguage();
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();
   useEffect(() => {

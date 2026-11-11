@@ -10,9 +10,9 @@ describe("Mr.B. Sudoku ad configuration", () => {
     const { ADMOB_IDS } = await import("./admob");
     expect(ADMOB_IDS.ios).toEqual({ appId: "ca-app-pub-7448540924654868~5197213597", appOpen: "ca-app-pub-7448540924654868/5823578752", optional: "ca-app-pub-7448540924654868/3884131928" });
   });
-  it("leaves all Android IDs unchanged", async () => {
+  it("keeps Android sample manifest but disables unconfigured production units", async () => {
     const { ADMOB_IDS } = await import("./admob");
-    expect(ADMOB_IDS.android).toEqual({ appId: "ca-app-pub-3940256099942544~3347511713", appOpen: "ca-app-pub-3940256099942544/9257395921", optional: "ca-app-pub-3940256099942544/1033173712" });
+    expect(ADMOB_IDS.android).toEqual({ appId: "ca-app-pub-3940256099942544~3347511713", appOpen: null, optional: null });
     expect(readFileSync("android/app/src/main/AndroidManifest.xml", "utf8")).toContain("ca-app-pub-3940256099942544~3347511713");
   });
   it("puts Sudoku's App ID in iOS", () => {

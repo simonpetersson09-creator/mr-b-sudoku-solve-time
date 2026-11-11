@@ -12,7 +12,7 @@ beforeEach(() => {
   fetchMock.mockImplementation(async () => Response.json({ ok: true }));
   vi.stubGlobal("fetch", fetchMock);
 });
-afterEach(() => vi.unstubAllGlobals());
+afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals(); });
 
 describe("native backend transport", () => {
   const profile = { display_name: "Sudoku", avatar: "🧩", country: "SE" };
@@ -73,5 +73,18 @@ describe("native backend transport", () => {
     const me = { userId: "player-a", profile: { display_name: "Sudoku" }, isAdmin: false };
     fetchMock.mockResolvedValue(Response.json(me));
     await expect(client.getMe()).resolves.toEqual(me);
+  });
+  it.each(['fetch', 'body', 'identity'])('bounds hung %s, aborts and never retries deletion', async stage => {
+    vi.useFakeTimers();
+    const never = () => new Promise(() => {});
+    if (stage === 'identity') mocks.session.mockImplementation(never);
+    else if (stage === 'body') fetchMock.mockResolvedValue({ ok: true, json: never });
+    else fetchMock.mockImplementation(never);
+    const pending = client.deletePlayerData({ data: {} });
+    const rejected = expect(pending).rejects.toThrow('err:bad_action');
+    await vi.advanceTimersByTimeAsync(20000);
+    await rejected;
+    expect(fetchMock).toHaveBeenCalledTimes(stage === 'identity' ? 0 : 1);
+    if (stage !== 'identity') expect(fetchMock.mock.calls[0][1].signal.aborted).toBe(true);
   });
 });

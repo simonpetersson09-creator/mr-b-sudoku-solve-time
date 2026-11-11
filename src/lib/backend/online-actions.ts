@@ -5,12 +5,13 @@ import { healthAlerts } from "./server-timing";
 import { activityByDay, type ActivityEvent } from "./activity-stats";
 import { adminActivityEvents, adminPeriodStart, adminReportingDays, appPlayerIds } from "./admin-period";
 import { appOpenDiagnosticsSince, isAppOpenDiagnostic } from "./ad-diagnostics";
+import { appRetention } from './retention';
 
 // The service-role client is only loaded inside handlers, after the caller is authenticated.
 const admin = async () => (await import("@/integrations/supabase/client.server")).supabaseAdmin;
 type Admin = Awaited<ReturnType<typeof admin>>;
 
-async function logEventRow(db: Admin, row: { user_id?: string | null; kind: string; detail?: unknown; device_id?: string | null; platform?: string | null }) {
+async function logEventRow(db: Admin, row: { user_id?: string | null; kind: string; detail?: unknown; device_id?: string | null; platform?: string | null; created_at?: string }) {
   const { error } = await db.from("app_events").insert({ ...row, detail: (row.detail ?? null) as never });
   if (error) throw new Error("err:bad_action");
 }
@@ -43,9 +44,9 @@ export const setAvatarAction = async ({ data, context }: { data: ReturnType<type
 export const deletePlayerDataAction = async ({ context }: { data?: unknown; context: OnlineContext }) => {
   const db = await admin();
   const uid = context.userId;
-  const { error: evErr } = await db.from("app_events").delete().eq("user_id", uid);
-  if (evErr) throw new Error("err:delete_failed");
-  const { error } = await db.auth.admin.deleteUser(uid); // removes profile and roles too
+  // The profile-delete trigger cleans app records in the SAME transaction as auth deletion.
+  // Any auth/cleanup failure rolls everything back; the caller retains the identity for retry.
+  const { error } = await db.auth.admin.deleteUser(uid);
   if (error) throw new Error("err:delete_failed");
   return { ok: true };
 };
@@ -64,7 +65,8 @@ export const logEventAction = async ({ data, context }: { data: ReturnType<typeo
     if (error) throw new Error("err:bad_action");
     if (existing?.length) return { ok: true };
   }
-  await logEventRow(db, { user_id: context.userId, kind: data.kind, device_id: data.deviceId, platform: data.platform, detail: data.detail });
+  await logEventRow(db, { user_id: context.userId, kind: data.kind, device_id: data.deviceId, platform: data.platform, detail: data.detail,
+    ...(data.kind === 'local_game' && typeof data.detail['occurredAt'] === 'string' ? { created_at: data.detail['occurredAt'] } : {}) });
   return { ok: true };
 };
 
@@ -101,18 +103,24 @@ export const adminOverviewAction = async ({ context }: { context: OnlineContext 
   if (resetError) throw resetError;
   const periodStart = adminPeriodStart(now, reset?.created_at ?? null);
   const sinceStats = new Date(periodStart).toISOString();
-  const [events, profiles, exclusions] = await Promise.all([
+  const [events, exclusions] = await Promise.all([
     db.from("app_events").select("kind, user_id, device_id, platform, detail, created_at").gte("created_at", since30).order("created_at", { ascending: false }).limit(10000),
-    db.from("profiles").select("id, created_at, last_seen").limit(10000),
     db.from("admin_activity_exclusions").select("user_id, device_id"),
   ]);
   if (exclusions.error) throw exclusions.error;
-  if (events.error || profiles.error) throw new Error("err:bad_action");
+  if (events.error) throw new Error("err:bad_action");
+  const profiles: { id: string; created_at: string; last_seen: string }[] = [];
+  for (let offset = 0; ; offset += 1000) {
+    const { data: page, error } = await db.from('profiles').select('id, created_at, last_seen').order('id').range(offset, offset + 999);
+    if (error) throw new Error('err:bad_action');
+    profiles.push(...(page ?? []));
+    if ((page?.length ?? 0) < 1000) break;
+  }
   // Visit/local-game reports are read in full pages so busy diagnostics can never crowd them out.
   const visitRows: ActivityEvent[] = [];
   for (let offset = 0; ; offset += 1000) {
     const { data: page, error } = await db.from("app_events").select("kind, user_id, device_id, platform, detail, created_at")
-      .in("kind", ["session", "heartbeat", "session_end", "local_game"]).gte("created_at", sinceStats)
+      .in("kind", ["session", "heartbeat", "session_end", "local_game"]).gte("created_at", reset?.created_at ?? '2020-01-01T00:00:00Z').lte('created_at', new Date(now).toISOString())
       .order("created_at").order("id").range(offset, offset + 999);
     if (error) throw error;
     visitRows.push(...(page ?? []));
@@ -120,7 +128,6 @@ export const adminOverviewAction = async ({ context }: { context: OnlineContext 
   }
   const ev = events.data ?? [];
   const allActivity = adminActivityEvents([...ev, ...visitRows] as typeof ev, exclusions.data ?? []);
-  const appUsers = appPlayerIds(allActivity, sinceStats);
   const activeAppUsers = appPlayerIds(allActivity, new Date(Math.max(periodStart, now - day)).toISOString());
   const activeNowUsers = appPlayerIds(allActivity, new Date(Math.max(periodStart, now - 2 * 60_000)).toISOString());
   const reportDays = adminReportingDays(now, periodStart);
@@ -130,17 +137,11 @@ export const adminOverviewAction = async ({ context }: { context: OnlineContext 
     if (!a) throw new Error("err:bad_action");
     return { date: d, appSessions: a.appSessions, avgMinutes: a.avgMinutes, started: a.localStarted, finished: a.localFinished, appDevices: a.appDevices };
   });
-  // Keep existing identities intact; the player cohort restarts at the reset.
-  const profs = (profiles.data ?? []).filter((p) => appUsers.has(p.id) && (!reset || p.created_at >= reset.created_at));
-  const retention = (n: number) => {
-    const cohort = profs.filter((p) => now - new Date(p.created_at).getTime() > n * day);
-    if (!cohort.length) return null;
-    const kept = cohort.filter((p) => new Date(p.last_seen).getTime() - new Date(p.created_at).getTime() >= n * day).length;
-    return Math.round((kept / cohort.length) * 100);
-  };
+  // Full app cohort, including users who never returned; last_seen is NOT day-specific evidence.
+  const retention = appRetention(adminActivityEvents(visitRows as (ActivityEvent & { user_id: string | null })[], exclusions.data ?? []), new Set(profiles.map(p => p.id)), now);
   return {
-    totals: { players: profs.length, activeNow: activeNowUsers.size, active24h: activeAppUsers.size },
-    retention: { d1: retention(1), d7: retention(7), d30: retention(30) },
+    totals: { players: retention.players, activeNow: activeNowUsers.size, active24h: activeAppUsers.size },
+    retention: { d1: retention.d1, d7: retention.d7, d30: retention.d30 },
     days,
     healthAlerts: healthAlerts(ev.filter((e) => e.kind === "server_timing" && !(e.detail && typeof e.detail === "object" && "steps" in e.detail) && now - new Date(e.created_at).getTime() < 7 * day)
       .map((e) => { const x = (e.detail ?? {}) as { op?: string; ms?: number; ok?: boolean }; return { at: e.created_at, op: String(x.op ?? "?"), ms: Number(x.ms) || 0, ok: x.ok !== false }; })).slice(0, 20),

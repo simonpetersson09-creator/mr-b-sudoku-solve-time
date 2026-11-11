@@ -35,7 +35,14 @@ export const logEventInput = (d: { kind: string; deviceId?: string; platform?: s
         || typeof raw["gid"] !== "string" || !/^[A-Za-z0-9_-]{1,40}$/.test(raw["gid"]) || platform === "web") throw new Error("err:bad_action");
       const level = String(raw["level"]);
       const gid = typeof raw["gid"] === "string" && /^[A-Za-z0-9_-]{1,40}$/.test(raw["gid"]) ? { gid: raw["gid"] } : {};
-      detail = { phase: raw["phase"] === "finish" ? "finish" : "start", level, ...gid, ...v };
+      const original = raw['occurredAt'] ?? raw['queued'];
+      let occurredAt: string | undefined;
+      if (original !== undefined) {
+        const at = typeof original === 'string' ? Date.parse(original) : NaN;
+        if (!Number.isFinite(at) || at < Date.UTC(2020, 0, 1) || at > Date.now() + 5 * 60_000) throw new Error('err:bad_action');
+        occurredAt = new Date(Math.min(at, Date.now())).toISOString();
+      }
+      detail = { phase: raw["phase"] === "finish" ? "finish" : "start", level, ...gid, ...v, ...(occurredAt ? { occurredAt } : {}) };
     } else {
       detail = {};
       for (const [key, value] of Object.entries(raw).slice(0, 16)) {

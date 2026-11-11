@@ -1,0 +1,27 @@
+import { afterAll, expect, it } from 'vitest';
+import { randomUUID } from 'node:crypto';
+import postgres from 'postgres';
+const url = process.env['LUDO_TEST_DATABASE_URL'] ?? '';
+if (!/@localhost:\d+\/ludo_test\?host=\/tmp\/ludo-testdb\./.test(url)) throw new Error('Requires isolated test database');
+const u = new URL(url);
+const sql = postgres({ host: u.searchParams.get('host') ?? '', port: Number(u.port), database: 'ludo_test', username: 'ludo_test' });
+afterAll(() => sql.end());
+it('deletes own app data atomically with identity, preserving all records if cleanup fails', async () => {
+  const id = randomUUID(), other = randomUUID();
+  await sql`insert into auth.users (id) values (${id}), (${other})`;
+  await sql`insert into app_events (user_id, kind) values (${id}, 'error'), (${other}, 'error')`;
+  await sql`insert into admin_activity_exclusions (user_id) values (${id})`;
+  await sql`insert into rate_limit_hits (key) values (${'report:' + id + ':error'})`;
+  await sql`create function public.test_block_cleanup() returns trigger language plpgsql as $$ begin raise exception 'forced cleanup failure'; end; $$`;
+  await sql`create trigger test_block_cleanup before delete on public.app_events for each row execute function public.test_block_cleanup()`;
+  await expect(sql`delete from auth.users where id = ${id}`).rejects.toThrow('forced cleanup failure');
+  expect((await sql`select id from auth.users where id = ${id}`).length).toBe(1);
+  expect((await sql`select id from profiles where id = ${id}`).length).toBe(1);
+  expect((await sql`select id from app_events where user_id = ${id}`).length).toBe(1);
+  await sql`drop trigger test_block_cleanup on public.app_events`;
+  await sql`delete from auth.users where id = ${id}`;
+  expect((await sql`select id from app_events where user_id = ${id}`).length).toBe(0);
+  expect((await sql`select user_id from admin_activity_exclusions where user_id = ${id}`).length).toBe(0);
+  expect((await sql`select key from rate_limit_hits where key = ${'report:' + id + ':error'}`).length).toBe(0);
+  expect((await sql`select id from app_events where user_id = ${other}`).length).toBe(1);
+});

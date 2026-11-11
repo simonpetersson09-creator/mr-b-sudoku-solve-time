@@ -1,5 +1,15 @@
 # Roadmap: Mr.B. Sudoku
 
+## A4–A11 från senaste lanseringsgranskningen (2026-11-11)
+- [ ] A4: Unikhetsvalidera sparade pussel med prestandasäkert återställningsflöde och cache.
+- [ ] A5/A11: Beständiga spelrapporter, racesäker kö, korrekt ursprungstid och separata diagnostikgränser.
+- [ ] A6: Fullständigt profilunderlag och dagsspecifik appretention med testundantag.
+- [ ] A7: Robust dataradering som inte tappar historik vid misslyckad identitetsradering.
+- [ ] A8: Tidsgräns och avbrott för nativeanrop utan automatisk mutationsretry.
+- [ ] A9: Androidproduktion avstängd utan egna godkända ID; begär externa uppgifter.
+- [ ] A10: Native-dokumentets språk följer spelarens val.
+- [ ] Stegvisa regressioner, hela testsviten och slutrapport; ingen publicering eller ändring i Ludo/Yatzy.
+
 ## A1–A3 från senaste lanseringsgranskningen (2026-11-11)
 - [x] A1: Läs migrationsunderlaget före resultatskrivning; varje avslutat spel räknas en gång utan återställning av framsteg.
 - [x] A2: Belönad ledtråd skapar ingen Ångra-post och äldre historik kan inte skriva över den. Ångra för senare vanliga drag fungerar fortsatt.

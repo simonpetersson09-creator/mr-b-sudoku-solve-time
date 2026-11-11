@@ -1,5 +1,6 @@
 import { isLevel, LEVELS, MAX_UNDOS, MAX_HINTS, MAX_MISTAKES, isConsistent, isLost, type GameState, type Level } from "@/lib/sudoku/engine";
 import { emptyProgress, type Progress } from "@/lib/player/unlock";
+import { hasUniqueSavedPuzzle } from './puzzle-validation';
 
 /** All Sudoku keys live in their own namespace; never shared with Ludo or Yatzy. */
 const NS = "mrb-sudoku:v1:";
@@ -41,9 +42,10 @@ export function isValidSave(g: unknown): g is GameState {
     || (s.undosLeft !== undefined && !integerIn(s.undosLeft, 0, MAX_UNDOS))
     || !nonnegativeTime(s.elapsedMs) || !nonnegativeTime(s.startedAt) || !nonnegativeTime(s.updatedAt) || s.finished !== false) return false;
   if (!s.puzzle.every((v, i) => v === 0 || (v === s.solution[i] && s.values[i] === v && s.notes[i] === 0))) return false;
-  return Array.from(s.history).every((entry) => Array.isArray(entry) && entry.length > 0 && Array.from(entry).every((c) =>
+  const validHistory = Array.from(s.history).every((entry) => Array.isArray(entry) && entry.length > 0 && Array.from(entry).every((c) =>
     c && typeof c === "object" && integerIn(c.i, 0, 80) && integerIn(c.value, 0, 9) && integerIn(c.notes, 0, 511)
     && (s.puzzle[c.i] === 0 || (c.value === s.puzzle[c.i] && c.notes === 0))));
+  return validHistory && hasUniqueSavedPuzzle(s);
 }
 
 /** Pure: newest first, at most MAX_SAVED_GAMES. */

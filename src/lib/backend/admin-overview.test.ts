@@ -1,18 +1,18 @@
 import { beforeEach, expect, it, vi } from "vitest";
 
-const mocks = vi.hoisted(() => ({ failure: "", range: vi.fn(), role: vi.fn() }));
+const mocks = vi.hoisted(() => ({ failure: "", range: vi.fn(), profileRange: vi.fn(), role: vi.fn() }));
 vi.mock("@/integrations/supabase/client.server", () => ({ supabaseAdmin: { from: (table: string) => {
   const query = {
-    select() { return this; }, eq() { return this; }, in() { return this; }, gte() { return this; }, order() { return this; }, limit() { return this; },
+    select() { return this; }, eq() { return this; }, in() { return this; }, gte() { return this; }, lte() { return this; }, order() { return this; }, limit() { return this; },
     maybeSingle: async () => ({ data: null, error: null }),
-    range: mocks.range,
+    range: table === 'profiles' ? mocks.profileRange : mocks.range,
     then(resolve: (value: unknown) => unknown) { return Promise.resolve({ data: [], error: mocks.failure === table ? { message: "unavailable" } : null }).then(resolve); },
   };
   return query;
 } } }));
 import { adminOverviewAction } from "./online-actions";
 const context = { userId: "admin-a", supabase: { rpc: mocks.role } as never };
-beforeEach(() => { mocks.failure = ""; mocks.role.mockReset().mockResolvedValue({ data: true, error: null }); mocks.range.mockReset().mockResolvedValue({ data: [], error: null }); });
+beforeEach(() => { mocks.failure = ""; mocks.role.mockReset().mockResolvedValue({ data: true, error: null }); mocks.range.mockReset().mockResolvedValue({ data: [], error: null }); mocks.profileRange.mockReset().mockImplementation(async () => ({ data: [], error: mocks.failure === 'profiles' ? new Error('unavailable') : null })); });
 it.each(["app_events", "profiles"])("never returns zero statistics after a %s read failure", async table => {
   mocks.failure = table;
   await expect(adminOverviewAction({ context })).rejects.toThrow("err:bad_action");
@@ -28,4 +28,9 @@ it("requires the server role before reading statistics", async () => {
   mocks.role.mockResolvedValue({ data: false, error: null });
   await expect(adminOverviewAction({ context })).rejects.toThrow("err:forbidden");
   expect(mocks.range).not.toHaveBeenCalled();
+});
+it('reads profiles beyond 10000 without truncating the app cohort', async () => {
+  mocks.profileRange.mockImplementation(async (offset: number) => ({ data: offset < 11000 ? Array.from({ length: 1000 }, (_, n) => ({ id: `p-${offset+n}`, created_at: '2026-09-01', last_seen: '2026-09-01' })) : [], error: null }));
+  await adminOverviewAction({ context });
+  expect(mocks.profileRange).toHaveBeenLastCalledWith(11000, 11999);
 });

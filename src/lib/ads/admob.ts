@@ -46,8 +46,8 @@ export const ADMOB_IDS: Record<'ios' | 'android', PlatformAdIds> = {
   },
   android: {
     appId: 'ca-app-pub-3940256099942544~3347511713',
-    appOpen: GOOGLE_TEST_IDS.android.appOpen,
-    optional: GOOGLE_TEST_IDS.android.optional,
+    appOpen: null,
+    optional: null,
   },
 };
 
@@ -66,6 +66,8 @@ function adUnitId(kind: 'appOpen' | 'optional'): string | null {
   const p = adPlatform();
   if (!p) return null;
   const real = ADMOB_IDS[p][kind];
+  // Android samples are development-only. Release stays disabled until approved own units exist.
+  if (p === 'android' && ADMOB_CONFIG.useTestAds) return GOOGLE_TEST_IDS[p][kind];
   if (!real) return null; // aldrig annonser på en plattform utan egna riktiga ID:n
   // Utan plattformens eget App-ID står Googles prov-App-ID i manifestet; riktiga
   // annons-ID:n får aldrig blandas med det, så annonserna stängs av helt.

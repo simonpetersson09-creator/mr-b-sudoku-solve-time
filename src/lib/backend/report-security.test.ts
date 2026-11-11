@@ -36,3 +36,11 @@ it("acknowledges an already stored game report without inserting another row", a
   await expect(logEventAction({ context, data: logEventInput({ kind: "local_game", platform: "ios", detail: { gid: "game-a", phase: "finish", level: "easy" } }) })).resolves.toEqual({ ok: true });
   expect(mocks.insert).not.toHaveBeenCalled();
 });
+it('stores a delayed game finish on its original day, not receipt day', async () => {
+  const data = logEventInput({ kind: 'local_game', platform: 'android', detail: { gid: 'offline-game', phase: 'finish', level: 'easy', occurredAt: '2026-10-31T22:30:00Z' } });
+  await logEventAction({ context, data });
+  expect(mocks.insert).toHaveBeenCalledWith(expect.objectContaining({ created_at: '2026-10-31T22:30:00.000Z' }));
+});
+it.each(['invalid', '2099-01-01T00:00:00Z', '1900-01-01T00:00:00Z'])('rejects unsafe original game timestamp %s', occurredAt => {
+  expect(() => logEventInput({ kind: 'local_game', platform: 'android', detail: { gid: 'g', phase: 'finish', level: 'easy', occurredAt } })).toThrow('err:bad_action');
+});

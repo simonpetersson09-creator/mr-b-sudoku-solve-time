@@ -1,0 +1,1 @@
+GRANT USAGE, SELECT ON SEQUENCE public.app_events_id_seq TO service_role;

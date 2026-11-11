@@ -1,0 +1,23 @@
+import { afterAll, expect, it } from 'vitest';
+import { randomUUID } from 'node:crypto';
+import postgres from 'postgres';
+import { testClient } from '../../test/db-admin-client';
+import { logEventAction } from './online-actions';
+import { logEventInput } from './online-inputs';
+const url = process.env['LUDO_TEST_DATABASE_URL'] ?? '';
+if (!/@localhost:\d+\/ludo_test\?host=\/tmp\/ludo-testdb\./.test(url)) throw new Error('Requires isolated test database');
+const u = new URL(url);
+const sql = postgres({ host: u.searchParams.get('host') ?? '', port: Number(u.port), database: 'ludo_test', username: 'ludo_test' });
+afterAll(() => sql.end());
+it('a previous-month offline finish keeps its original database date and does not enter this month ranking', async () => {
+  const id = randomUUID();
+  await sql`insert into auth.users (id) values (${id})`;
+  const [date] = await sql`select (date_trunc('month', now()) - interval '1 day') as previous`;
+  const occurredAt = new Date(date['previous']).toISOString();
+  const context = { userId: id, supabase: testClient({ role: 'authenticated', sub: id }) as never };
+  await logEventAction({ context, data: logEventInput({ kind: 'local_game', platform: 'android', detail: { gid: 'offline', phase: 'finish', level: 'easy', occurredAt } }) });
+  const [row] = await sql`select created_at from app_events where user_id = ${id}`;
+  expect(new Date(row['created_at']).toISOString()).toBe(occurredAt);
+  const ranked = await sql`select user_id from get_monthly_most_active(50) where user_id = ${id}`;
+  expect(ranked).toHaveLength(0);
+});

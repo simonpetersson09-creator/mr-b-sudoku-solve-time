@@ -86,6 +86,11 @@ describe("saved games", () => {
     expect(listGames().map(s => s.id)).toEqual(["healthy"]);
     expect(loadGame()).toEqual(good);
   });
+  it('rejects a nonunique empty puzzle even with a valid full solution', () => {
+    const g = newGame('easy', 17, 'nonunique');
+    expect(isValidSave({ ...g, puzzle: Array(81).fill(0), values: Array(81).fill(0) })).toBe(false);
+    expect(isValidSave(g)).toBe(true);
+  });
 });
 
 describe("statistics per level", () => {
