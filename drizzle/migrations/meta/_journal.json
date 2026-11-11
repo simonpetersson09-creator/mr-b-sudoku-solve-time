@@ -43,6 +43,20 @@
       "when": 1794397497534,
       "tag": "0005_harden_role_check_and_game_reports",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1794398230284,
+      "tag": "0006_accept_finish_reports_with_receipt_time_cap",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1794398248845,
+      "tag": "0007_finish_cap_key_covered_by_cleanup",
+      "breakpoints": true
     }
   ]
 }
