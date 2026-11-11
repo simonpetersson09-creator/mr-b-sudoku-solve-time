@@ -48,6 +48,14 @@ function PlayPage() {
   const [unlocked, setUnlocked] = useState<Level[]>([]);
   const [confirmEnd, setConfirmEnd] = useState(false);
   const [flash, setFlash] = useState<Set<number>>(new Set());
+
+  // Idle selection: if no move is made for a while, the selection fades away on its own.
+  // Any move or new tap resets the timer (state/selected change re-runs the effect).
+  useEffect(() => {
+    if (selected == null || paused) return;
+    const timer = window.setTimeout(() => { setSelected(null); setSameDigit(null); }, 8000);
+    return () => window.clearTimeout(timer);
+  }, [selected, state, paused]);
   const [popCell, setPopCell] = useState<{ i: number; k: number } | null>(null);
   const [shakeCell, setShakeCell] = useState<{ i: number; k: number } | null>(null);
   const [celebrating, setCelebrating] = useState(false);
@@ -313,7 +321,7 @@ function PlayPage() {
                   className="sdk-cell"
                   onClick={() => {
                     if (hinted.has(i) && !lockedHints.has(i) && v === state.solution[i]) { setLockedHints((s) => new Set(s).add(i)); void playLightHaptic(); }
-                    if (selected === i && v !== 0) { setSelected(null); setSameDigit(null); void playLightHaptic(); return; }
+                    if (selected === i) { setSelected(null); setSameDigit(null); void playLightHaptic(); return; }
                     setSelected(i); setSameDigit(v !== 0 ? v : null);
                   }}
                 >
