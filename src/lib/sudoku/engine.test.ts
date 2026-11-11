@@ -168,6 +168,37 @@ describe("mistake limit and completed groups", () => {
 });
 
 describe("smart hint", () => {
+  it("uses the selected empty cell rather than the automatic choice", () => {
+    const s = newGame("easy", 31, "selected-hint");
+    const automatic = explainHint(s);
+    const chosen = s.values.findIndex((v, i) => v === 0 && i !== automatic?.cell);
+    expect(chosen).toBeGreaterThanOrEqual(0);
+    expect(explainHint(s, chosen)?.cell).toBe(chosen);
+    expect(explainHint(s, chosen)?.digit).toBe(s.solution[chosen]);
+    expect(markHint(s, chosen).cell).toBe(chosen);
+    expect(markHint(s, chosen).state.hints).toBe(1);
+  });
+  it("keeps the existing automatic choice when nothing is selected", () => {
+    const s = newGame("medium", 31, "automatic-hint");
+    expect(explainHint(s, null)).toEqual(explainHint(s));
+    expect(markHint(s, null).cell).toBe(findHintCell(s));
+  });
+  it("corrects a selected wrong cell even if another wrong cell comes first", () => {
+    let s = newGame("easy", 32, "selected-wrong");
+    const cells = s.values.map((v, i) => v === 0 ? i : -1).filter(i => i >= 0);
+    s = setValue(s, cells[0], s.solution[cells[0]] % 9 + 1);
+    s = setValue(s, cells[1], s.solution[cells[1]] % 9 + 1);
+    expect(explainHint(s, cells[1])?.cell).toBe(cells[1]);
+    expect(explainHint(s, cells[1])?.digit).toBe(s.solution[cells[1]]);
+  });
+  it("does not spend a hint on a selected given or already correct digit", () => {
+    const s = newGame("easy", 32, "correct-hint");
+    const given = s.values.findIndex(v => v !== 0);
+    expect(markHint(s, given)).toEqual({ state: s, cell: null });
+    const open = s.values.findIndex(v => v === 0);
+    const filled = setValue(s, open, s.solution[open]);
+    expect(markHint(filled, open)).toEqual({ state: filled, cell: null });
+  });
   it("marks one cell without filling it and counts the hint", () => {
     const s = newGame("medium", 31, "h");
     const r = markHint(s);

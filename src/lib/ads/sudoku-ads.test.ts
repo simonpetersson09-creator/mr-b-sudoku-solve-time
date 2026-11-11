@@ -24,8 +24,8 @@ describe("Mr.B. Sudoku ad configuration", () => {
     const { BANNER_IDS } = await import("./admob");
     expect(BANNER_IDS).toEqual({ ios: null, android: null });
   });
-  it("shows the return ad only after 40 seconds away", async () => {
-    const { RESUME_AD_MIN_AWAY_MS } = await import("./home-ads");
-    expect(RESUME_AD_MIN_AWAY_MS).toBe(40_000);
+  it("uses the family games' 1.5 second startup delay", async () => {
+    const { STARTUP_AD_DELAY_MS } = await import("./home-ads");
+    expect(STARTUP_AD_DELAY_MS).toBe(1500);
   });
 });

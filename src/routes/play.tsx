@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, Check, CircleX, Eraser, Lightbulb, Pause, Pencil, Play, Undo2 } from "lucide-react";
-import { showOptionalInterstitial } from "@/lib/ads/admob";
+import { preloadInterstitial, showHintInterstitial } from "@/lib/ads/admob";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
@@ -44,6 +44,7 @@ function PlayPage() {
   const [paused, setPaused] = useState(false);
   const [hintInfo, setHintInfo] = useState<{ info: HintInfo; step: 1 | 2 } | null>(null);
   const [hintBusy, setHintBusy] = useState(false);
+  const hintInFlight = useRef(false);
   const [unlocked, setUnlocked] = useState<Level[]>([]);
   const [confirmEnd, setConfirmEnd] = useState(false);
   const [flash, setFlash] = useState<Set<number>>(new Set());
@@ -72,6 +73,7 @@ function PlayPage() {
   const bestMs = stats[state?.level ?? "easy"].bestMs ?? previewBest;
   const finishedDone = useRef(false);
   const startingAgain = useRef(false);
+  useEffect(() => { void preloadInterstitial(); }, []);
   useEffect(() => {
     if (state?.finished || (state && isLost(state))) prepareGame(state.level);
   }, [state?.finished, state?.level, state?.mistakes]);
@@ -87,7 +89,7 @@ function PlayPage() {
 
   // Timer: counts only while the screen is visible and not paused.
   useEffect(() => {
-    if (!state || state.finished || isLost(state) || paused) return;
+    if (!state || state.finished || isLost(state) || paused || hintBusy) return;
     let last = Date.now();
     const tick = () => {
       const now = Date.now();
@@ -99,7 +101,7 @@ function PlayPage() {
     const onVis = () => { if (document.visibilityState !== "visible") setPaused(true); last = Date.now(); };
     document.addEventListener("visibilitychange", onVis);
     return () => { window.clearInterval(id); document.removeEventListener("visibilitychange", onVis); };
-  }, [state?.finished, state ? isLost(state) : false, paused, state?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [state?.finished, state ? isLost(state) : false, paused, hintBusy, state?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Autosave every change (finished games are removed from the saved list).
   // A lost game is never saved again, so it disappears from the ongoing games.
@@ -118,7 +120,7 @@ function PlayPage() {
   }, [state]);
 
   const act = useCallback((fn: (s: GameState) => GameState) => {
-    setState((s) => (s && !paused ? fn(s) : s));
+    setState((s) => (s && !paused && !hintInFlight.current ? fn(s) : s));
   }, [paused, !!state]);
 
   const input = (d: number, at: number | null = selected, fromHint = false, base: GameState | null = null) => {
@@ -126,7 +128,7 @@ function PlayPage() {
     if (selected == null || !state) return;
     setSameDigit(null);
     if (notesMode && !fromHint) { act((s) => toggleNote(s, selected, d)); void playLightHaptic(); setNotesMode(false); return; }
-    if (paused) return;
+    if (paused || (!fromHint && hintInFlight.current)) return;
     const before = base ?? state;
     // A wrong digit fades away by itself, so it must not enter the undo history.
     const next = setValue(before, selected, d, settings.autoRemoveNotes, d === before.solution[selected]);
@@ -173,6 +175,7 @@ function PlayPage() {
 
   // A lost game (too many mistakes) is removed and never counted in the statistics.
   const lost = state ? isLost(state) : false;
+  const lossExit = usePostMatchExit(`sudoku:${state?.id ?? "pending"}`, lost, () => { void navigate({ to: "/" }); });
   useEffect(() => { if (lost && state) removeGame(state.id); }, [lost]); // eslint-disable-line react-hooks/exhaustive-deps
   // The board fades out slowly before the loss view appears.
   const [showLost, setShowLost] = useState(false);
@@ -212,15 +215,17 @@ function PlayPage() {
 
   // A hint (after an optional interstitial) fills one good square directly; a short note explains why.
   const doHint = async () => {
-    if (hintBusy || state.finished || lost || state.hints >= MAX_HINTS) return;
-    const info = explainHint(state);
+    if (hintInFlight.current || paused || state.finished || lost || state.hints >= MAX_HINTS) return;
+    const info = explainHint(state, selected);
     if (info == null) return;
+    hintInFlight.current = true;
     setHintBusy(true);
-    setPaused(true);
-    try { await showOptionalInterstitial(); } catch { /* the hint is never blocked by an ad */ }
+    try { await showHintInterstitial(); } catch { /* the hint is never blocked by an ad */ }
+    hintInFlight.current = false;
+    // Native visibility events can pause play while the ad is open.
     setPaused(false);
     setHintBusy(false);
-    const r = markHint(state);
+    const r = markHint(state, info.cell);
     if (r.cell == null) return;
     input(info.digit, info.cell, true, r.state);
     setSelected(null);
@@ -244,6 +249,7 @@ function PlayPage() {
     setUnlocked([]);
     reportLocalGame("start", g);
     setSelected(null); setNotesMode(false); setPaused(false); setSameDigit(null);
+    setHinted(new Set()); setLockedHints(new Set()); setHintInfo(null);
     setState(g);
     } catch { toast.error(t("genericError")); }
     finally { startingAgain.current = false; }
@@ -257,7 +263,7 @@ function PlayPage() {
             <ArrowLeft className="h-4 w-4" /><span>{t("back")}</span>
           </button>
           <div className="ml-auto flex items-center gap-2">
-            <button onClick={() => setPaused((p) => !p)} disabled={state.finished} aria-label={paused ? t("resume") : t("pause")} className="sdk-round-btn" data-active={paused}>
+            <button onClick={() => setPaused((p) => !p)} disabled={state.finished || hintBusy} aria-label={paused ? t("resume") : t("pause")} className="sdk-round-btn" data-active={paused}>
               {paused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}<span>{paused ? t("resume") : t("pause")}</span>
             </button>
             <button onClick={() => setConfirmEnd(true)} disabled={state.finished} aria-label={t("endGame")} className="sdk-round-btn sdk-round-end">
@@ -367,8 +373,8 @@ function PlayPage() {
             <h2 className="brand-title mt-1 text-2xl">{t("gameOverTitle")}</h2>
             <p className="mt-1 text-sm text-muted-foreground">{t("gameOverBody", { n: MAX_MISTAKES })}</p>
             <div className="home-stack mt-4">
-              <button className="home-action home-action-gold" onClick={again}>{t("playAgain")}</button>
-              <button className="home-action home-action-ghost" onClick={() => navigate({ to: "/" })}>{t("home")}</button>
+              <button className="home-action home-action-gold" disabled={lossExit.leaving} onClick={() => void lossExit.leave(again)}>{t("playAgain")}</button>
+              <button className="home-action home-action-ghost" disabled={lossExit.leaving} onClick={() => void lossExit.leave()}>{t("home")}</button>
             </div>
           </div>
         </div>

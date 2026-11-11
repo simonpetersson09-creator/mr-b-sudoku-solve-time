@@ -579,12 +579,17 @@ export async function showOptionalInterstitial(): Promise<ShowAdResult> {
   return showInterstitial('optional');
 }
 
+/** Each used hint is its own opportunity, with the same fullscreen lifecycle as a result exit. */
+export async function showHintInterstitial(): Promise<ShowAdResult> {
+  return showInterstitial('hint');
+}
+
 /** Result exit only: skip unprepared ads rather than delaying navigation. No XP. */
 export async function showPostMatchInterstitial(context?: { matchKey: string; action: 'home' | 'replay' }): Promise<ShowAdResult> {
   return showInterstitial('postMatch', context);
 }
 
-async function showInterstitial(kind: 'optional' | 'postMatch', context?: { matchKey: string; action: 'home' | 'replay' }): Promise<ShowAdResult> {
+async function showInterstitial(kind: 'optional' | 'postMatch' | 'hint', context?: { matchKey: string; action: 'home' | 'replay' }): Promise<ShowAdResult> {
   const generation = adGeneration;
   const startedAt = Date.now();
   const details = { ...context, loadId: interstitialLoadId, cacheAgeMs: preparedAt ? Date.now() - preparedAt : null };
@@ -594,7 +599,7 @@ async function showInterstitial(kind: 'optional' | 'postMatch', context?: { matc
   };
   const skip = (result: ShowAdResult, reason: string) => {
     opportunity('skipped', reason);
-    if (kind === 'postMatch') reportAd(kind, 'skipped', startedAt, reason, details);
+    if (kind !== 'optional') reportAd(kind === 'hint' ? 'interstitial' : kind, 'skipped', startedAt, reason, { ...details, ...(kind === 'hint' ? { source: 'hint' } : {}) });
     return result;
   };
   if (!adAllowed(generation)) return skip('busy', 'ads_not_ready');
@@ -609,7 +614,7 @@ async function showInterstitial(kind: 'optional' | 'postMatch', context?: { matc
     const ready = kind === 'postMatch' || await preloadInterstitial();
     if (!ready) {
       showing = false;
-      reportAd(kind, 'load_failed', startedAt, lastPrepareError);
+      reportAd(kind === 'hint' ? 'interstitial' : kind, 'load_failed', startedAt, lastPrepareError);
       return 'failed';
     }
     shownLoadId = interstitialLoadId;
@@ -621,8 +626,8 @@ async function showInterstitial(kind: 'optional' | 'postMatch', context?: { matc
     listeners.push(await mod.AdMob.addListener(mod.InterstitialAdPluginEvents.Dismissed, () => settle('shown')));
     listeners.push(await mod.AdMob.addListener(mod.InterstitialAdPluginEvents.FailedToShow, () => settle('failed')));
     if (!adAllowed(generation)) return skip('unavailable', 'ads_state_changed');
-    if (kind === 'postMatch') {
-      reportAd(kind, 'show_requested', startedAt, undefined, details);
+    if (kind !== 'optional') {
+      reportAd(kind === 'hint' ? 'interstitial' : kind, 'show_requested', startedAt, undefined, { ...details, ...(kind === 'hint' ? { source: 'hint' } : {}) });
       suppressAppOpenUntil = Date.now() + APP_OPEN_SUPPRESS_AFTER_REWARDED_MS;
       // Never free an uncancellable native attempt just because a timer elapsed.
       void mod.AdMob.showInterstitial().catch((err) => { lastShowError = reasonOf(err); settle('failed'); });
@@ -636,15 +641,16 @@ async function showInterstitial(kind: 'optional' | 'postMatch', context?: { matc
     opportunity(result === 'shown' ? 'shown' : 'failed', result === 'shown' ? undefined : 'sdk_show_failed');
     // Dismissed/FailedToShow owns cache consumption. Do not clear a replacement
     // load that the global dismissal listener may already have completed.
-    reportAd(kind, result === 'shown' ? 'shown' : 'show_failed', startedAt, lastShowError, details);
+    reportAd(kind === 'hint' ? 'interstitial' : kind, result === 'shown' ? 'shown' : 'show_failed', startedAt, lastShowError, { ...details, ...(kind === 'hint' ? { source: 'hint' } : {}) });
     return result;
   } catch (err) {
     opportunity('failed', 'sdk_show_failed');
     if (adAllowed(generation) && interstitialLoadId === shownLoadId) preparedAt = 0;
-    reportAd(kind, 'show_failed', startedAt, reasonOf(err), details);
+    reportAd(kind === 'hint' ? 'interstitial' : kind, 'show_failed', startedAt, reasonOf(err), details);
     return 'failed';
   } finally {
     if (kind === 'postMatch') suppressAppOpenUntil = Date.now() + APP_OPEN_SUPPRESS_AFTER_REWARDED_MS;
+    if (kind === 'hint') suppressAppOpenUntil = Date.now() + APP_OPEN_SUPPRESS_AFTER_REWARDED_MS;
     await Promise.all(listeners.map((listener) => listener.remove().catch(() => {})));
     showing = false;
   }

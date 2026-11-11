@@ -623,8 +623,12 @@ const unitBox = (i: number) => {
  * else a digit that fits only one place in a row/column/box ("hidden"), else the open cell with
  * the fewest possible digits. `unit` is the area shown in step 1 of a hint.
  */
-export function explainHint(s: GameState): HintInfo | null {
+export function explainHint(s: GameState, selected: number | null = null): HintInfo | null {
   if (over(s)) return null;
+  if (selected != null) {
+    if (!Number.isInteger(selected) || selected < 0 || selected >= 81 || isGiven(s, selected) || s.values[selected] === s.solution[selected]) return null;
+    return { cell: selected, digit: s.solution[selected], kind: isWrong(s, selected) ? "wrong" : "fewest", unit: unitBox(selected) };
+  }
   const wrong = s.values.findIndex((_, i) => isWrong(s, i));
   if (wrong >= 0) return { cell: wrong, digit: s.solution[wrong], kind: "wrong", unit: unitBox(wrong) };
   const known = s.values.map((v, i) => (v === s.solution[i] ? v : 0));
@@ -654,9 +658,9 @@ export function findHintCell(s: GameState): number | null {
 }
 
 /** Uses a hint: marks the cell from findHintCell and counts it; the board itself is unchanged. */
-export function markHint(s: GameState): { state: GameState; cell: number | null } {
+export function markHint(s: GameState, selected: number | null = null): { state: GameState; cell: number | null } {
   if (s.hints >= MAX_HINTS) return { state: s, cell: null };
-  const cell = findHintCell(s);
+  const cell = explainHint(s, selected)?.cell ?? null;
   return cell == null ? { state: s, cell } : { state: { ...s, hints: s.hints + 1 }, cell };
 }
 

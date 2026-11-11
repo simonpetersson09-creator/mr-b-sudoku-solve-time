@@ -1,5 +1,11 @@
 # Roadmap: Mr.B. Sudoku
 
+## Ledtråd och annonser (2026-11-11)
+- [x] Ledtråd fyller markerad tom/felaktig ruta; utan markering behålls befintligt val av ruta. Redan rätt ruta förbrukar ingen ledtråd.
+- [x] Jämför annonsers tider, UMP och ATT med Ludo/Yatzy utan ändringar där. Samma UMP/ATT som Ludo, uppstartsdelay 1,5 s och 60 s skydd mot efterföljande App Open; inga återkomstannonser enligt ägarens val av en uppstartsannons. Ludos återkomstgräns är 40 s, Yatzys nu 20 s — dessa används inte i Sudoku.
+- [x] Mellanannons per använd ledtråd samt vid Hem/Spela igen efter löst eller förlorat spel. 228 tester godkända; markerad/automatisk ledtråd, gräns 3, vinst→spela igen och förlust→hem provade i 393×706 utan sidfel eller scroll.
+- [ ] Annonsvisning inklusive UMP/ATT på installerad telefon: kräver native app och riktig enhet; endast Googles prov-ID:n tills Sudoku får egna.
+
 ## Jämförelse och snabbare Sudoku (2026-11-11)
 - [x] Jämför Ludos spel, sidor, inställningar, statistik, annonser och admin utan att ändra Ludo; skillnader redovisade utan nya funktioner.
 - [x] Förladda lokala sidor, korta startsidans intoning och skapa brickor i browser worker med engångsförberedelse. 217 tester godkända; sju nivåer, spelstart, paus och sparning verifierade i telefonstor webbläsare. Installerad iPhone återstår.
