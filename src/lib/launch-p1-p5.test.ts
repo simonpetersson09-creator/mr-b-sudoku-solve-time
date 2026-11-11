@@ -28,12 +28,10 @@ vi.setConfig({ testTimeout: 30_000 }); // fake-timer queue drains with dynamic i
 
 // ---------- P1 ----------
 const finish = (id: string) => ({ id, kind: "local_game", detail: { gid: id, phase: "finish", level: "easy" }, at: Date.now() });
-// Load every module delivery imports before faking timers; module loading under fake timers can stall.
-const warm = async () => { await Promise.all([import("./backend/report"), import("./backend/telemetry"), import("./backend/online.functions"), import("@capacitor/app"), import("@capacitor/core")]); vi.useFakeTimers(); };
+const ids = () => JSON.parse(localStorage.getItem(QKEY) ?? "[]").map((r: { detail: { gid?: string } }) => r.detail.gid ?? "-").sort();
 const limit = () => Promise.reject(new Error("err:daily_finish_limit"));
 
 it("P1: a finish over the daily limit stays queued while errors, ads and game starts are still sent", async () => {
-  await warm();
   m.log.mockImplementation(({ data }) => data.kind === "local_game" && data.detail.phase === "finish" ? limit() : Promise.resolve({ ok: true }));
   localStorage.setItem(QKEY, JSON.stringify([finish("f1"),
     { id: "e", kind: "error", detail: { source: "x", message: "m" }, at: Date.now() },
@@ -41,11 +39,9 @@ it("P1: a finish over the daily limit stays queued while errors, ads and game st
     { id: "a", kind: "ad", detail: { name: "shown" }, at: Date.now() },
     { id: "s", kind: "local_game", detail: { gid: "g", phase: "start", level: "easy" }, at: Date.now() }]));
   const { flushQueuedReports } = await import("./backend/report");
-  let done = false; const p = flushQueuedReports().then(() => { done = true; });
-  while (!done) { await vi.advanceTimersByTimeAsync(600); await new Promise((r) => setImmediate(r)); }
-  await p;
-  const q = JSON.parse(localStorage.getItem(QKEY) ?? "[]");
-  expect(q.map((r: { id: string }) => r.id)).toEqual(["f1", "f2"]);
+  void flushQueuedReports();
+  await vi.waitFor(() => expect(m.log).toHaveBeenCalledTimes(4), { timeout: 15_000 });
+  await vi.waitFor(() => expect(ids()).toEqual(["f1", "f2"]));
   // Only one finish attempt while blocked; the rest of the queue still went out.
   expect(m.log.mock.calls.map(([o]) => o.data.kind + ":" + (o.data.detail.phase ?? ""))).toEqual(["local_game:finish", "error:", "ad:", "local_game:start"]);
 });
@@ -66,7 +62,6 @@ it("P1: deferred finishes are delivered once the limit allows, each exactly once
 });
 
 it("P1: concurrent flushes and reports queued mid-flush are not lost or double-sent", async () => {
-  await warm();
   m.log.mockImplementation(({ data }) => data.detail.phase === "finish" ? limit() : Promise.resolve({ ok: true }));
   localStorage.setItem(QKEY, JSON.stringify([finish("f1")]));
   const r = await import("./backend/report");
@@ -74,9 +69,8 @@ it("P1: concurrent flushes and reports queued mid-flush are not lost or double-s
   r.reportLocalGame("start", { id: "g2", level: "easy" });
   r.reportLocalGame("finish", { id: "g2", level: "easy" });
   r.reportAppError(new Error("boom"), "test");
-  await vi.advanceTimersByTimeAsync(3000); await Promise.all([a, b]);
-  const q = JSON.parse(localStorage.getItem(QKEY) ?? "[]");
-  expect(q.map((x: { detail: { gid: string } }) => x.detail.gid).sort()).toEqual(["f1", "g2"]);
+  await Promise.all([a, b]);
+  await vi.waitFor(() => expect(ids()).toEqual(["f1", "g2"]), { timeout: 15_000 });
   const sentStarts = m.log.mock.calls.filter(([o]) => o.data.detail.phase === "start");
   expect(sentStarts).toHaveLength(1);
   expect(m.log.mock.calls.filter(([o]) => o.data.kind === "error")).toHaveLength(1);

@@ -39,3 +39,16 @@ Ingen Xcode-kompilering eller fysisk enhetstestning har utförts. Ingen signerin
 
 ## Ändrade projektfiler
 `scripts/verify-ios-package.mjs`, dess typdeklaration `scripts/verify-ios-package.d.mts`, `src/lib/native/ios-package.test.ts`, denna rapport, `roadmap.md` och `AGENTS.md`. Synkat genererat spelpaket ligger i ignorerade `dist-native` och `ios/App/App/public`, och medföljer ZIP-överlämningen. Den befintliga iOS-konfigurationen behövde ingen saklig ändring.
+## 1.0.0 (build 2) via git pull on a Mac
+
+`ios/App/App/public` (bundled web app) and `dist-native/` are not in git, so after `git pull` regenerate them before Xcode:
+
+```sh
+bun install          # or npm ci
+bun run native:web   # production web bundle for iOS (includes N1–N13, P1–P5)
+bun run native:sync:ios
+bun run native:verify -- --source-only && node scripts/verify-ios-package.mjs
+bun run native:open:ios
+```
+
+In Xcode select team `F43HQMHCAT` under Signing & Capabilities (automatic signing). The project keeps `DEVELOPMENT_TEAM = ""` on purpose; selecting the team in Xcode locally is enough, do not commit the team change unless decided. Archive must show version 1.0.0, build 2, bundle ID `se.shiningdays.mrbsudoku`.
