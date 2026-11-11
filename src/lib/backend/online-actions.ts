@@ -1,11 +1,13 @@
 import type { updateProfileInput, logEventInput, setAvatarInput } from "./online-inputs";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Database } from "@/integrations/supabase/types";
+import type { Database, Json } from "@/integrations/supabase/types";
 import { healthAlerts } from "./server-timing";
 import { activityByDay, type ActivityEvent } from "./activity-stats";
 import { adminActivityEvents, adminPeriodStart, adminReportingDays, appPlayerIds } from "./admin-period";
 import { appOpenDiagnosticsSince, isAppOpenDiagnostic } from "./ad-diagnostics";
 import { appRetention } from './retention';
+import { readEventPages } from './event-pages';
+import { adminDayMetrics } from './admin-day-metrics';
 
 // The service-role client is only loaded inside handlers, after the caller is authenticated.
 const admin = async () => (await import("@/integrations/supabase/client.server")).supabaseAdmin;
@@ -59,11 +61,11 @@ export const logEventAction = async ({ data, context }: { data: ReturnType<typeo
   const { data: allowed, error: rateError } = await db.rpc("rate_hit", { _key: `report:${context.userId}:${data.kind}`, _max: limit, _window_seconds: 60 });
   if (rateError || allowed !== true) throw new Error("err:rate_limited");
   if (data.kind === "local_game") {
-    const { data: existing, error } = await db.from("app_events").select("id").eq("user_id", context.userId)
-      .eq("kind", "local_game").eq("detail->>gid", String(data.detail["gid"]))
-      .eq("detail->>phase", String(data.detail["phase"])).limit(1);
+    const { error } = await db.rpc('insert_sudoku_game_report', { _user_id: context.userId,
+      _device_id: data.deviceId ?? '', _platform: data.platform, _detail: data.detail as Json,
+      ...(typeof data.detail['occurredAt'] === 'string' ? { _created_at: data.detail['occurredAt'] } : {}) });
     if (error) throw new Error("err:bad_action");
-    if (existing?.length) return { ok: true };
+    return { ok: true };
   }
   await logEventRow(db, { user_id: context.userId, kind: data.kind, device_id: data.deviceId, platform: data.platform, detail: data.detail,
     ...(data.kind === 'local_game' && typeof data.detail['occurredAt'] === 'string' ? { created_at: data.detail['occurredAt'] } : {}) });
@@ -80,15 +82,8 @@ export const adminAdDiagnosticsAction = async ({ context }: { context: OnlineCon
   await requireAdmin(context);
   const db = await admin();
   const since = appOpenDiagnosticsSince(Date.now());
-  const diagnostics: { at: string; platform: string | null; detail: Database["public"]["Tables"]["app_events"]["Row"]["detail"] }[] = [];
-  for (let offset = 0; offset < 10000; offset += 500) {
-    const { data, error } = await db.from("app_events").select("id, created_at, platform, detail")
-      .eq("kind", "ad").eq("platform", "ios").eq("detail->>name", "ios_app_open_diag")
-      .gte("created_at", since).order("created_at", { ascending: false }).order("id", { ascending: false }).range(offset, offset + 499);
-    if (error) throw new Error("err:missing");
-    diagnostics.push(...(data ?? []).filter(isAppOpenDiagnostic).map((r) => ({ at: r.created_at, platform: r.platform, detail: r.detail })));
-    if ((data?.length ?? 0) < 500) break;
-  }
+  const diagnostics = (await readEventPages(db, since, ['ad'])).filter(r => r.platform === 'ios').filter(isAppOpenDiagnostic)
+    .sort((a,b) => b.id-a.id).map(r => ({ at: r.created_at, platform: r.platform, detail: r.detail }));
   return { diagnostics };
 };
 
@@ -104,11 +99,10 @@ export const adminOverviewAction = async ({ context }: { context: OnlineContext 
   const periodStart = adminPeriodStart(now, reset?.created_at ?? null);
   const sinceStats = new Date(periodStart).toISOString();
   const [events, exclusions] = await Promise.all([
-    db.from("app_events").select("kind, user_id, device_id, platform, detail, created_at").gte("created_at", since30).order("created_at", { ascending: false }).limit(10000),
+    readEventPages(db, since30),
     db.from("admin_activity_exclusions").select("user_id, device_id"),
   ]);
   if (exclusions.error) throw exclusions.error;
-  if (events.error) throw new Error("err:bad_action");
   const profiles: { id: string; created_at: string; last_seen: string }[] = [];
   for (let offset = 0; ; offset += 1000) {
     const { data: page, error } = await db.from('profiles').select('id, created_at, last_seen').order('id').range(offset, offset + 999);
@@ -117,25 +111,20 @@ export const adminOverviewAction = async ({ context }: { context: OnlineContext 
     if ((page?.length ?? 0) < 1000) break;
   }
   // Visit/local-game reports are read in full pages so busy diagnostics can never crowd them out.
-  const visitRows: ActivityEvent[] = [];
-  for (let offset = 0; ; offset += 1000) {
-    const { data: page, error } = await db.from("app_events").select("kind, user_id, device_id, platform, detail, created_at")
-      .in("kind", ["session", "heartbeat", "session_end", "local_game"]).gte("created_at", reset?.created_at ?? '2020-01-01T00:00:00Z').lte('created_at', new Date(now).toISOString())
-      .order("created_at").order("id").range(offset, offset + 999);
-    if (error) throw error;
-    visitRows.push(...(page ?? []));
-    if ((page?.length ?? 0) < 1000) break;
-  }
-  const ev = events.data ?? [];
+  const visitRows = await readEventPages(db, reset?.created_at ?? '2020-01-01T00:00:00Z', ['session','heartbeat','session_end','local_game']);
+  const ev = events.sort((a,b) => b.created_at.localeCompare(a.created_at));
   const allActivity = adminActivityEvents([...ev, ...visitRows] as typeof ev, exclusions.data ?? []);
   const activeAppUsers = appPlayerIds(allActivity, new Date(Math.max(periodStart, now - day)).toISOString());
   const activeNowUsers = appPlayerIds(allActivity, new Date(Math.max(periodStart, now - 2 * 60_000)).toISOString());
   const reportDays = adminReportingDays(now, periodStart);
+  const metrics = adminDayMetrics(adminActivityEvents(visitRows, exclusions.data ?? []), reportDays);
   const byDay = activityByDay(adminActivityEvents(visitRows as (ActivityEvent & { user_id: string | null })[], exclusions.data ?? []), reportDays);
   const days = reportDays.map((d) => {
     const a = byDay.get(d);
     if (!a) throw new Error("err:bad_action");
-    return { date: d, appSessions: a.appSessions, avgMinutes: a.avgMinutes, started: a.localStarted, finished: a.localFinished, appDevices: a.appDevices };
+    const metric = metrics.get(d);
+    if (!metric) throw new Error('err:bad_action');
+    return { date: d, appSessions: a.appSessions, avgMinutes: a.avgMinutes, started: a.localStarted, finished: a.localFinished, appDevices: a.appDevices, ...metric };
   });
   // Full app cohort, including users who never returned; last_seen is NOT day-specific evidence.
   const retention = appRetention(adminActivityEvents(visitRows as (ActivityEvent & { user_id: string | null })[], exclusions.data ?? []), new Set(profiles.map(p => p.id)), now);

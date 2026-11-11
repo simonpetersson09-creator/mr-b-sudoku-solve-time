@@ -108,7 +108,7 @@ export const hu: Record<TranslationKey, string> = {
   deleteDataDescription: "A neved, profilképed, statisztikáid és mentett játékaid törlődnek a telefonról és a szerverről. Ha tovább játszol, új játékosazonosító jön létre.",
   storeSoon: "A Mr.B. Sudoku hamarosan elérhető lesz az App Store és a Google Play kínálatában.",
   webOnlyTitle: "A Mr.B. Sudoku az alkalmazásban játszható",
-  webOnlyBody: "Töltsd le az ingyenes alkalmazást, és oldj meg sudokukat négy nehézségi szinten – akár offline is.",
+  webOnlyBody: "Töltsd le az ingyenes alkalmazást, és oldj meg sudokukat hét nehézségi szinten – akár offline is.",
   newGame: "Új játék",
   newGameTitle: "Új játék",
   chooseLevel: "Válassz nehézségi szintet",

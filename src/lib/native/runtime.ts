@@ -11,12 +11,14 @@ export async function startNativeRuntime(goHome: () => void) {
     import("@capacitor/app"), import("@capacitor/network"), import("@capacitor/status-bar"),
   ]);
   const handles: PluginListenerHandle[] = [];
+  let foreground = true;
   await StatusBar.setStyle({ style: Style.Dark }).catch(() => {});
   const resume = () => {
     supabase.auth.startAutoRefresh();
     window.dispatchEvent(new Event(RESUME_EVENT));
   };
   handles.push(await App.addListener("appStateChange", ({ isActive }) => {
+    foreground = isActive;
     nativeDiagnostic("lifecycle", isActive ? "active" : "background");
     if (isActive) resume();
     else { window.dispatchEvent(new Event(PAUSE_EVENT)); supabase.auth.stopAutoRefresh(); }
@@ -24,7 +26,7 @@ export async function startNativeRuntime(goHome: () => void) {
   handles.push(await Network.addListener("networkStatusChange", ({ connected }) => {
     nativeDiagnostic("network", connected ? "online" : "offline");
     window.dispatchEvent(new Event(connected ? "online" : "offline"));
-    if (connected) resume();
+    if (connected && foreground) resume();
   }));
   // AndroidBackButton owns back navigation; a second handler bypassed its
   // leave-match confirmation and could exit instead of minimizing.

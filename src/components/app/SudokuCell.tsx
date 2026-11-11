@@ -6,6 +6,7 @@ type Props = {
   given: boolean; selected: boolean; peer: boolean; same: boolean;
   flash: boolean; pop: boolean; shake: boolean; wave: boolean; wrong: boolean;
   hint: boolean; zone: boolean; hinted: boolean; solution: number;
+  tabStop?: boolean;
   onSelect: (index: number) => void;
 };
 
@@ -19,7 +20,7 @@ export const SudokuCell = memo(function SudokuCell(p: Props) {
       data-wrong={p.wrong} data-hint={p.hint} data-hint-zone={p.zone || undefined}
       data-hinted={p.hinted || undefined} style={{ '--d': row + col } as CSSProperties}
       aria-label={p.label} aria-selected={p.selected} aria-readonly={p.given} aria-invalid={p.wrong}
-      aria-rowindex={row + 1} aria-colindex={col + 1} onClick={() => p.onSelect(p.index)}>
+      tabIndex={p.tabStop ? 0 : -1} aria-rowindex={row + 1} aria-colindex={col + 1} onClick={() => p.onSelect(p.index)}>
       {p.hint && <span className="sdk-hint-digit" aria-hidden="true">{p.solution}</span>}
       {p.value ? p.value : p.notes ? <span className="sdk-notes" aria-hidden="true">
         {[1, 2, 3, 4, 5, 6, 7, 8, 9].filter(d => hasNote(p.notes, d)).map(d => <span key={d}>{d}</span>)}

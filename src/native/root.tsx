@@ -14,6 +14,8 @@ import { startNativeRuntime, RESUME_EVENT } from "@/lib/native/runtime";
 import { installViewportSync } from "@/lib/native/viewport";
 import { nativeDiagnostic } from "@/lib/native/diagnostics";
 import { useDocumentLanguage } from '@/lib/i18n/document-language';
+import { Capacitor } from '@capacitor/core';
+import { usesIosSafeArea } from '@/lib/native/platform-style';
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({ component: NativeRoot });
 function NativeRoot() {
@@ -23,7 +25,7 @@ function NativeRoot() {
   useEffect(() => {
     let cleanup: (() => void) | undefined;
     let stopped = false;
-    if (/iPhone|iPad|iPod/.test(navigator.userAgent)) document.documentElement.classList.add("native-ios");
+    if (usesIosSafeArea(Capacitor.getPlatform(), Capacitor.isNativePlatform())) document.documentElement.classList.add("native-ios");
     const viewportCleanup = installViewportSync();
     nativeDiagnostic("startup", "ready");
     const activity = startActivityTracking();

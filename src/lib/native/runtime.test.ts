@@ -29,3 +29,13 @@ it("emits the explicit pause event on background and only resume on foreground",
   expect(resume).toHaveBeenCalledTimes(1);
   cleanup(); window.removeEventListener(PAUSE_EVENT, pause); window.removeEventListener(RESUME_EVENT, resume);
 });
+it('a network return in native background cannot emit a foreground resume', async () => {
+  const { startNativeRuntime, RESUME_EVENT } = await import('./runtime');
+  const resume=vi.fn();window.addEventListener(RESUME_EVENT,resume);
+  const cleanup=await startNativeRuntime(()=>{});
+  const state=mocks.listen.mock.calls.find(c=>c[0]==='appStateChange')?.[1];
+  const network=mocks.listen.mock.calls.find(c=>c[0]==='networkStatusChange')?.[1];
+  if(typeof state!=='function'||typeof network!=='function')throw new Error('listeners');
+  state({isActive:false});network({connected:true});expect(resume).not.toHaveBeenCalled();
+  cleanup();window.removeEventListener(RESUME_EVENT,resume);
+});

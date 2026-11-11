@@ -164,12 +164,34 @@ it('unmount saves partial time but never resurrects an explicitly ended game', a
   removeGame('ui-game'); now += 300; cleanup();
   expect(loadGame()).toBeNull();
 });
+it('end confirmation pauses partial time and cancel resumes without counting dialog time', async () => {
+  let now = 0;
+  vi.spyOn(performance, 'now').mockImplementation(() => now);
+  render(<PlayPage />); await screen.findAllByRole('gridcell');
+  now = 650;
+  fireEvent.click(screen.getByRole('button', { name: 'Avsluta spel' }));
+  expect(loadGame()?.elapsedMs).toBe(650);
+  now = 10650;
+  fireEvent.click(screen.getByRole('button', { name: 'Avbryt' }));
+  now += 350;
+  fireEvent.click(screen.getByRole('button', { name: 'Pausa' }));
+  expect(loadGame()?.elapsedMs).toBe(1000);
+});
 it('blocks arrows, digits and deletion behind the hint dialog', async () => {
   render(<PlayPage />); const cells = await screen.findAllByRole('gridcell');
   fireEvent.click(cells[0]); const before = loadGame(); await offer();
   for (const key of ['ArrowRight', '1', 'Delete']) fireEvent.keyDown(window, { key });
   expect(loadGame()?.values).toEqual(before?.values);
   expect(cells[0].getAttribute('aria-selected')).toBe('true');
+});
+it('the board has one tab stop and arrows move focus without crossing row boundaries', async () => {
+  render(<PlayPage />);const cells=await screen.findAllByRole('gridcell');
+  expect(cells.filter(c=>c.tabIndex===0)).toHaveLength(1);
+  cells[0].focus();fireEvent.keyDown(cells[0],{key:'ArrowRight'});
+  expect(document.activeElement).toBe(cells[1]);
+  fireEvent.click(cells[8]);cells[8].focus();fireEvent.keyDown(cells[8],{key:'ArrowRight'});
+  expect(document.activeElement).toBe(cells[8]);
+  expect(screen.getAllByRole('row')).toHaveLength(9);
 });
 it('an old wrong-digit timeout cannot modify a replacement saved game', async () => {
   render(<PlayPage />); const cells = await screen.findAllByRole('gridcell');

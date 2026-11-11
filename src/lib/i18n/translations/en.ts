@@ -125,7 +125,7 @@ export const en: Record<TranslationKey, string> = {
   deleteDataDescription: "Your name, profile picture, statistics and saved games are deleted from the phone and the server. If you keep playing, a new player identity is created.",
   storeSoon: "Mr.B. Sudoku is coming soon to the App Store and Google Play.",
   webOnlyTitle: "Mr.B. Sudoku is played in the app",
-  webOnlyBody: "Download the app for free and solve Sudoku in four levels – even offline.",
+  webOnlyBody: "Download the app for free and solve Sudoku in seven levels – even offline.",
   newGame: "New game",
   newGameTitle: "New game",
   chooseLevel: "Choose level",

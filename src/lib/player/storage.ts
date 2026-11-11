@@ -1,6 +1,7 @@
 import { isLevel, LEVELS, MAX_UNDOS, MAX_HINTS, MAX_MISTAKES, isConsistent, isLost, type GameState, type Level } from "@/lib/sudoku/engine";
 import { emptyProgress, type Progress } from "@/lib/player/unlock";
 import { hasUniqueSavedPuzzle } from './puzzle-validation';
+import { readPlayerStorage, transactPlayerStorage } from './storage-transaction';
 
 /** All Sudoku keys live in their own namespace; never shared with Ludo or Yatzy. */
 const NS = "mrb-sudoku:v1:";
@@ -16,12 +17,12 @@ const DEFAULT_SETTINGS: Settings = { name: "Spelare", haptics: true, showMistake
 function read<T>(key: string, fallback: T): T {
   if (typeof window === "undefined") return fallback;
   try {
-    const raw = localStorage.getItem(key);
+    const raw = readPlayerStorage(key);
     return raw ? { ...fallback, ...JSON.parse(raw) } : fallback;
   } catch { return fallback; }
 }
 function write(key: string, v: unknown) {
-  try { localStorage.setItem(key, JSON.stringify(v)); } catch { /* storage full/blocked */ }
+  transactPlayerStorage({ [key]: v });
 }
 
 // ---------- Saved games (max 10, oldest dropped first) ----------
@@ -56,13 +57,13 @@ export function capSaves(list: SavedGame[]): SavedGame[] {
 function readSaves(): SavedGame[] {
   if (typeof window === "undefined") return [];
   try {
-    const parsed: unknown = JSON.parse(localStorage.getItem(GAMES) ?? "[]");
+    const parsed: unknown = JSON.parse(readPlayerStorage(GAMES) ?? "[]");
     return Array.isArray(parsed) ? parsed.filter((e): e is SavedGame => !!e && typeof e === "object" && typeof e.id === "string"
       && nonnegativeTime(e.updatedAt) && isValidSave(e.game) && e.id === e.game.id) : [];
   } catch { return []; }
 }
 const writeSaves = (list: SavedGame[]) => write(GAMES, capSaves(list));
-const activeId = () => { try { return localStorage.getItem(ACTIVE); } catch { return null; } };
+const activeId = () => { try { const raw = readPlayerStorage(ACTIVE); return raw?.startsWith('"') ? JSON.parse(raw) as string : raw; } catch { return null; } };
 
 /** Unfinished games, most recently played first. */
 export const listGames = (): SavedGame[] => capSaves(readSaves());
@@ -76,18 +77,17 @@ export const loadGame = (): GameState | null => {
 };
 /** Starts a new game without touching the other saved ones. */
 export const startNewGame = (g: GameState, now = Date.now()) => {
-  writeSaves([{ id: g.id, game: g, updatedAt: now }, ...readSaves().filter((e) => e.id !== g.id)]);
-  selectGame(g.id);
+  transactPlayerStorage({ [GAMES]: capSaves([{ id: g.id, game: g, updatedAt: now }, ...readSaves().filter((e) => e.id !== g.id)]), [ACTIVE]: g.id });
 };
 /** Saves progress of a game (finished games are removed). */
 export const saveGame = (g: GameState, now = Date.now()) => {
+  if (g.finished) { recordFinish(g); return; }
   const rest = readSaves().filter((e) => e.id !== g.id);
   writeSaves(g.finished || isLost(g) ? rest : [{ id: g.id, game: g, updatedAt: now }, ...rest]);
 };
 /** Removes one game; the others stay. */
 export const removeGame = (id: string) => {
-  writeSaves(readSaves().filter((e) => e.id !== id));
-  if (activeId() === id) { try { localStorage.removeItem(ACTIVE); } catch { /* noop */ } }
+  transactPlayerStorage({ [GAMES]: readSaves().filter((e) => e.id !== id), ...(activeId() === id ? { [ACTIVE]: undefined } : {}) });
 };
 
 // Legacy saved switches cannot disable the now fixed gameplay assistance.
@@ -200,15 +200,13 @@ export const saveStats = (s: Stats) => write(STATS, s);
 export function recordFinish(g: GameState) {
   if (!g.finished) return;
   let list: string[] = [];
-  try { const v: unknown = JSON.parse(localStorage.getItem(COUNTED) ?? "[]"); if (Array.isArray(v)) list = v.filter((x) => typeof x === "string"); } catch { /* damaged list starts over */ }
+  try { const v: unknown = JSON.parse(readPlayerStorage(COUNTED) ?? "[]"); if (Array.isArray(v)) list = v.filter((x) => typeof x === "string"); } catch { throw new Error('err:bad_action'); }
   if (list.includes(g.id)) return;
   const at = loadAllTime(); // load before the yearly save so a first-run seed never double-counts this game
   const p = loadProgress(); // migrate from the old stats, not stats already containing this result
-  saveStats(addResult(loadStats(), g));
-  saveAllTime(addAllTimeResult(at, g));
-  saveProgress({ ...p, [g.level]: p[g.level] + 1 });
-  // Keep the existing list format for older installations, but never evict a recorded ID.
-  write(COUNTED, [...list, g.id]);
+  transactPlayerStorage({ [STATS]: addResult(loadStats(), g), [ALLTIME]: addAllTimeResult(at, g),
+    [PROGRESS]: { ...p, [g.level]: p[g.level] + 1 }, [COUNTED]: [...list, g.id],
+    [GAMES]: readSaves().filter(e => e.id !== g.id) });
 }
 
 // ---------- Level unlock progress (lifetime, never reset) ----------
@@ -217,7 +215,7 @@ export function loadProgress(): Progress {
   const out = emptyProgress();
   if (typeof window === "undefined") return out;
   let raw: Record<string, unknown> | null = null;
-  try { const v: unknown = JSON.parse(localStorage.getItem(PROGRESS) ?? "null"); if (v && typeof v === "object") raw = v as Record<string, unknown>; } catch { /* damaged */ }
+  try { const v: unknown = JSON.parse(readPlayerStorage(PROGRESS) ?? "null"); if (v && typeof v === "object") raw = v as Record<string, unknown>; } catch { /* damaged */ }
   // First run: seed from this year's solved games so nobody loses levels they already played.
   const st = raw ? null : loadStats();
   for (const l of LEVELS) out[l] = raw ? cleanCount(raw[l]) : (st?.[l].played ?? 0);

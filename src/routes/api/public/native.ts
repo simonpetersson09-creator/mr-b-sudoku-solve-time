@@ -3,6 +3,7 @@ import { timed } from "@/lib/backend/server-timing";
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
 import { allowedNativeOrigin } from "@/lib/native/origin";
+import { BodyTooLarge, readNativeBody, MAX_NATIVE_ACTION_BYTES } from '@/lib/backend/bounded-body';
 
 function cors(request: Request) {
   const origin = request.headers.get("origin");
@@ -25,11 +26,10 @@ export const Route = createFileRoute("/api/public/native")({ server: { handlers:
     if (error || !userData.user) return reply({ error: "err:forbidden" }, 401);
     const context = { supabase: db, userId: userData.user.id };
     try {
-      const raw = await request.text();
-      if (raw.length > 200000) return reply({ error: "err:bad_action" }, 413);
+      const { text: raw, bytes } = await readNativeBody(request);
       const body = JSON.parse(raw) as { operation?: unknown; data?: unknown };
       // Only a profile picture carries a bigger body; every other operation stays small.
-      if (body.operation !== "setAvatar" && raw.length > 12000) return reply({ error: "err:bad_action" }, 413);
+      if (body.operation !== "setAvatar" && bytes > MAX_NATIVE_ACTION_BYTES) return reply({ error: "err:bad_action" }, 413);
       const actions = await import("@/lib/backend/online-actions");
       const inputs = await import("@/lib/backend/online-inputs");
       switch (body.operation) {
@@ -49,6 +49,7 @@ export const Route = createFileRoute("/api/public/native")({ server: { handlers:
         default: return reply({ error: "err:bad_action" }, 400);
       }
     } catch (error) {
+      if (error instanceof BodyTooLarge) return reply({ error: 'err:bad_action' }, 413);
       const message = error instanceof Error && /^err:[a-z_]+$/.test(error.message) ? error.message : "err:bad_action";
       return reply({ error: message }, message === "err:forbidden" ? 403 : 400);
     }

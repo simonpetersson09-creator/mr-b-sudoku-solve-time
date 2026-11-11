@@ -125,7 +125,7 @@ export const th: Record<TranslationKey, string> = {
   deleteDataDescription: "ชื่อ รูปโปรไฟล์ สถิติ และเกมที่บันทึกไว้จะถูกลบจากโทรศัพท์และเซิร์ฟเวอร์ หากเล่นต่อ ระบบจะสร้างตัวตนผู้เล่นใหม่",
   storeSoon: "Mr.B. Sudoku กำลังจะมาใน App Store และ Google Play",
   webOnlyTitle: "เล่น Mr.B. Sudoku ได้ในแอป",
-  webOnlyBody: "ดาวน์โหลดแอปฟรี แล้วสนุกกับซูโดกุ 4 ระดับได้แม้ออฟไลน์",
+  webOnlyBody: "ดาวน์โหลดแอปฟรี แล้วสนุกกับซูโดกุ 7 ระดับได้แม้ออฟไลน์",
   newGame: "เกมใหม่",
   newGameTitle: "เกมใหม่",
   chooseLevel: "เลือกระดับ",

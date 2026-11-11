@@ -125,7 +125,7 @@ export const ro: Record<TranslationKey, string> = {
   deleteDataDescription: "Numele, poza de profil, statisticile și jocurile salvate sunt șterse de pe telefon și de pe server. Dacă joci în continuare, se creează o nouă identitate de jucător.",
   storeSoon: "Mr.B. Sudoku va fi disponibil în curând în App Store și Google Play.",
   webOnlyTitle: "Mr.B. Sudoku se joacă în aplicație",
-  webOnlyBody: "Descarcă gratuit aplicația și rezolvă Sudoku la patru niveluri – chiar și offline.",
+  webOnlyBody: "Descarcă gratuit aplicația și rezolvă Sudoku la șapte niveluri – chiar și offline.",
   newGame: "Joc nou",
   newGameTitle: "Joc nou",
   chooseLevel: "Alege nivelul",

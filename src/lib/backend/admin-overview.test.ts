@@ -11,6 +11,12 @@ vi.mock("@/integrations/supabase/client.server", () => ({ supabaseAdmin: { from:
   return query;
 } } }));
 import { adminOverviewAction } from "./online-actions";
+vi.mock('./event-pages', () => ({ readEventPages: async () => {
+  if(mocks.failure==='app_events')throw new Error('err:bad_action');
+  const rows=[];
+  for(let offset=0;;offset+=1000){const {data}=await mocks.range(offset,offset+999);rows.push(...data);if(data.length<1000)break;}
+  return rows;
+} }));
 const context = { userId: "admin-a", supabase: { rpc: mocks.role } as never };
 beforeEach(() => { mocks.failure = ""; mocks.role.mockReset().mockResolvedValue({ data: true, error: null }); mocks.range.mockReset().mockResolvedValue({ data: [], error: null }); mocks.profileRange.mockReset().mockImplementation(async () => ({ data: [], error: mocks.failure === 'profiles' ? new Error('unavailable') : null })); });
 it.each(["app_events", "profiles"])("never returns zero statistics after a %s read failure", async table => {

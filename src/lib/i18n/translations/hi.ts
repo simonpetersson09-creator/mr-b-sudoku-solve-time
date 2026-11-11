@@ -125,7 +125,7 @@ export const hi: Record<TranslationKey, string> = {
   deleteDataDescription: "आपका नाम, प्रोफ़ाइल फ़ोटो, आँकड़े और सेव किए गए खेल फ़ोन और सर्वर से मिटा दिए जाएँगे। अगर आप खेलना जारी रखते हैं, तो नई खिलाड़ी पहचान बनाई जाएगी।",
   storeSoon: "Mr.B. Sudoku जल्द ही App Store और Google Play पर आएगा।",
   webOnlyTitle: "Mr.B. Sudoku ऐप में खेलें",
-  webOnlyBody: "ऐप मुफ़्त डाउनलोड करें और चार स्तरों पर सुडोकू हल करें – ऑफ़लाइन भी।",
+  webOnlyBody: "ऐप मुफ़्त डाउनलोड करें और सात स्तरों पर सुडोकू हल करें – ऑफ़लाइन भी।",
   newGame: "नया खेल",
   newGameTitle: "नया खेल",
   chooseLevel: "स्तर चुनें",

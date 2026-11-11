@@ -125,7 +125,7 @@ export const vi: Record<TranslationKey, string> = {
   deleteDataDescription: "Tên, ảnh đại diện, thống kê và các ván đã lưu của bạn sẽ bị xóa khỏi điện thoại và máy chủ. Nếu tiếp tục chơi, bạn sẽ có một danh tính người chơi mới.",
   storeSoon: "Mr.B. Sudoku sẽ sớm có mặt trên App Store và Google Play.",
   webOnlyTitle: "Chơi Mr.B. Sudoku trên ứng dụng",
-  webOnlyBody: "Tải ứng dụng miễn phí và giải Sudoku ở bốn cấp độ – ngay cả khi không có mạng.",
+  webOnlyBody: "Tải ứng dụng miễn phí và giải Sudoku ở bảy cấp độ – ngay cả khi không có mạng.",
   newGame: "Ván mới",
   newGameTitle: "Ván mới",
   chooseLevel: "Chọn cấp độ",

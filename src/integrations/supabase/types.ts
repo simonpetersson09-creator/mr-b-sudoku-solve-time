@@ -152,6 +152,16 @@ export type Database = {
         }
         Returns: boolean
       }
+      insert_sudoku_game_report: {
+        Args: {
+          _created_at?: string
+          _detail: Json
+          _device_id: string
+          _platform: string
+          _user_id: string
+        }
+        Returns: boolean
+      }
       rate_hit: {
         Args: { _key: string; _max: number; _window_seconds: number }
         Returns: boolean

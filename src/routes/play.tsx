@@ -163,7 +163,7 @@ export function PlayPage() {
 
   // Timer: counts only while the screen is visible and not paused.
   useEffect(() => {
-    if (!state || state.finished || isLost(state) || paused || adBusy || hintOffer || backgroundPaused.current) return;
+    if (!state || state.finished || isLost(state) || paused || confirmEnd || adBusy || hintOffer || backgroundPaused.current) return;
     clock.current.start(state);
     const tick = () => {
       if (document.visibilityState !== 'visible') return;
@@ -175,19 +175,22 @@ export function PlayPage() {
     };
     const id = window.setInterval(tick, 1000);
     return () => { window.clearInterval(id); stopClock(); };
-  }, [state?.finished, state ? isLost(state) : false, paused, adBusy, hintOffer, state?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [state?.finished, state ? isLost(state) : false, paused, confirmEnd, adBusy, hintOffer, state?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Autosave every change (finished games are removed from the saved list).
   // A lost game is never saved again, so it disappears from the ongoing games.
-  useEffect(() => { if (state && !isLost(state)) saveGame({ ...state, updatedAt: Date.now() }); }, [state]);
+  useEffect(() => {
+    if (!state || state.finished || isLost(state)) return;
+    try { saveGame({ ...state, updatedAt: Date.now() }); } catch { toast.error(t('genericError')); }
+  }, [state]);
 
   useEffect(() => {
     if (!state?.finished || finishedDone.current) return;
-    finishedDone.current = true;
     const before = loadProgress();
     const prevBest = loadStats()[state.level].bestMs;
     if (state.hints === 0 && prevBest != null && state.elapsedMs < prevBest) setRecord(prevBest);
-    recordFinish(state);
+    try { recordFinish(state); } catch { toast.error(t('genericError')); return; }
+    finishedDone.current = true;
     setUnlocked(newlyUnlocked(before, loadProgress()));
     reportLocalGame("finish", state);
     void playSuccessHaptic();
@@ -252,7 +255,15 @@ export function PlayPage() {
     if (/^[1-9]$/.test(e.key)) { input(Number(e.key)); return; }
     if (e.key === "Backspace" || e.key === "Delete" || e.key === "0") { if (selected != null) act((s) => erase(s, selected)); return; }
     const move: Record<string, number> = { ArrowUp: -9, ArrowDown: 9, ArrowLeft: -1, ArrowRight: 1 };
-    if (e.key in move) { e.preventDefault(); setSameDigit(null); setSelected((c) => { const n = (c ?? 40) + move[e.key]; return n >= 0 && n < 81 ? n : c; }); }
+    if (e.key in move) {
+      e.preventDefault(); setSameDigit(null);
+      const focused = e.target instanceof HTMLElement ? e.target.closest('[role="gridcell"]') : null;
+      const from = focused ? Number(focused.getAttribute('data-r')) * 9 + Number(focused.getAttribute('data-c')) : selected ?? 40;
+      const n = from + move[e.key];
+      if (n >= 0 && n < 81 && !((e.key === 'ArrowLeft' || e.key === 'ArrowRight') && Math.floor(n / 9) !== Math.floor(from / 9))) {
+        setSelected(n);document.querySelectorAll<HTMLElement>('[role="gridcell"]')[n]?.focus();
+      }
+    }
   }, [state, paused, selected, notesMode, hintOffer, confirmEnd, adBusy]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => { window.addEventListener("keydown", onKey); return () => window.removeEventListener("keydown", onKey); }, [onKey]);
 
@@ -367,7 +378,7 @@ export function PlayPage() {
             <button onClick={() => { if (paused) resumePlay(); else { stopClock(); setPaused(true); } }} disabled={state.finished || adBusy} aria-label={paused ? t("resume") : t("pause")} className="sdk-round-btn" data-active={paused}>
               {paused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}<span>{paused ? t("resume") : t("pause")}</span>
             </button>
-            <button onClick={() => setConfirmEnd(true)} disabled={state.finished} aria-label={t("endGame")} className="sdk-round-btn sdk-round-end">
+            <button onClick={() => { stopClock(); setConfirmEnd(true); }} disabled={state.finished || adBusy} aria-label={t("endGame")} className="sdk-round-btn sdk-round-end">
               <CircleX className="h-4 w-4" /><span>{t("endGame")}</span>
             </button>
           </div>
@@ -390,14 +401,16 @@ export function PlayPage() {
             <button onClick={resumePlay} className="flex flex-col items-center gap-2 rounded-xl p-4 active:scale-95"><Play className="h-12 w-12 text-gold" /><span className="font-display text-lg font-bold">{t("paused")}</span><span className="text-xs text-muted-foreground">{t("tapToResume")}</span></button>
           </div>
         ) : (
-          <div className="sdk-board" data-dark={settings.darkBoard} data-lost={lost} role="grid" aria-label={t("board")}>
-            {state.values.map((v, i) => {
+          <div className="sdk-board" data-dark={settings.darkBoard} data-lost={lost} role="grid" aria-rowcount={9} aria-colcount={9} aria-label={t("board")}>
+            {Array.from({ length: 9 }, (_, row) => <div key={row} role="row" className="contents">{state.values.slice(row * 9, row * 9 + 9).map((v, col) => {
+              const i = row * 9 + col;
               const r = Math.floor(i / 9), c = i % 9;
               const wrong = settings.showMistakes && isWrong(state, i);
               return (
                 <SudokuCell
                   key={popCell?.i === i ? `p${popCell.k}` : shakeCell?.i === i ? `s${shakeCell.k}` : i}
                   index={i} value={v} notes={state.notes[i]} solution={state.solution[i]}
+                  tabStop={selected === i || (selected == null && i === 0)}
                   given={isGiven(state, i) || (lockedHints.has(i) && v === state.solution[i])}
                   selected={selected === i} peer={selected != null && selected !== i && peers.has(i)}
                   same={holdDigit != null ? v === holdDigit : settings.highlightSame && sameDigit !== null && v === sameDigit && selected !== i}
@@ -410,7 +423,7 @@ export function PlayPage() {
                   onSelect={selectCell}
                 />
               );
-            })}
+            })}</div>)}
           </div>
         )}
         </div>
@@ -438,7 +451,7 @@ export function PlayPage() {
             </button>
           ))}
         </div>
-        <p className="sdk-hint-tip" role="status" data-show={hintText != null}>{hintText != null && <><Lightbulb className="h-3 w-3 shrink-0" /><span>{hintText}</span></>}</p>
+        <p className="sdk-hint-tip" role="status" title={hintText ?? undefined} data-show={hintText != null}>{hintText != null && <><Lightbulb className="h-3 w-3 shrink-0" /><span>{hintText}</span></>}</p>
         </div>
       </div>
       <AlertDialog open={hintOffer} onOpenChange={setHintOffer}>

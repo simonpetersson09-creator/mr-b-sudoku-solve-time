@@ -138,7 +138,7 @@ export const sv = {
   deleteDataDescription: "Ditt namn, profilbild, statistik och sparade spel raderas från telefonen och servern. Fortsätter du spela skapas en ny spelaridentitet.",
   storeSoon: "Mr.B. Sudoku finns snart i App Store och Google Play.",
   webOnlyTitle: "Mr.B. Sudoku spelas i appen",
-  webOnlyBody: "Ladda ner appen gratis och lös Sudoku i fyra nivåer – även utan internet.",
+  webOnlyBody: "Ladda ner appen gratis och lös Sudoku i sju nivåer – även utan internet.",
   newGame: "Nytt spel",
   newGameTitle: "Nytt spel",
   chooseLevel: "Välj nivå",

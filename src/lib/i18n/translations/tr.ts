@@ -125,7 +125,7 @@ export const tr: Record<TranslationKey, string> = {
   deleteDataDescription: "Adın, profil resmin, istatistiklerin ve kayıtlı oyunların telefondan ve sunucudan silinir. Oynamaya devam edersen yeni bir oyuncu kimliği oluşturulur.",
   storeSoon: "Mr.B. Sudoku yakında App Store ve Google Play'de.",
   webOnlyTitle: "Mr.B. Sudoku uygulamada oynanır",
-  webOnlyBody: "Uygulamayı ücretsiz indir ve dört seviyede Sudoku çöz – çevrimdışıyken bile.",
+  webOnlyBody: "Uygulamayı ücretsiz indir ve yedi seviyede Sudoku çöz – çevrimdışıyken bile.",
   newGame: "Yeni oyun",
   newGameTitle: "Yeni oyun",
   chooseLevel: "Seviye seç",

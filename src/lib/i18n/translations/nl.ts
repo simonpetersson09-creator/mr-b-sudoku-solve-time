@@ -108,7 +108,7 @@ export const nl: Record<TranslationKey, string> = {
   deleteDataDescription: "Je naam, profielfoto, statistieken en opgeslagen spellen worden van je telefoon en de server verwijderd. Als je blijft spelen, wordt een nieuwe spelersidentiteit aangemaakt.",
   storeSoon: "Mr.B. Sudoku komt binnenkort naar de App Store en Google Play.",
   webOnlyTitle: "Je speelt Mr.B. Sudoku in de app",
-  webOnlyBody: "Download de app gratis en speel sudoku op vier niveaus – ook offline.",
+  webOnlyBody: "Download de app gratis en speel sudoku op zeven niveaus – ook offline.",
   newGame: "Nieuw spel",
   newGameTitle: "Nieuw spel",
   chooseLevel: "Kies een niveau",

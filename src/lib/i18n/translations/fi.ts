@@ -108,7 +108,7 @@ export const fi: Record<TranslationKey, string> = {
   deleteDataDescription: "Nimesi, profiilikuvasi, tilastosi ja tallennetut pelisi poistetaan puhelimelta ja palvelimelta. Jos jatkat pelaamista, sinulle luodaan uusi pelaajatunnus.",
   storeSoon: "Mr.B. Sudoku on pian saatavilla App Store- ja Google Play -kaupoissa.",
   webOnlyTitle: "Mr.B. Sudokua pelataan sovelluksessa",
-  webOnlyBody: "Lataa sovellus ilmaiseksi ja ratkaise sudokuja neljällä vaikeustasolla – myös ilman verkkoyhteyttä.",
+  webOnlyBody: "Lataa sovellus ilmaiseksi ja ratkaise sudokuja seitsemällä vaikeustasolla – myös ilman verkkoyhteyttä.",
   newGame: "Uusi peli",
   newGameTitle: "Uusi peli",
   chooseLevel: "Valitse vaikeustaso",

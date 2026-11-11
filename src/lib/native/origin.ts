@@ -1,7 +1,7 @@
 /** The packaged game works offline; only online actions need this Sudoku-only origin. */
 export function validateSudokuOrigin(value: string): string {
   const url = new URL(value);
-  if (url.protocol !== "https:" || url.username || url.password || url.pathname !== "/" || url.search || url.hash || /localhost|id-preview|yatzy|ludo/i.test(url.hostname)) {
+  if (url.origin !== PUBLISHED_SUDOKU_ORIGIN || url.protocol !== "https:" || url.username || url.password || url.pathname !== "/" || url.search || url.hash) {
     throw new Error("Use the approved published Mr.B. Sudoku HTTPS origin");
   }
   return url.origin;

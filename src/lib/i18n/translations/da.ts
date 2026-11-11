@@ -125,7 +125,7 @@ export const da: Record<TranslationKey, string> = {
   deleteDataDescription: "Dit navn, profilbillede, dine statistikker og gemte spil slettes fra telefonen og serveren. Hvis du fortsætter med at spille, oprettes en ny spilleridentitet.",
   storeSoon: "Mr.B. Sudoku kommer snart til App Store og Google Play.",
   webOnlyTitle: "Mr.B. Sudoku spilles i appen",
-  webOnlyBody: "Download appen gratis, og løs sudoku på fire niveauer – også offline.",
+  webOnlyBody: "Download appen gratis, og løs sudoku på syv niveauer – også offline.",
   newGame: "Nyt spil",
   newGameTitle: "Nyt spil",
   chooseLevel: "Vælg niveau",

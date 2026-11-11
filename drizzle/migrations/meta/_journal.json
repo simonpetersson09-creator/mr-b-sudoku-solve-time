@@ -29,6 +29,13 @@
       "when": 1794392580330,
       "tag": "0003_report_sequence_access",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1794394574566,
+      "tag": "0004_atomic_local_game_reports",
+      "breakpoints": true
     }
   ]
 }
