@@ -61,7 +61,7 @@ export async function flushQueuedReports(): Promise<void> {
     // Persist legacy IDs before awaiting. Always re-read before removing only the acknowledged ID.
     writeQueue(readQueue());
     // A finish report over the server's daily limit stays queued (deferred) while other reports continue.
-    const deferred = new Set<string>();
+    const deferred = new Set<string | undefined>();
     let finishBlocked = false;
     while (true) {
       const item = readQueue().find(r => !deferred.has(r.id) && !(finishBlocked && isFinish(r)));
