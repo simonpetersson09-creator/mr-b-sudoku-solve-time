@@ -34,5 +34,10 @@ describe("approved native configuration", () => {
   it("has no push entitlement or background modes", () => {
     expect(read("ios/App/App/App.entitlements")).not.toContain("aps-environment");
     expect(read("ios/App/App/Info.plist")).not.toContain("UIBackgroundModes");
+    expect(read("ios/App/App.xcodeproj/project.pbxproj")).not.toContain("com.apple.Push");
+  });
+  it("chooses profile photos without a camera plugin or camera permission", () => {
+    expect(read("package.json")).not.toContain('"@capacitor/camera"');
+    expect(read("ios/App/App/Info.plist")).not.toContain("NSCameraUsageDescription");
   });
 });

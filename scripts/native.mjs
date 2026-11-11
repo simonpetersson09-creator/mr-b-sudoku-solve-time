@@ -16,15 +16,15 @@ try {
     const origin = process.env.VITE_MRB_SUDOKU_ORIGIN;
     if (origin) {
       const parsed = new URL(origin);
-      if (parsed.protocol !== "https:" || /localhost|id-preview|yatzy/i.test(parsed.hostname) || parsed.username || parsed.password || parsed.pathname !== "/" || parsed.search || parsed.hash) throw new Error("Only the separately approved published Ludo HTTPS origin may be bundled");
+      if (parsed.protocol !== "https:" || /localhost|id-preview|yatzy/i.test(parsed.hostname) || parsed.username || parsed.password || parsed.pathname !== "/" || parsed.search || parsed.hash) throw new Error("Only Mr.B. Sudoku's separately approved HTTPS origin may be bundled");
     }
     run("bunx", ["vite", "build", "--config", "vite.native.config.ts"]);
   } else if (action === "verify") {
-    requireFiles(["bun.lock", "android/gradlew", "android/gradlew.bat", "android/gradle/wrapper/gradle-wrapper.jar", "android/gradle/wrapper/gradle-wrapper.properties", "android/settings.gradle", "android/capacitor.settings.gradle", "android/app/capacitor.build.gradle", "android/app/src/main/java/com/simonpetersson/mrbsudoku/MainActivity.java", "android/app/src/main/res/xml/locales_config.xml", "ios/App/App/AppDelegate.swift", "ios/App/App/SceneDelegate.swift", "ios/App/App/Info.plist", "ios/App/App/App.entitlements", "ios/App/App/Base.lproj/Main.storyboard", "ios/App/App/Base.lproj/LaunchScreen.storyboard", "ios/App/CapApp-SPM/Package.swift", "ios/debug.xcconfig"]);
+    requireFiles(["bun.lock", "android/gradlew", "android/gradlew.bat", "android/gradle/wrapper/gradle-wrapper.jar", "android/gradle/wrapper/gradle-wrapper.properties", "android/settings.gradle", "android/capacitor.settings.gradle", "android/app/capacitor.build.gradle", "android/app/src/main/java/com/pending/mrbsudoku/MainActivity.java", "android/app/src/main/res/xml/locales_config.xml", "ios/App/App/AppDelegate.swift", "ios/App/App/SceneDelegate.swift", "ios/App/App/Info.plist", "ios/App/App/App.entitlements", "ios/App/App/Base.lproj/Main.storyboard", "ios/App/App/Base.lproj/LaunchScreen.storyboard", "ios/App/CapApp-SPM/Package.swift", "ios/debug.xcconfig"]);
     const capacitorPackages = ["core", "cli", "android", "ios"].map(name => JSON.parse(readFileSync(`node_modules/@capacitor/${name}/package.json`, "utf8")).version);
     if (new Set(capacitorPackages).size !== 1 || capacitorPackages[0] !== "8.6.0") throw new Error("Capacitor core/CLI/platform version mismatch; use bun install --frozen-lockfile");
     const spm = readFileSync("ios/App/CapApp-SPM/Package.swift", "utf8");
-    for (const plugin of ["@capacitor/app", "@capacitor/haptics", "@capacitor/barcode-scanner", "@capacitor/network", "@capacitor/status-bar", "capacitor-secure-storage-plugin", "@capacitor-community/admob"]) {
+    for (const plugin of ["@capacitor/app", "@capacitor/haptics", "@capacitor/network", "@capacitor/status-bar", "capacitor-secure-storage-plugin", "@capacitor-community/admob", "@capacitor-community/in-app-review", "@capacitor/share"]) {
       requireFiles([`node_modules/${plugin}/package.json`, `node_modules/${plugin}/Package.swift`]);
       if (!spm.includes(`node_modules/${plugin}`)) throw new Error(`iOS plugin missing: ${plugin}; run native:sync:ios`);
       const pluginId = plugin.replace("@", "").replaceAll("/", "-");
@@ -34,7 +34,7 @@ try {
     if (!config.includes('webDir: "dist-native"') || config.includes("server:")) throw new Error("Native app must launch the packaged game, not a remote website");
     if (!sourceOnly && !existsSync("dist-native/index.html")) throw new Error("Source checks available with --source-only; full verification requires bun run native:web and both platform syncs");
     const files = sourceOnly ? [] : readdirSync("dist-native/assets");
-    if (!sourceOnly && (!files.some(f => f.endsWith("woff2")) || !files.some(f => f.startsWith("DiceScene")))) throw new Error("Bundled fonts or 3D die missing");
+    if (!sourceOnly && !files.some(f => f.endsWith("woff2"))) throw new Error("Bundled fonts missing");
     for (const file of files.filter(f => /\.(js|html|css)$/.test(f))) {
       // The auth SDK contains a literal prefix detector; reject real keys, not that detector.
       if (/ixzqnmocplgbsawuufsm|sb_secret_[A-Za-z0-9_-]{12,}|supabaseAdmin|SUPABASE_SERVICE_ROLE_KEY/.test(readFileSync(`dist-native/assets/${file}`, "utf8"))) throw new Error("Forbidden backend configuration in native package");
@@ -55,6 +55,13 @@ try {
     if ((ios.match(/DEVELOPMENT_TEAM = "";/g) || []).length !== 2 || gradle.includes("signingConfigs")) throw new Error("Apple team must stay empty until Mr.B. Sudoku's team is approved; no Android signing credentials");
     if (/com\.pending\./.test(config)) console.warn("Temporary app ID com.pending.mrbsudoku: replace with the approved bundle ID before any store build.");
     if (readFileSync("ios/App/App/App.entitlements", "utf8").includes("aps-environment")) throw new Error("Push entitlement must stay off for Mr.B. Sudoku");
+    if (ios.includes("com.apple.Push")) throw new Error("Push capability must stay off for Mr.B. Sudoku");
+    const { permissionCopy } = await import("./ios-permission-copy.js");
+    const { iosLocale, stringsFile, registerPermissionResources } = await import("./ios-permission-localizations.js");
+    if (registerPermissionResources(ios) !== ios) throw new Error("iOS permission localizations are not registered");
+    for (const [lang, copy] of Object.entries(permissionCopy)) {
+      if (readFileSync(`ios/App/App/${iosLocale(lang)}.lproj/InfoPlist.strings`, "utf8") !== stringsFile(copy)) throw new Error(`Stale iOS permission localization: ${lang}`);
+    }
     if (!readFileSync("ios/App/App/Info.plist", "utf8").includes("CFBundleLocalizations") || !android.includes('android:localeConfig="@xml/locales_config"')) throw new Error("Native language declarations missing");
     for (const file of ["capacitor.config.ts", "android/app/build.gradle", "ios/App/App.xcodeproj/project.pbxproj"]) {
       if (/ixzqnmocplgbsawuufsm|sb_secret_|SERVICE_ROLE_KEY/.test(readFileSync(file, "utf8"))) throw new Error("Forbidden production configuration");
@@ -72,6 +79,10 @@ try {
     run("bunx", ["cap", "sync", platform]);
     run("node", ["scripts/verify-admob-patches.js", platform]);
     run("node", [platform === "ios" ? "scripts/set-ios-admob-plist.js" : "scripts/set-android-admob-manifest.js"]);
+    if (platform === "ios") {
+      const { writePermissionLocalizations } = await import("./ios-permission-localizations.js");
+      await writePermissionLocalizations("ios/App");
+    }
     run("node", ["scripts/set-native-icons.mjs", platform]);
     if (action === "open") run("bunx", ["cap", "open", platform]);
     if (action === "build" && platform === "android") run(process.platform === "win32" ? "gradlew.bat" : "./gradlew", ["assembleDebug"], "android");

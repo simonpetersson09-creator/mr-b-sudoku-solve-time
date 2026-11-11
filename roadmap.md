@@ -1,5 +1,11 @@
 # Roadmap: Mr.B. Sudoku
 
+## iPhone-frågor, profilbild och dokumentation (2026-11-11)
+- [x] Översatt spårnings- och bildfrågor på 40 språk och registrerat i iPhone-appen; 17 relevanta tester och native source-verifiering godkända.
+- [x] Befintlig bildväljare, autentiserad sparning och återöppning verifierade i 393×706 utan sidfel eller sidöverflöde; inga nya capabilities.
+- [x] Ersatt tre ärvda Ludo-rapporter och rättat kvarlämnade push-/QR-kontroller. Inaktiv Push capability och QR-kameratext borttagna; Sudoku har inte push.
+- [ ] iPhones verkliga systemfrågor och bildväljare: kräver nytt installerat appbygge och riktig telefon.
+
 ## Ledtråd och annonser (2026-11-11)
 - [x] Ledtråd fyller markerad tom/felaktig ruta; utan markering behålls befintligt val av ruta. Redan rätt ruta förbrukar ingen ledtråd.
 - [x] Jämför annonsers tider, UMP och ATT med Ludo/Yatzy utan ändringar där. Samma UMP/ATT som Ludo, uppstartsdelay 1,5 s och 60 s skydd mot efterföljande App Open; inga återkomstannonser enligt ägarens val av en uppstartsannons. Ludos återkomstgräns är 40 s, Yatzys nu 20 s — dessa används inte i Sudoku.

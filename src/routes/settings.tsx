@@ -4,6 +4,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { ArrowLeft, BarChart3, Camera, Check, ChevronRight, Eraser, Moon, Globe, Highlighter, ShieldCheck, Trash2, TriangleAlert, User, UserCog, Vibrate } from "lucide-react";
 import { AppVersion } from "@/components/AppVersion";
+import { Button } from "@/components/ui/button";
 import { DeletePlayerDataDialog } from "@/components/app/DeletePlayerDataDialog";
 import { toast } from "sonner";
 import { loadSettings, resetStats, saveSettings, type Settings } from "@/lib/player/storage";
@@ -130,10 +131,10 @@ function SettingsPage() {
             <div className="min-w-0 flex-1">
               <p className="truncate font-display text-sm font-bold">{s.name}</p>
               <div className="mt-1 flex flex-wrap gap-1.5">
-                <button type="button" onClick={() => fileRef.current?.click()} disabled={busy}
-                  className="min-h-9 rounded-full bg-primary/15 px-2.5 py-1.5 text-xs font-semibold text-primary transition-colors active:bg-primary/25 disabled:opacity-60">
+                <Button type="button" variant="ghost" onClick={() => fileRef.current?.click()} disabled={busy}
+                  className="min-h-11 h-auto whitespace-normal rounded-full bg-primary/15 px-2.5 py-1.5 text-xs font-semibold text-primary transition-colors active:bg-primary/25 disabled:opacity-60">
                   {t("changeAvatar")}
-                </button>
+                </Button>
                 {avatar && (
                   <button type="button" onClick={removePicture} disabled={busy}
                     className="min-h-9 rounded-full bg-destructive/10 px-2.5 py-1.5 text-xs font-semibold text-destructive transition-colors active:bg-destructive/20 disabled:opacity-60">

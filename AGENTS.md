@@ -30,3 +30,5 @@
 - DB integration tests (`*.db.test.ts`, `bun run test:db`) run only against a throwaway local PostgreSQL+PostgREST, never the live backend.
 - All new-game entry points use the browser worker generation helper; prepared puzzles are consumed once and start timestamps are reset on delivery, keeping solver work off the UI thread without changing the pure engine.
 - Home preloads only public local content routes; protected pages and authentication are not part of background navigation warming.
+- Native permission copy lives in `scripts/ios-permission-copy.js`; iOS sync regenerates and registers all 40 `InfoPlist.strings` resources so system prompts follow iOS language preferences independently of the in-game language.
+- Profile images use the existing HTML file picker and canvas conversion, not a camera plugin or photo-library capability; only the chosen file is read and the existing local/server avatar flow is retained.

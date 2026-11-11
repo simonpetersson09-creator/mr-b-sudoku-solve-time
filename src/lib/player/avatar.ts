@@ -25,7 +25,8 @@ export async function fileToAvatarDataUrl(file: File, maxSize = 256): Promise<st
   const canvas = document.createElement("canvas");
   canvas.width = size;
   canvas.height = size;
-  const ctx = canvas.getContext("2d")!;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("Image canvas unavailable");
   const side = Math.min(img.width, img.height);
   ctx.drawImage(img, (img.width - side) / 2, (img.height - side) / 2, side, side, 0, 0, size, size);
   return canvas.toDataURL("image/jpeg", 0.85);

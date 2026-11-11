@@ -215,8 +215,6 @@
 			<key>CFBundleURLSchemes</key><array><string>mrbsudoku</string></array>
 		</dict>
 	</array>
-	<key>NSCameraUsageDescription</key>
-	<string>The camera is used only to scan a friend's match QR code.</string>
   <key>CAPACITOR_DEBUG</key>
 	<string>$(CAPACITOR_DEBUG)</string>
 	<key>CFBundleDevelopmentRegion</key>
