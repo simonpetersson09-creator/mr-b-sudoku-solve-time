@@ -58,11 +58,11 @@ it("N8: a corrupt journal is quarantined, saved games stay visible and new saves
   const g = newGame("easy", 13, "n8");
   startNewGame(g);
   localStorage.setItem("mrb-sudoku:v1:storage-transaction", "{");
-  expect(loadGame("n8")?.id).toBe("n8");
+  expect(loadGame()?.id).toBe("n8");
   expect(localStorage.getItem("mrb-sudoku:v1:storage-transaction")).toBeNull();
   expect(localStorage.getItem(JOURNAL_QUARANTINE)).toBe("{");
   startNewGame(newGame("easy", 14, "n8b"));
-  expect(loadGame("n8b")?.id).toBe("n8b");
+  expect(loadGame()?.id).toBe("n8b");
   expect(readPlayerStorage("mrb-sudoku:v1:active-game-id")).toBe("n8b");
 });
 
