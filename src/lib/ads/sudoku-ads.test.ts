@@ -6,17 +6,19 @@ vi.mock("@capacitor/core", () => ({ Capacitor: { getPlatform: () => "ios", isNat
 const files = ["src/lib/ads/admob.ts", "scripts/set-ios-admob-plist.js", "ios/App/App/Info.plist", "android/app/src/main/AndroidManifest.xml"];
 
 describe("Mr.B. Sudoku ad configuration", () => {
-  it("uses only Google's sample ad IDs until Sudoku has its own", async () => {
+  it("uses Sudoku's approved iOS production IDs", async () => {
     const { ADMOB_IDS } = await import("./admob");
-    for (const p of ["ios", "android"] as const)
-      for (const id of Object.values(ADMOB_IDS[p])) expect(id).toMatch(/^ca-app-pub-3940256099942544[~/]/);
+    expect(ADMOB_IDS.ios).toEqual({ appId: "ca-app-pub-7448540924654868~5197213597", appOpen: "ca-app-pub-7448540924654868/5823578752", optional: "ca-app-pub-7448540924654868/3884131928" });
   });
-  it("puts Google's sample App IDs in the native projects", () => {
-    expect(readFileSync("ios/App/App/Info.plist", "utf8")).toContain("ca-app-pub-3940256099942544~1458002511");
+  it("leaves all Android IDs unchanged", async () => {
+    const { ADMOB_IDS } = await import("./admob");
+    expect(ADMOB_IDS.android).toEqual({ appId: "ca-app-pub-3940256099942544~3347511713", appOpen: "ca-app-pub-3940256099942544/9257395921", optional: "ca-app-pub-3940256099942544/1033173712" });
     expect(readFileSync("android/app/src/main/AndroidManifest.xml", "utf8")).toContain("ca-app-pub-3940256099942544~3347511713");
   });
-  it("never uses Ludo's or Yatzy's AdMob account anywhere", () => {
-    for (const f of files) expect(readFileSync(f, "utf8"), f).not.toContain("7448540924654868");
+  it("puts Sudoku's App ID in iOS", () => {
+    expect(readFileSync("ios/App/App/Info.plist", "utf8")).toContain("ca-app-pub-7448540924654868~5197213597");
+  });
+  it("never uses Yatzy's app or ad unit IDs (publisher account may match)", () => {
     const yatzy = ["6494873071", "8707432437", "6422685490", "1382689760", "2605382885", "7786182090", "2816751438"];
     for (const f of files) for (const id of yatzy) expect(readFileSync(f, "utf8")).not.toContain(id);
   });

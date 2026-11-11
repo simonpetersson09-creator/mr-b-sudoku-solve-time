@@ -38,11 +38,11 @@ const GOOGLE_TEST_IDS: Record<'ios' | 'android', Omit<PlatformAdIds, 'appId'>> =
 };
 
 export const ADMOB_IDS: Record<'ios' | 'android', PlatformAdIds> = {
-  // Until Mr.B. Sudoku has its own AdMob account, both platforms use Google's sample IDs only.
+  // Sudoku's approved iOS units; Android keeps Google's samples until its own IDs are supplied.
   ios: {
-    appId: 'ca-app-pub-3940256099942544~1458002511',
-    appOpen: GOOGLE_TEST_IDS.ios.appOpen,
-    optional: GOOGLE_TEST_IDS.ios.optional,
+    appId: 'ca-app-pub-7448540924654868~5197213597',
+    appOpen: 'ca-app-pub-7448540924654868/5823578752',
+    optional: 'ca-app-pub-7448540924654868/3884131928',
   },
   android: {
     appId: 'ca-app-pub-3940256099942544~3347511713',

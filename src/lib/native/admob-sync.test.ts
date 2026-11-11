@@ -9,6 +9,23 @@ import { configuredAppId, selectAppId, SAMPLE_APP_IDS } from '../../../scripts/a
 const production = 'ca-app-pub-1111111111111111~1111111111';
 const other = 'ca-app-pub-2222222222222222~2222222222';
 
+it('actual iOS sync installs and preserves the confirmed Sudoku App ID across repeated syncs', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'sudoku-ios-approved-'));
+  try {
+    cpSync('scripts', join(dir, 'scripts'), { recursive: true });
+    mkdirSync(join(dir, 'src/lib/ads'), { recursive: true });
+    cpSync('src/lib/ads/admob.ts', join(dir, 'src/lib/ads/admob.ts'));
+    mkdirSync(join(dir, 'ios/App/App'), { recursive: true });
+    const file = join(dir, 'ios/App/App/Info.plist');
+    writeFileSync(file, readFileSync('ios/App/App/Info.plist', 'utf8').replace('ca-app-pub-7448540924654868~5197213597', SAMPLE_APP_IDS.ios));
+    for (let i = 0; i < 2; i++) {
+      expect(spawnSync(process.execPath, [join(dir, 'scripts/set-ios-admob-plist.js')], { cwd: dir, encoding: 'utf8' }).status).toBe(0);
+      expect(readFileSync(file, 'utf8')).toContain('ca-app-pub-7448540924654868~5197213597');
+      expect(readFileSync(file, 'utf8')).not.toContain(SAMPLE_APP_IDS.ios);
+    }
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
 describe.each(['ios', 'android'] as const)('%s App ID safety', platform => {
   it('preserves a native production ID when app config still uses samples', () => {
     expect(selectAppId(platform, SAMPLE_APP_IDS[platform], production)).toBe(production);
@@ -30,17 +47,19 @@ describe.each(['ios', 'android'] as const)('%s App ID safety', platform => {
     expect(() => selectAppId(platform, 'invalid', production)).toThrow();
   });
   it('reads the actual platform config, not the earlier test-ID block', () => {
-    expect(configuredAppId(readFileSync('src/lib/ads/admob.ts', 'utf8'), platform)).toBe(SAMPLE_APP_IDS[platform]);
+    expect(configuredAppId(readFileSync('src/lib/ads/admob.ts', 'utf8'), platform)).toBe(platform === 'ios' ? 'ca-app-pub-7448540924654868~5197213597' : SAMPLE_APP_IDS.android);
   });
   it('runs the actual sync script twice without overwriting production or restoring camera permission', () => {
     const dir = mkdtempSync(join(tmpdir(), 'sudoku-admob-sync-'));
     try {
       cpSync('scripts', join(dir, 'scripts'), { recursive: true });
       mkdirSync(join(dir, 'src/lib/ads'), { recursive: true });
-      cpSync('src/lib/ads/admob.ts', join(dir, 'src/lib/ads/admob.ts'));
+      const source = readFileSync('src/lib/ads/admob.ts', 'utf8');
+      // Exercise an existing native production ID while the central config still has samples.
+      writeFileSync(join(dir, 'src/lib/ads/admob.ts'), source.replace('ca-app-pub-7448540924654868~5197213597', SAMPLE_APP_IDS.ios));
       const file = platform === 'ios' ? 'ios/App/App/Info.plist' : 'android/app/src/main/AndroidManifest.xml';
       mkdirSync(join(dir, platform === 'ios' ? 'ios/App/App' : 'android/app/src/main'), { recursive: true });
-      let initial = readFileSync(file, 'utf8').replace(SAMPLE_APP_IDS[platform], production);
+      let initial = readFileSync(file, 'utf8').replace(platform === 'ios' ? 'ca-app-pub-7448540924654868~5197213597' : SAMPLE_APP_IDS.android, production);
       if (platform === 'ios') initial = initial.replace('<dict>', '<dict><key>NSCameraUsageDescription</key><string>Old QR camera</string>');
       writeFileSync(join(dir, file), initial);
       const script = platform === 'ios' ? 'set-ios-admob-plist.js' : 'set-android-admob-manifest.js';

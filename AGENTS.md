@@ -24,7 +24,7 @@
 - The published website is download-only (`src/server.ts` + pure `src/lib/web-access.ts`); preview hosts and native origins are never gated.
 - Capacitor launches the `dist-native` static bundle from `vite.native.config.ts`, so local play needs no server; native projects contain no signing credentials, and build scripts never publish.
 - Native identity/version must agree across Capacitor, both platform projects and verification tests; the Apple team stays empty until supplied, so unsigned preparation cannot silently become a release build.
-- Ads use the existing AdMob/UMP/ATT flow in `src/lib/ads/`; hints share the fullscreen dismissal lifecycle, result exits are deduplicated by game ID, and startup is guarded per launch. Use only Google's sample IDs until the app has its own AdMob account, so identities remain separate.
+- Ads use the existing AdMob/UMP/ATT flow in `src/lib/ads/`; hints share the fullscreen dismissal lifecycle, result exits are deduplicated by game ID, and startup is guarded per launch. Production uses only approved platform-specific Sudoku units; development uses Google's samples, and platforms without approved units retain samples.
 - AndroidBackButton is the only owner of native back events; leaving a game via back returns home because games save continuously.
 - App icon/splash source is `resources/icon.png`; `scripts/make-icons.mjs` regenerates committed `resources/` and `scripts/set-native-icons.mjs` copies them into the native projects.
 - Native AdMob sync scripts share a conservative App ID selector: preserve production IDs and reject conflicts or unreadable configuration, preventing sample IDs from replacing production configuration.
