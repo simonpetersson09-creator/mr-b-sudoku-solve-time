@@ -1,9 +1,14 @@
 # Roadmap: Mr.B. Sudoku
 
+## Belöningsannonser för ledtrådar (2026-11-11)
+- [ ] Inför godkänt iOS Rewarded-ID, frivilligt erbjudande på 40 språk och exakt en spelbunden ledtråd per SDK-belöning.
+- [ ] Verifiera fel, dubbelhändelser, spelbyte, sparning, treledtrådsgräns och hela tillgängliga testsviten; skriv slutrapport.
+- [ ] Verklig iPhone: SDK-visning, kontots belöningsinställningar, bakgrund och UMP/ATT kräver installerat osignerat/testsignerat telefonbygge och native-verktyg.
+
 ## iOS AdMob-produktionsuppgifter (2026-11-11)
 - [x] Bekräftade iOS-ID:n införda; Android oförändrat och Googles enheter används i utveckling. Synkskydd och UMP-ordning verifierade.
 - [x] Ledtråd, dubbelvisning och sparning granskade; 257 tester godkända och återöppning provad utan sidfel.
-- [ ] Beslut om ledtrådsflöde: befintlig regel ger/förbrukar ledtråd även vid annonsfel, saknad annons eller stängning. Väntar på ägarens godkännande till ändring; mellanannons varje ledtråd har policyrisk.
+- [x] Ägaren har godkänt byte från ledtrådsmellanannons till frivillig belöningsannons med SDK-bekräftelse.
 - [ ] Verklig annonsvisning/UMP: kräver installerad app och kontots meddelanden; ingen publicering.
 
 ## Lanseringsförberedelser steg 1 (2026-11-11)

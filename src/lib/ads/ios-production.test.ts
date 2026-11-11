@@ -40,10 +40,10 @@ it('production App Open uses the confirmed iOS unit after UMP and ATT', async ()
   expect(sdk.order).toEqual(['ump', 'att', 'initialize', 'appOpen']);
   expect(sdk.show).not.toHaveBeenCalled();
 });
-it.each(['hint', 'result'] as const)('production %s uses the confirmed shared interstitial, waits for dismissal and never grants a reward', async kind => {
+it('production result exit uses the confirmed interstitial and waits for dismissal', async () => {
   const m = await import('./admob');
-  if (kind === 'result') expect(await m.preloadInterstitial()).toBe(true);
-  const pending = kind === 'hint' ? m.showHintInterstitial() : m.showPostMatchInterstitial({ matchKey: 'ios-config-fixture', action: 'home' });
+  expect(await m.preloadInterstitial()).toBe(true);
+  const pending = m.showPostMatchInterstitial({ matchKey: 'ios-config-fixture', action: 'home' });
   await vi.advanceTimersByTimeAsync(0);
   expect(sdk.prepare).toHaveBeenCalledWith({ adId: 'ca-app-pub-7448540924654868/3884131928', isTesting: false });
   expect(sdk.order.slice(0, 4)).toEqual(['ump', 'att', 'initialize', 'interstitial']);

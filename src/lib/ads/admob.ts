@@ -579,17 +579,12 @@ export async function showOptionalInterstitial(): Promise<ShowAdResult> {
   return showInterstitial('optional');
 }
 
-/** Each used hint is its own opportunity, with the same fullscreen lifecycle as a result exit. */
-export async function showHintInterstitial(): Promise<ShowAdResult> {
-  return showInterstitial('hint');
-}
-
 /** Result exit only: skip unprepared ads rather than delaying navigation. No XP. */
 export async function showPostMatchInterstitial(context?: { matchKey: string; action: 'home' | 'replay' }): Promise<ShowAdResult> {
   return showInterstitial('postMatch', context);
 }
 
-async function showInterstitial(kind: 'optional' | 'postMatch' | 'hint', context?: { matchKey: string; action: 'home' | 'replay' }): Promise<ShowAdResult> {
+async function showInterstitial(kind: 'optional' | 'postMatch', context?: { matchKey: string; action: 'home' | 'replay' }): Promise<ShowAdResult> {
   const generation = adGeneration;
   const startedAt = Date.now();
   const details = { ...context, loadId: interstitialLoadId, cacheAgeMs: preparedAt ? Date.now() - preparedAt : null };
@@ -599,7 +594,7 @@ async function showInterstitial(kind: 'optional' | 'postMatch' | 'hint', context
   };
   const skip = (result: ShowAdResult, reason: string) => {
     opportunity('skipped', reason);
-    if (kind !== 'optional') reportAd(kind === 'hint' ? 'interstitial' : kind, 'skipped', startedAt, reason, { ...details, ...(kind === 'hint' ? { source: 'hint' } : {}) });
+    if (kind !== 'optional') reportAd(kind, 'skipped', startedAt, reason, details);
     return result;
   };
   if (!adAllowed(generation)) return skip('busy', 'ads_not_ready');
@@ -614,7 +609,7 @@ async function showInterstitial(kind: 'optional' | 'postMatch' | 'hint', context
     const ready = kind === 'postMatch' || await preloadInterstitial();
     if (!ready) {
       showing = false;
-      reportAd(kind === 'hint' ? 'interstitial' : kind, 'load_failed', startedAt, lastPrepareError);
+      reportAd(kind, 'load_failed', startedAt, lastPrepareError);
       return 'failed';
     }
     shownLoadId = interstitialLoadId;
@@ -627,7 +622,7 @@ async function showInterstitial(kind: 'optional' | 'postMatch' | 'hint', context
     listeners.push(await mod.AdMob.addListener(mod.InterstitialAdPluginEvents.FailedToShow, () => settle('failed')));
     if (!adAllowed(generation)) return skip('unavailable', 'ads_state_changed');
     if (kind !== 'optional') {
-      reportAd(kind === 'hint' ? 'interstitial' : kind, 'show_requested', startedAt, undefined, { ...details, ...(kind === 'hint' ? { source: 'hint' } : {}) });
+      reportAd(kind, 'show_requested', startedAt, undefined, details);
       suppressAppOpenUntil = Date.now() + APP_OPEN_SUPPRESS_AFTER_REWARDED_MS;
       // Never free an uncancellable native attempt just because a timer elapsed.
       void mod.AdMob.showInterstitial().catch((err) => { lastShowError = reasonOf(err); settle('failed'); });
@@ -641,32 +636,32 @@ async function showInterstitial(kind: 'optional' | 'postMatch' | 'hint', context
     opportunity(result === 'shown' ? 'shown' : 'failed', result === 'shown' ? undefined : 'sdk_show_failed');
     // Dismissed/FailedToShow owns cache consumption. Do not clear a replacement
     // load that the global dismissal listener may already have completed.
-    reportAd(kind === 'hint' ? 'interstitial' : kind, result === 'shown' ? 'shown' : 'show_failed', startedAt, lastShowError, { ...details, ...(kind === 'hint' ? { source: 'hint' } : {}) });
+    reportAd(kind, result === 'shown' ? 'shown' : 'show_failed', startedAt, lastShowError, details);
     return result;
   } catch (err) {
     opportunity('failed', 'sdk_show_failed');
     if (adAllowed(generation) && interstitialLoadId === shownLoadId) preparedAt = 0;
-    reportAd(kind === 'hint' ? 'interstitial' : kind, 'show_failed', startedAt, reasonOf(err), details);
+    reportAd(kind, 'show_failed', startedAt, reasonOf(err), details);
     return 'failed';
   } finally {
     if (kind === 'postMatch') suppressAppOpenUntil = Date.now() + APP_OPEN_SUPPRESS_AFTER_REWARDED_MS;
-    if (kind === 'hint') suppressAppOpenUntil = Date.now() + APP_OPEN_SUPPRESS_AFTER_REWARDED_MS;
     await Promise.all(listeners.map((listener) => listener.remove().catch(() => {})));
     showing = false;
   }
 }
 
 /* ------------------------------------------------------------------ */
-/* Rewarded (iOS only): frivillig XP-annons                             */
+/* Rewarded: frivilligt erbjudande om en ledtråd                       */
 /* ------------------------------------------------------------------ */
 
-/** Rewarded ad units for the optional XP button (own IDs per platform). */
-const REWARDED_IDS: Record<'ios' | 'android', { real: string; test: string } | null> = { ios: null, android: null };
+/** Android remains unconfigured; no iOS unit may be requested there. */
+export const REWARDED_IDS: Record<'ios' | 'android', { real: string; test: string } | null> = {
+  ios: { real: 'ca-app-pub-7448540924654868/8705213764', test: 'ca-app-pub-3940256099942544/1712485313' },
+  android: null,
+};
 /** Android: load and "ad actually opened" limits; never cuts a running ad. */
 const ANDROID_REWARDED_LOAD_TIMEOUT_MS = 20_000;
 const ANDROID_REWARDED_OPEN_TIMEOUT_MS = 20_000;
-/** Reward callback may arrive just after dismissal on some SDK versions. */
-const REWARD_GRACE_MS = 1500;
 /** Start ad stays away this long (60 s) after the rewarded or post-match ad closes. */
 const APP_OPEN_SUPPRESS_AFTER_REWARDED_MS = 60_000;
 
@@ -752,7 +747,12 @@ let lateRewardHandler: (() => void) | null = null;
  * { rewarded }. Ids of attempts that closed unrewarded are kept so a Rewarded
  * event arriving after dismissal pays exactly once, to the right attempt.
  */
-type RewardEvent = { attemptId?: string } | undefined;
+type RewardEvent = { attemptId?: string; amount?: number; type?: string } | undefined;
+function validHintReward(ev: RewardEvent): boolean {
+  if (!ev || typeof ev.amount !== 'number' || !Number.isFinite(ev.amount) || ev.amount <= 0 || typeof ev.type !== 'string' || !ev.type.trim()) return false;
+  // Google's sample inventory has its own reward metadata; it still gives only one app hint.
+  return ADMOB_CONFIG.useTestAds || ev.amount === 1 && ev.type === 'Hint';
+}
 type ListenerHandle = { remove: () => Promise<void> };
 /** addListener for rewarded events with the attemptId payload of the patched plugin. */
 const onReward = (mod: AdMobModule) =>
@@ -765,7 +765,7 @@ async function ensureLateRewardListener(mod: AdMobModule) {
   lateRewardListenerAttached = true;
   await onReward(mod)(mod.RewardAdPluginEvents.Rewarded, (ev: RewardEvent) => {
     const aid = ev?.attemptId;
-    if (aid && closedUnrewarded.delete(aid)) {
+    if (aid && validHintReward(ev) && closedUnrewarded.delete(aid)) {
       const handler = closedRewardHandlers.get(aid) ?? lateRewardHandler;
       closedRewardHandlers.delete(aid);
       handler?.();
@@ -797,7 +797,7 @@ export function setLateRewardHandler(fn: (() => void) | null): void {
  * The attempt (and its listeners) stays alive until the SDK finishes it, so a
  * new attempt can never overlap or receive the old attempt's events.
  */
-export async function showOptionalRewarded(options: { waitForCompletion?: boolean; onLateReward?: () => void } = {}): Promise<RewardedResult> {
+export async function showOptionalRewarded(options: { waitForCompletion?: boolean; onLateReward?: () => void; onReward?: () => void } = {}): Promise<RewardedResult> {
   const generation = adGeneration;
   if (!adAllowed(generation)) return 'busy';
   if (!isAdMobAvailable() || !rewardedUnitId()) return 'unavailable';
@@ -825,11 +825,11 @@ export async function showOptionalRewarded(options: { waitForCompletion?: boolea
     }
     const mod = await loadModule();
     const E = mod.RewardAdPluginEvents;
-    if (!adAllowed(generation)) return 'unavailable';
+    if (!adAllowed(generation) || (typeof document !== 'undefined' && document.visibilityState === 'hidden')) return 'unavailable';
     const nativeId = `${startedAt.toString(36)}-${id}`;
     // Tagged events (patched native) must match this attempt; untagged ones
     // (unpatched native) fall back to "the only active attempt".
-    const mine = (ev?: RewardEvent) => (ev?.attemptId != null ? ev.attemptId === nativeId : activeRewardedAttempt === id);
+    const mine = (ev?: RewardEvent) => ev?.attemptId === nativeId && activeRewardedAttempt === id;
     await ensureLateRewardListener(mod);
     let earned = false;
     let opened = false;
@@ -838,7 +838,12 @@ export async function showOptionalRewarded(options: { waitForCompletion?: boolea
       let done = false;
       finish = (r) => { if (!done) { done = true; resolve(r); } };
     });
-    listeners.push(await onReward(mod)(E.Rewarded, (ev: RewardEvent) => { if (mine(ev)) earned = true; }));
+    const grant = () => {
+      if (earned) return;
+      earned = true;
+      options.onReward?.();
+    };
+    listeners.push(await onReward(mod)(E.Rewarded, (ev: RewardEvent) => { if (mine(ev) && validHintReward(ev)) grant(); }));
     listeners.push(await onReward(mod)(E.Showed, (ev: RewardEvent) => {
       if (!mine(ev)) return;
       opened = true;
@@ -848,28 +853,26 @@ export async function showOptionalRewarded(options: { waitForCompletion?: boolea
     listeners.push(await onReward(mod)(E.FailedToShow, (ev: RewardEvent) => { if (mine(ev)) finish(earned ? 'rewarded' : 'failed'); }));
     listeners.push(await onReward(mod)(E.Dismissed, (ev: RewardEvent) => {
       if (!mine(ev)) return;
-      if (ev?.attemptId != null) return; // patched native: the show call's resolution decides
-      if (earned) { finish('rewarded'); return; }
-      setTimeout(() => finish(earned ? 'rewarded' : 'not_earned'), REWARD_GRACE_MS);
+      // The close event, not a potentially missing show-call resolution, releases ownership.
+      if (!earned) rememberUnrewarded(nativeId, () => { grant(); options.onLateReward?.(); });
+      finish(earned ? 'rewarded' : 'not_earned');
     }));
-    if (!adAllowed(generation)) return 'unavailable';
+    if (!adAllowed(generation) || (typeof document !== 'undefined' && document.visibilityState === 'hidden')) return 'unavailable';
     rewardedPreparedAt = 0; // consumed as soon as we try to show it
     presentationAttempted = true;
     suppressAppOpenUntil = Date.now() + APP_OPEN_SUPPRESS_AFTER_REWARDED_MS;
-    // Both native plugins resolve the show call ONLY from the SDK's
-    // earned-reward callback, so resolution is a second reward signal; the
-    // attempt still yields at most one reward. A rejection only ends the
-    // attempt if the ad has not opened.
+    // Patched native resolves on dismissal. Reward eligibility comes only
+    // from the tagged Rewarded event, never this promise or its reward flag.
+    // A rejection cannot release ownership while the native ad is open.
     (mod.AdMob.showRewardVideoAd as (o: object) => Promise<unknown>)({ attemptId: nativeId }).then(
       (res) => {
         const r = res as { patched?: boolean; rewarded?: boolean; attemptId?: string } | undefined;
-        if (r?.patched) {
-          if (r.rewarded) earned = true;
-          if (!earned) rememberUnrewarded(nativeId, options.onLateReward);
+        if (r?.patched && r.attemptId === nativeId) {
+          // A resolved promise is NOT a reward event, even when it says rewarded:true.
+          if (!earned) rememberUnrewarded(nativeId, () => { grant(); options.onLateReward?.(); });
           finish(earned ? 'rewarded' : 'not_earned');
           return;
         }
-        if (mine()) earned = true; // unpatched native resolves only on reward
       },
       () => { if (!opened) finish(earned ? 'rewarded' : 'failed'); },
     );
@@ -896,7 +899,7 @@ export async function showOptionalRewarded(options: { waitForCompletion?: boolea
     void lifecycle.then((late) => {
       release();
       reportAd('optional', `late_${late}`, startedAt);
-      if (late === 'rewarded') (options.onLateReward ?? lateRewardHandler)?.();
+      if (late === 'rewarded') options.onLateReward?.();
     });
     return 'pending';
   } catch (err) {

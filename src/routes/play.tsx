@@ -1,7 +1,9 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, Check, CircleX, Eraser, Lightbulb, Pause, Pencil, Play, Undo2 } from "lucide-react";
-import { preloadInterstitial, showHintInterstitial } from "@/lib/ads/admob";
+import { getRewardedState, preloadInterstitial, preloadRewarded, showOptionalRewarded, subscribeRewardedState } from "@/lib/ads/admob";
+import { createHintReward } from "@/lib/ads/hint-reward";
+import { Button } from "@/components/ui/button";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
@@ -9,7 +11,7 @@ import { AppOpenGameGate } from "@/components/AppOpenGameGate";
 import { usePostMatchExit } from "@/lib/ads/usePostMatchExit";
 import { reportLocalGame } from "@/lib/backend/report";
 import {
-  PEERS, MAX_MISTAKES, MAX_UNDOS, MAX_HINTS, explainHint, markHint, type HintInfo, completedGroups, isLost, digitCounts, erase, hasNote, isGiven, isWrong, setValue, toggleNote, undo, type GameState, type Level,
+  PEERS, MAX_MISTAKES, MAX_UNDOS, MAX_HINTS, explainHint, type HintInfo, completedGroups, isLost, digitCounts, erase, hasNote, isGiven, isWrong, setValue, toggleNote, undo, type GameState, type Level,
 } from "@/lib/sudoku/engine";
 import { LEVEL_KEY, formatTime } from "@/lib/sudoku/format";
 import { loadGame, loadProgress, loadSettings, loadStats, recordFinish, removeGame, saveGame, startNewGame } from "@/lib/player/storage";
@@ -33,7 +35,7 @@ export const Route = createFileRoute("/play")({
   component: () => <AppOpenGameGate><PlayPage /></AppOpenGameGate>,
 });
 
-function PlayPage() {
+export function PlayPage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [state, setState] = useState<GameState | null>(null);
@@ -45,6 +47,14 @@ function PlayPage() {
   const [hintInfo, setHintInfo] = useState<{ info: HintInfo; step: 1 | 2 } | null>(null);
   const [hintBusy, setHintBusy] = useState(false);
   const hintInFlight = useRef(false);
+  const [hintOffer, setHintOffer] = useState(false);
+  const [adState, setAdState] = useState(getRewardedState);
+  const currentGame = useRef<GameState | null>(null);
+  currentGame.current = state;
+  const mounted = useRef(false);
+  useEffect(() => { mounted.current = true; return () => { mounted.current = false; currentGame.current = null; }; }, []);
+  useEffect(() => subscribeRewardedState(setAdState), []);
+  const adBusy = hintBusy || adState !== "idle";
   const [unlocked, setUnlocked] = useState<Level[]>([]);
   const [confirmEnd, setConfirmEnd] = useState(false);
   const [flash, setFlash] = useState<Set<number>>(new Set());
@@ -82,7 +92,7 @@ function PlayPage() {
   const bestMs = stats[state?.level ?? "easy"].bestMs ?? previewBest;
   const finishedDone = useRef(false);
   const startingAgain = useRef(false);
-  useEffect(() => { void preloadInterstitial(); }, []);
+  useEffect(() => { void preloadInterstitial(); void preloadRewarded(); }, []);
   useEffect(() => {
     if (state?.finished || (state && isLost(state))) prepareGame(state.level);
   }, [state?.finished, state?.level, state?.mistakes]);
@@ -98,7 +108,7 @@ function PlayPage() {
 
   // Timer: counts only while the screen is visible and not paused.
   useEffect(() => {
-    if (!state || state.finished || isLost(state) || paused || hintBusy) return;
+    if (!state || state.finished || isLost(state) || paused || adBusy || hintOffer) return;
     let last = Date.now();
     const tick = () => {
       const now = Date.now();
@@ -110,7 +120,7 @@ function PlayPage() {
     const onVis = () => { if (document.visibilityState !== "visible") setPaused(true); last = Date.now(); };
     document.addEventListener("visibilitychange", onVis);
     return () => { window.clearInterval(id); document.removeEventListener("visibilitychange", onVis); };
-  }, [state?.finished, state ? isLost(state) : false, paused, hintBusy, state?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [state?.finished, state ? isLost(state) : false, paused, adBusy, hintOffer, state?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Autosave every change (finished games are removed from the saved list).
   // A lost game is never saved again, so it disappears from the ongoing games.
@@ -129,15 +139,15 @@ function PlayPage() {
   }, [state]);
 
   const act = useCallback((fn: (s: GameState) => GameState) => {
-    setState((s) => (s && !paused && !hintInFlight.current ? fn(s) : s));
-  }, [paused, !!state]);
+    setState((s) => (s && !paused && !adBusy && !hintOffer && !hintInFlight.current ? fn(s) : s));
+  }, [paused, adBusy, hintOffer, !!state]);
 
   const input = (d: number, at: number | null = selected, fromHint = false, base: GameState | null = null) => {
     const selected = at;
     if (selected == null || !state) return;
     setSameDigit(null);
     if (notesMode && !fromHint) { act((s) => toggleNote(s, selected, d)); void playLightHaptic(); setNotesMode(false); return; }
-    if (paused || (!fromHint && hintInFlight.current)) return;
+    if (paused || (!fromHint && (hintInFlight.current || adBusy || hintOffer))) return;
     const before = base ?? state;
     // A wrong digit fades away by itself, so it must not enter the undo history.
     const next = setValue(before, selected, d, settings.autoRemoveNotes, d === before.solution[selected]);
@@ -222,25 +232,38 @@ function PlayPage() {
   const counts = digitCounts(state);
   const peers = selected != null ? new Set(PEERS[selected]) : new Set<number>();
 
-  // A hint (after an optional interstitial) fills one good square directly; a short note explains why.
+  // The offer is separate from acceptance. Only a tagged SDK reward can mutate the game.
   const doHint = async () => {
-    if (hintInFlight.current || paused || state.finished || lost || state.hints >= MAX_HINTS) return;
+    if (hintInFlight.current || adBusy || paused || state.finished || lost || state.hints >= MAX_HINTS) return;
     const info = explainHint(state, selected);
     if (info == null) return;
     hintInFlight.current = true;
     setHintBusy(true);
-    try { await showHintInterstitial(); } catch { /* the hint is never blocked by an ad */ }
-    hintInFlight.current = false;
-    // Native visibility events can pause play while the ad is open.
-    setPaused(false);
-    setHintBusy(false);
-    const r = markHint(state, info.cell);
-    if (r.cell == null) return;
-    input(info.digit, info.cell, true, r.state);
-    setSelected(null);
-    setHinted((h) => new Set(h).add(info.cell));
-    setHintInfo({ info, step: 1 });
-    window.setTimeout(() => setHintInfo((h) => (h?.info === info ? null : h)), 3500);
+    let received = false;
+    const claim = createHintReward(state.id, info.cell, settings.autoRemoveNotes, () => {
+      // loadGame also checks the active game ID, including changes while away from this screen.
+      const active = loadGame();
+      return mounted.current && active?.id === state.id ? currentGame.current : null;
+    }, (next, explanation) => {
+      currentGame.current = next;
+      saveGame(next); // persist synchronously at the reward boundary, before another callback/navigation.
+      setState(next);
+      setSelected(null); setSameDigit(null); setNotesMode(false);
+      setShakeCell(null); setPopCell({ i: explanation.cell, k: Date.now() });
+      setHinted((h) => new Set(h).add(explanation.cell));
+      setHintInfo({ info: explanation, step: 1 });
+      window.setTimeout(() => setHintInfo((h) => (h?.info === explanation ? null : h)), 3500);
+      if (next.finished) { setCelebrating(true); window.setTimeout(() => setCelebrating(false), 1600); }
+      void playLightHaptic();
+    });
+    try {
+      const result = await showOptionalRewarded({ onReward: () => { received = true; claim(); } });
+      if (mounted.current) {
+        if (result === "pending") toast.message(t("hintAdWaiting"));
+        else if (!received) toast.message(t(result === "not_earned" ? "hintAdNotEarned" : "hintAdUnavailable"));
+      }
+    } catch { if (mounted.current && !received) toast.error(t("hintAdUnavailable")); }
+    finally { hintInFlight.current = false; if (mounted.current) { setHintBusy(false); setPaused(false); } }
   };
   const activeHint = hintInfo?.info ?? null;
   const showHint: number | null = null;
@@ -272,7 +295,7 @@ function PlayPage() {
             <ArrowLeft className="h-4 w-4" /><span>{t("back")}</span>
           </button>
           <div className="ml-auto flex items-center gap-2">
-            <button onClick={() => setPaused((p) => !p)} disabled={state.finished || hintBusy} aria-label={paused ? t("resume") : t("pause")} className="sdk-round-btn" data-active={paused}>
+            <button onClick={() => setPaused((p) => !p)} disabled={state.finished || adBusy} aria-label={paused ? t("resume") : t("pause")} className="sdk-round-btn" data-active={paused}>
               {paused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}<span>{paused ? t("resume") : t("pause")}</span>
             </button>
             <button onClick={() => setConfirmEnd(true)} disabled={state.finished} aria-label={t("endGame")} className="sdk-round-btn sdk-round-end">
@@ -321,6 +344,7 @@ function PlayPage() {
                   aria-label={t("cellLabel", { row: r + 1, col: c + 1 }) + (v ? `: ${v}` : "") + (showHint === i ? ` (${t("hint")}: ${state.solution[i]})` : "")}
                   className="sdk-cell"
                   onClick={() => {
+                    if (adBusy || hintOffer) return;
                     if (hinted.has(i) && !lockedHints.has(i) && v === state.solution[i]) { setLockedHints((s) => new Set(s).add(i)); void playLightHaptic(); }
                     if (selected === i) { setSelected(null); setSameDigit(null); void playLightHaptic(); return; }
                     setSelected(i); setSameDigit(v !== 0 ? v : null);
@@ -343,7 +367,7 @@ function PlayPage() {
           <button className="sdk-tool" onClick={() => { setHintInfo(null); setSameDigit(null); act(undo); }} disabled={paused || !state.history.length || state.undosLeft <= 0} aria-label={`${t("undo")}: ${state.undosLeft}/${MAX_UNDOS}`}><Undo2 className="h-5 w-5" />{t("undo")}<span className="sdk-pips" aria-hidden="true">{Array.from({ length: MAX_UNDOS }, (_, i) => <span key={i} className="sdk-pip" data-on={i < state.undosLeft} />)}</span></button>
           <button className="sdk-tool" onClick={() => selected != null && act((s) => erase(s, selected))} disabled={paused}><Eraser className="h-5 w-5" />{t("eraseNotes")}</button>
           <button className="sdk-tool" aria-pressed={notesMode} onClick={() => setNotesMode((n) => !n)} disabled={paused}><Pencil className="h-5 w-5" />{t("notes")}</button>
-          <button className="sdk-tool relative" onClick={() => void doHint()} disabled={paused || hintBusy || state.hints >= MAX_HINTS} aria-label={`${t("hint")}: ${MAX_HINTS - state.hints}/${MAX_HINTS}`}><Lightbulb className="h-5 w-5" />{t("hint")}<span className="sdk-pips" aria-hidden="true">{Array.from({ length: MAX_HINTS }, (_, i) => <span key={i} className="sdk-pip" data-on={i < MAX_HINTS - state.hints} />)}</span></button>
+          <button className="sdk-tool relative" onClick={() => { if (!hintInFlight.current && !adBusy && explainHint(state, selected)) setHintOffer(true); }} disabled={paused || adBusy || state.finished || lost || state.hints >= MAX_HINTS} aria-label={`${t("hint")}: ${MAX_HINTS - state.hints}/${MAX_HINTS}`}><Lightbulb className="h-5 w-5" />{t("hint")}<span className="sdk-pips" aria-hidden="true">{Array.from({ length: MAX_HINTS }, (_, i) => <span key={i} className="sdk-pip" data-on={i < MAX_HINTS - state.hints} />)}</span></button>
         </div>
 
         <div className="sdk-pad">
@@ -363,6 +387,18 @@ function PlayPage() {
         </div>
         <p className="sdk-hint-tip" role="status" data-show={hintText != null}>{hintText != null && <><Lightbulb className="h-3 w-3 shrink-0" /><span>{hintText}</span></>}</p>
       </div>
+      <AlertDialog open={hintOffer} onOpenChange={setHintOffer}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t("hint")}</AlertDialogTitle>
+            <AlertDialogDescription>{t("hintAdOffer")}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
+            <Button className="h-auto min-h-11 whitespace-normal" onClick={() => { setHintOffer(false); void doHint(); }} disabled={adBusy}>{t("hintAdAccept")}</Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       <AlertDialog open={confirmEnd} onOpenChange={setConfirmEnd}>
         <AlertDialogContent>
           <AlertDialogHeader>
