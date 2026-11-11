@@ -54,7 +54,7 @@ try {
       }
     }
     if (!config.includes('appId: "se.shiningdays.mrbsudoku"') || !gradle.includes('applicationId "se.shiningdays.mrbsudoku"') || (ios.match(/PRODUCT_BUNDLE_IDENTIFIER = se\.shiningdays\.mrbsudoku;/g) || []).length !== 2) throw new Error("Mr.B. Sudoku app identity missing");
-    if (!gradle.includes('versionCode 1') || !gradle.includes('versionName "1.0.0"') || (ios.match(/CURRENT_PROJECT_VERSION = 1;/g) || []).length !== 2 || (ios.match(/MARKETING_VERSION = 1.0.0;/g) || []).length !== 2) throw new Error("Android/iOS app versions differ");
+    if (!gradle.includes('versionCode 1') || !gradle.includes('versionName "1.0.0"') || (ios.match(/CURRENT_PROJECT_VERSION = 2;/g) || []).length !== 2 || (ios.match(/MARKETING_VERSION = 1.0.0;/g) || []).length !== 2) throw new Error("Expected Android 1.0.0 (1) and iOS 1.0.0 (build 2)");
     if (!spm.includes('exact: "8.6.0"')) throw new Error("iOS Capacitor package version differs");
     for (const path of sourceOnly ? [] : ["android/app/src/main/assets", "ios/App/App"]) {
       requireFiles([`${path}/public/index.html`, `${path}/capacitor.config.json`]);

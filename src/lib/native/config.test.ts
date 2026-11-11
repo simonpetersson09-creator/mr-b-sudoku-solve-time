@@ -18,7 +18,7 @@ describe("approved native configuration", () => {
   });
   it("uses build number 1 on both platforms", () => {
     expect(read("android/app/build.gradle")).toMatch(/versionCode 1\s/);
-    expect(read("ios/App/App.xcodeproj/project.pbxproj").match(/CURRENT_PROJECT_VERSION = 1;/g)).toHaveLength(2);
+    expect(read("ios/App/App.xcodeproj/project.pbxproj").match(/CURRENT_PROJECT_VERSION = 2;/g)).toHaveLength(2);
   });
   it("leaves the Apple team empty until Mr.B. Sudoku's own team is approved", () => {
     const project = read("ios/App/App.xcodeproj/project.pbxproj");

@@ -10,7 +10,7 @@ function fixture() {
   roots.push(root);
   const put = (path: string, text: string) => { mkdirSync(join(root, path, ".."), { recursive: true }); writeFileSync(join(root, path), text); };
   put("ios/App/App/capacitor.config.json", JSON.stringify({ appId: "se.shiningdays.mrbsudoku", packageClassList: ["AdMobPlugin", "InAppReviewPlugin", "AppPlugin", "HapticsPlugin", "CAPNetworkPlugin", "SharePlugin", "StatusBarPlugin", "SecureStoragePlugin"] }));
-  put("ios/App/App.xcodeproj/project.pbxproj", ['PRODUCT_BUNDLE_IDENTIFIER = se.shiningdays.mrbsudoku;', 'MARKETING_VERSION = 1.0.0;', 'CURRENT_PROJECT_VERSION = 1;', 'DEVELOPMENT_TEAM = "";'].join("\n").repeat(2));
+  put("ios/App/App.xcodeproj/project.pbxproj", ['PRODUCT_BUNDLE_IDENTIFIER = se.shiningdays.mrbsudoku;', 'MARKETING_VERSION = 1.0.0;', 'CURRENT_PROJECT_VERSION = 2;', 'DEVELOPMENT_TEAM = "";'].join("\n").repeat(2));
   put("ios/App/App/Info.plist", "ca-app-pub-7448540924654868~5197213597");
   for (const file of ["AppDelegate.swift", "SceneDelegate.swift", "App.entitlements", "PrivacyInfo.xcprivacy", "Base.lproj/Main.storyboard", "Base.lproj/LaunchScreen.storyboard"]) put(`ios/App/App/${file}`, "fixture");
   for (const dir of ["dist-native", "ios/App/App/public"]) {

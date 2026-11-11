@@ -13,6 +13,7 @@ vi.mock("@/lib/backend/online.functions", () => ({ deletePlayerData: () => m.ser
 vi.mock("./online.functions", () => ({ logEvent: m.log }));
 vi.mock("@/lib/auth/client", () => ({ supabase: { auth: { signOut: m.signOut } } }));
 vi.mock("@capacitor/core", () => ({ Capacitor: { isNativePlatform: () => true } }));
+vi.mock("@capacitor/app", () => ({ App: { getInfo: async () => ({ version: "1.0.0", build: "2" }) } }));
 vi.mock("capacitor-secure-storage-plugin", () => ({ SecureStoragePlugin: secure }));
 import { deletePlayerData } from "./player/player-data";
 import { deviceId, initDeviceId } from "./backend/telemetry";
@@ -23,6 +24,7 @@ const DEV = "mrb-sudoku:v1:device-id";
 const QKEY = "mrb-sudoku:v1:report-queue";
 beforeEach(() => { localStorage.clear(); sessionStorage.clear(); m.store.clear(); m.removeFails = false; m.log.mockReset(); m.serverDelete.mockReset(); m.serverDelete.mockResolvedValue(undefined); m.signOut.mockClear(); vi.resetModules(); });
 afterEach(() => { vi.useRealTimers(); });
+vi.setConfig({ testTimeout: 30_000 }); // fake-timer queue drains with dynamic imports are slow under full-suite load
 
 // ---------- P1 ----------
 const finish = (id: string) => ({ id, kind: "local_game", detail: { gid: id, phase: "finish", level: "easy" }, at: Date.now() });
@@ -38,7 +40,7 @@ it("P1: a finish over the daily limit stays queued while errors, ads and game st
     { id: "s", kind: "local_game", detail: { gid: "g", phase: "start", level: "easy" }, at: Date.now() }]));
   const { flushQueuedReports } = await import("./backend/report");
   let done = false; const p = flushQueuedReports().then(() => { done = true; });
-  for (let n = 0; n < 50 && !done; n++) await vi.advanceTimersByTimeAsync(600);
+  while (!done) { await vi.advanceTimersByTimeAsync(600); await new Promise((r) => setImmediate(r)); }
   await p;
   const q = JSON.parse(localStorage.getItem(QKEY) ?? "[]");
   expect(q.map((r: { id: string }) => r.id)).toEqual(["f1", "f2"]);

@@ -6,7 +6,7 @@ export function verifyIosPackage(root = ".") {
   const config = JSON.parse(read("ios/App/App/capacitor.config.json"));
   if (config.appId !== "se.shiningdays.mrbsudoku" || config.server?.url) throw new Error("Wrong iOS identity or remote startup URL");
   const project = read("ios/App/App.xcodeproj/project.pbxproj");
-  for (const setting of ["PRODUCT_BUNDLE_IDENTIFIER = se.shiningdays.mrbsudoku;", "MARKETING_VERSION = 1.0.0;", "CURRENT_PROJECT_VERSION = 1;", 'DEVELOPMENT_TEAM = "";']) {
+  for (const setting of ["PRODUCT_BUNDLE_IDENTIFIER = se.shiningdays.mrbsudoku;", "MARKETING_VERSION = 1.0.0;", "CURRENT_PROJECT_VERSION = 2;", 'DEVELOPMENT_TEAM = "";']) {
     if (project.split(setting).length !== 3) throw new Error(`Unexpected iOS setting: ${setting}`);
   }
   const plist = read("ios/App/App/Info.plist");
