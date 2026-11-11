@@ -124,8 +124,9 @@ it('an old wrong-digit timeout cannot modify a replacement saved game', async ()
   render(<PlayPage />); const cells = await screen.findAllByRole('gridcell');
   const g = loadGame(); if (!g) throw new Error('fixture');
   const i = g.values.findIndex(v => !v); fireEvent.click(cells[i]);
+  vi.useFakeTimers();
   fireEvent.click(screen.getByRole('button', { name: String(g.solution[i] % 9 + 1) }));
   const replacement = newGame('easy', 322, 'replacement'); startNewGame(replacement);
-  vi.useFakeTimers(); act(() => { vi.advanceTimersByTime(2000); });
+  act(() => { vi.advanceTimersByTime(2000); });
   expect(loadGame()?.id).toBe('replacement'); expect(loadGame()?.values).toEqual(replacement.values);
 });

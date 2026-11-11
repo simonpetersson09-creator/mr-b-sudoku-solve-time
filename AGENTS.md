@@ -36,6 +36,9 @@
 - Native AdMob sync scripts share a conservative App ID selector: preserve production IDs and reject conflicts or unreadable configuration, preventing sample IDs from replacing production configuration.
 - DB integration tests (`*.db.test.ts`, `bun run test:db`) run only against a throwaway local PostgreSQL+PostgREST, never the live backend.
 - All new-game entry points use the browser worker generation helper; prepared puzzles are consumed once and start timestamps are reset on delivery, keeping solver work off the UI thread without changing the pure engine.
+- Generation workers have a bounded lifetime and terminate on every outcome; failures never fall back to synchronous solving, and generation rejects rather than returning a puzzle that fails its level gate.
+- Delayed play callbacks are game-ID-bound and cleaned on game replacement/unmount; keyboard and cell input share dialog/background/fullscreen blocking.
+- Reports use the existing atomic per-user server counter and strict event validation; database write failures remain failures, and repeat game reports are checked against stored user/game/phase before insertion.
 - Home preloads only public local content routes; protected pages and authentication are not part of background navigation warming.
 - Native permission copy lives in `scripts/ios-permission-copy.js`; iOS sync regenerates and registers all 40 `InfoPlist.strings` resources so system prompts follow iOS language preferences independently of the in-game language.
 - Profile images use the existing HTML file picker and canvas conversion, not a camera plugin or photo-library capability; only the chosen file is read and the existing local/server avatar flow is retained.

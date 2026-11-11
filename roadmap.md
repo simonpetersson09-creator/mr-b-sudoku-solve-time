@@ -1,12 +1,13 @@
 # Roadmap: Mr.B. Sudoku
 
 ## Återstående tekniska säkerhetsåtgärder (2026-11-11)
-- [ ] Behåll helskärmsägarskap efter annonsdeadline tills SDK stänger.
-- [ ] Säkra spelbundna fördröjningar och blockera inmatning bakom dialoger.
-- [ ] Avbryt fastnad pusselgenerering utan huvudtrådsfallback och utan för lätt reservpussel.
-- [ ] Validera och begränsa rapporter med befintlig serverräknare; hantera skrivfel och dubbletter.
-- [ ] Förbättra fokus, skärmläsarstöd och zoom; rätta inloggningsmål, gamla texter och avgränsad dödkod.
-- [ ] Kör regressioner, hela sviten, telefonpaketering och faktiska webbläsarflöden.
+- [x] Helskärmsägarskap och sena stängningslyssnare kvar efter deadline; SDK-stängning/fel frigör. App Open släpps inte av 90s-timer.
+- [x] Spelbundna fördröjningar städas; dialoger/bakgrund/annonser blockerar tangent- och cellinmatning.
+- [x] Worker stoppas efter 20s, vid kommunikationsfel och postMessage-fel; ingen huvudtrådsfallback eller reservpussel som missar nivågrinden.
+- [x] Befintlig atomisk serverräknare används efter ägarens godkännande; strikta rapportformat, identitetsbunden kontroll av lagrade speldubbletter och skrivfelhantering införda.
+- [x] Nivådialogens fokusfälla/återställning, rutornas ARIA/anteckningar/fel, zoom och minskad rörelse förbättrade. Auth går till befintliga sidor; sju nivåer i metadata. Oanvänd online-resultaträknare/väntrum borttagna, diagnostikflagga Sudoku-namngiven och gammal annonsrapport historikmärkt.
+- [x] 390 ordinarie tester och 2 isolerade databastester godkända; telefonpaketering och källkontroll godkända. Mobilflöde för fokus, ledtrådsdialogens tangentblockering och autentiserad auth→hem verifierat utan sidfel.
+- [ ] Installerad telefon: sena SDK-stängningar samt VoiceOver/TalkBack kräver fysisk iOS/Android och telefonverktyg. Offline-spelrapporter kan inte bevisa verkliga resultat mot en manipulerad klient; ingen fullständig anti-fusk-garanti införs.
 
 ## Fyra fel från lanseringsgranskningen (2026-11-11)
 - [x] Liggande spelsida har bricka vänster och verktyg/siffror höger; kontroller inom skärmen på 852×394, 667×375 och 568×320. Stående mått verifierade på 394×852 och 320×568.
