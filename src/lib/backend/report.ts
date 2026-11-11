@@ -7,6 +7,7 @@
  */
 import { enqueue, parseQueue, type QueuedReport } from "./report-queue";
 import { randomId } from '../random-id';
+import { redactSensitive } from "./redact";
 
 const MAX_PER_SESSION = { error: 10, ad: 60 } as const;
 const QUEUE_KEY = "mrb-sudoku:v1:report-queue";
@@ -90,10 +91,10 @@ async function send(kind: QueuedReport["kind"], detail: Record<string, unknown>)
 }
 
 export function reportAppError(error: unknown, source: string): void {
-  const message = (error instanceof Error ? `${error.name}: ${error.message}` : String(error)).slice(0, 300);
+  const message = redactSensitive(error instanceof Error ? `${error.name}: ${error.message}` : String(error)).slice(0, 300);
   if (seenErrors.has(message)) return;
   seenErrors.add(message);
-  const stack = error instanceof Error && error.stack ? error.stack.split("\n").slice(0, 4).join(" | ").slice(0, 600) : undefined;
+  const stack = error instanceof Error && error.stack ? redactSensitive(error.stack.split("\n").slice(0, 4).join(" | ")).slice(0, 600) : undefined;
   void send("error", { source, message, ...(stack ? { stack } : {}), route: typeof location !== "undefined" ? location.pathname : "" });
 }
 

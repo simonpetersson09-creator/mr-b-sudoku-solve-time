@@ -552,7 +552,8 @@ export const isSolved = (s: GameState) => s.values.every((v, i) => v === s.solut
 function apply(s: GameState, changes: Change[], record = true): GameState {
   if (!changes.length) return s;
   const values = s.values.slice(), notes = s.notes.slice();
-  const undo: Change[] = changes.map((c) => ({ i: c.i, value: values[c.i], notes: notes[c.i] }));
+  // A transient wrong digit is never a state to return to: undo restores the empty cell instead.
+  const undo: Change[] = changes.map((c) => ({ i: c.i, value: isWrong(s, c.i) ? 0 : values[c.i], notes: notes[c.i] }));
   for (const c of changes) { values[c.i] = c.value; notes[c.i] = c.notes; }
   const next = { ...s, values, notes, history: record ? [...s.history, undo] : s.history };
   return { ...next, finished: isSolved(next) };
@@ -562,7 +563,8 @@ function apply(s: GameState, changes: Change[], record = true): GameState {
 export function setValue(s: GameState, i: number, d: number, clearPeerNotes = true, record = true): GameState {
   if (over(s) || isGiven(s, i) || d < 1 || d > 9 || s.values[i] === d) return s;
   const changes: Change[] = [{ i, value: d, notes: 0 }];
-  if (clearPeerNotes) for (const p of PEERS[i]) if (s.notes[p] & bit(d)) changes.push({ i: p, value: s.values[p], notes: s.notes[p] & ~bit(d) });
+  // Only a correct digit may clear peer notes; a wrong one fades and must not destroy valid candidates.
+  if (clearPeerNotes && d === s.solution[i]) for (const p of PEERS[i]) if (s.notes[p] & bit(d)) changes.push({ i: p, value: s.values[p], notes: s.notes[p] & ~bit(d) });
   const next = apply(s, changes, record);
   return d !== s.solution[i] ? { ...next, mistakes: s.mistakes + 1 } : next;
 }

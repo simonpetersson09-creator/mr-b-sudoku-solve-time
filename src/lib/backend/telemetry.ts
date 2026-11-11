@@ -36,6 +36,19 @@ export async function initDeviceId(): Promise<string> {
   return deviceId();
 }
 
+/** After a confirmed server deletion: forget this phone's number in memory, web storage and Keychain/Keystore. */
+export async function forgetDeviceId(): Promise<void> {
+  cached = null;
+  try { localStorage.removeItem(DEVICE_KEY); } catch { /* nothing stored */ }
+  try {
+    const { Capacitor } = await import("@capacitor/core");
+    if (!Capacitor.isNativePlatform()) return;
+    const { SecureStoragePlugin } = await import("capacitor-secure-storage-plugin");
+    const { value: keys } = await SecureStoragePlugin.keys();
+    if (keys.includes(DEVICE_KEY)) await SecureStoragePlugin.remove({ key: DEVICE_KEY });
+  } catch { /* the server copy is already gone; a stale durable number is re-created on next launch */ }
+}
+
 /** "ios"/"android" only inside a native app shell; browsers count as "web". */
 export function platform(): "ios" | "android" | "web" {
   const w = window as unknown as { Capacitor?: { getPlatform?: () => string } };

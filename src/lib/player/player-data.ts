@@ -1,5 +1,6 @@
 import { deletePlayerData as deleteOnServer } from "@/lib/backend/online.functions";
 import { supabase } from "@/lib/auth/client";
+import { forgetDeviceId } from "@/lib/backend/telemetry";
 
 const NS = "mrb-sudoku:v1:";
 const KEEP = new Set([NS + "language"]);
@@ -14,4 +15,6 @@ export async function deletePlayerData(): Promise<void> {
   for (const storage of [localStorage, sessionStorage]) {
     for (const key of Object.keys(storage)) if (isPlayerStorageKey(key)) storage.removeItem(key);
   }
+  await forgetDeviceId(); // only reached after the server confirmed deletion
+
 }

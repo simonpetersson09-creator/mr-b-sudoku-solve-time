@@ -1,3 +1,4 @@
+import { redactSensitive } from "./redact";
 export const updateProfileInput = (d: { display_name: string; avatar: string; country: string }) => {
     const name = String(d.display_name ?? "").trim().slice(0, 20);
     if (name.length < 2) throw new Error("err:name_short");
@@ -47,7 +48,7 @@ export const logEventInput = (d: { kind: string; deviceId?: string; platform?: s
       detail = {};
       for (const [key, value] of Object.entries(raw).slice(0, 16)) {
         if (/token|password|authorization|consent|email|user_?id/i.test(key)) continue;
-        if (typeof value === "string") detail[key.slice(0, 40)] = value.slice(0, key === "stack" ? 600 : 300);
+        if (typeof value === "string") detail[key.slice(0, 40)] = redactSensitive(value).slice(0, key === "stack" ? 600 : 300);
         else if (typeof value === "boolean" || (typeof value === "number" && Number.isFinite(value))) detail[key.slice(0, 40)] = value;
       }
     }

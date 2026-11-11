@@ -57,6 +57,13 @@
       "when": 1794398248845,
       "tag": "0007_finish_cap_key_covered_by_cleanup",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1794398640600,
+      "tag": "0008_profile_field_limits_and_server_timestamps",
+      "breakpoints": true
     }
   ]
 }
