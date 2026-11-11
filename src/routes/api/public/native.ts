@@ -41,6 +41,11 @@ export const Route = createFileRoute("/api/public/native")({ server: { handlers:
         case "adminOverview": return reply(await timed("adminOverview", () => actions.adminOverviewAction({ context })));
         case "adminAdDiagnostics": return reply(await actions.adminAdDiagnosticsAction({ context }));
         case "adminPinLogin": return reply(await timed("adminPinLogin", () => actions.adminPinLoginAction({ data: inputs.adminPinInput(body.data as Parameters<typeof inputs.adminPinInput>[0]), context })));
+        case "getMonthlyMostActive": {
+          const { data, error } = await context.supabase.rpc("get_monthly_most_active", { _limit: 10 });
+          if (error) throw new Error("err:bad_action");
+          return reply({ me: context.userId, rows: data ?? [] });
+        }
         default: return reply({ error: "err:bad_action" }, 400);
       }
     } catch (error) {

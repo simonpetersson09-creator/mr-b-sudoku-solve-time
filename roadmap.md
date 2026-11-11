@@ -1,5 +1,10 @@
 # Roadmap: Mr.B. Sudoku
 
+## K1: Telefonpaketets backendkoppling (2026-11-11)
+- [x] Rättad importstyrning och autentiserad native-klient för samtliga nio backendanrop; Sudokus egen tjänsteadress används.
+- [x] 347 ordinarie tester och 2 isolerade databastester godkända; lokalt telefonpaket byggt, native-källkontroll och AdMob-patchkontroll godkända. Faktisk profil och rapportering verifierade genom paketet via lokal testkoppling.
+- [ ] Installerad iOS/Android och publicerad tjänsteadress: kräver telefonverktyg och senare publicering; ingenting publiceras i denna åtgärd.
+
 ## Förenklade inställningar och tydligare regler (2026-11-11)
 - [x] Profilgenväg och profilrubrik borttagna; namn och bildval behållna. Vald bild sparad och återläst med autentiserad session i telefonstor webbläsare.
 - [x] Rätt siffra avmarkerar rutan direkt; endast mörk bricka och vibration valbara, äldre hjälpreglage normaliseras till på.

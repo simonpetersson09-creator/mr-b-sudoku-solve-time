@@ -7,8 +7,8 @@ export function validateSudokuOrigin(value: string): string {
   return url.origin;
 }
 
-/** Sudoku's pending published server; the app talks to it directly. */
-export const PUBLISHED_SUDOKU_ORIGIN = "https://mrbsudoku.lovable.app";
+/** Sudoku's own deployment; it must be published before installed online actions work. */
+export const PUBLISHED_SUDOKU_ORIGIN = "https://mr-b-sudoku-solve-time.lovable.app";
 
 export function nativeOnlineOrigin(): string {
   const value = import.meta.env['VITE_MRB_SUDOKU_ORIGIN'] || PUBLISHED_SUDOKU_ORIGIN;
