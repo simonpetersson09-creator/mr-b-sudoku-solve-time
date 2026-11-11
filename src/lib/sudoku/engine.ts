@@ -462,8 +462,6 @@ export function generate(level: Level, seed: number): Puzzle {
         : level === "master"
           ? solvableMaster
           : solvableBySingles;
-  let best: Puzzle | null = null;
-  let bestGivens = 99;
   /** Best puzzle that passes the technique gate but has too many givens. */
   let gated: Puzzle | null = null;
   let gatedGivens = 99;
@@ -485,9 +483,9 @@ export function generate(level: Level, seed: number): Puzzle {
     if (givens <= target && hardEnough) return candidate;
     // Nothing met both rules yet: passing the technique gate beats having fewer givens.
     if (hardEnough && givens < gatedGivens) { gated = candidate; gatedGivens = givens; }
-    else if (!hardEnough && givens < bestGivens) { best = candidate; bestGivens = givens; }
   }
-  return gated ?? best!;
+  if (gated) return gated;
+  throw new Error("Sudoku technique gate not met");
 }
 
 // ---------- Game state ----------

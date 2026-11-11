@@ -796,6 +796,10 @@ main[data-level="master"] .sdk-level-pill { background: color-mix(in oklab, var(
 .sdk-round-btn[data-active="true"] { border-color: var(--game-gold); }
 .sdk-round-end svg { color: var(--destructive); }
 .sdk-round-end { border-color: color-mix(in oklab, var(--destructive) 30%, var(--border)); }
+@media (prefers-reduced-motion: reduce) {
+  .sdk-confetti { display: none; }
+  .sdk-cell, .sdk-cell[data-pop="true"], .sdk-cell[data-shake="true"], .sdk-cell[data-wave="true"], .sdk-cell[data-flash="true"] { animation: none; transition: none; }
+}
 .sdk-fixed .sdk-back { min-height: 36px; }
 
 /* Landscape phones: board and input occupy separate columns, never below the viewport. */

@@ -1,5 +1,13 @@
 # Roadmap: Mr.B. Sudoku
 
+## Återstående tekniska säkerhetsåtgärder (2026-11-11)
+- [ ] Behåll helskärmsägarskap efter annonsdeadline tills SDK stänger.
+- [ ] Säkra spelbundna fördröjningar och blockera inmatning bakom dialoger.
+- [ ] Avbryt fastnad pusselgenerering utan huvudtrådsfallback och utan för lätt reservpussel.
+- [ ] Validera och begränsa rapporter med befintlig serverräknare; hantera skrivfel och dubbletter.
+- [ ] Förbättra fokus, skärmläsarstöd och zoom; rätta inloggningsmål, gamla texter och avgränsad dödkod.
+- [ ] Kör regressioner, hela sviten, telefonpaketering och faktiska webbläsarflöden.
+
 ## Fyra fel från lanseringsgranskningen (2026-11-11)
 - [x] Liggande spelsida har bricka vänster och verktyg/siffror höger; kontroller inom skärmen på 852×394, 667×375 och 568×320. Stående mått verifierade på 394×852 och 320×568.
 - [x] Skadade sparningar valideras och filtreras individuellt; giltiga siffror, anteckningar och Ångra bevaras, äldre saknad Ångra-gräns normaliseras.

@@ -96,12 +96,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" },
+      { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       { name: "theme-color", content: "#123038" },
       { title: "Mr.B. Sudoku" },
-      { name: "description", content: "Sudoku i fyra nivåer för mobilen." },
+      { name: "description", content: "Sudoku i sju nivåer för mobilen." },
       { property: "og:title", content: "Mr.B. Sudoku" },
-      { property: "og:description", content: "Sudoku i fyra nivåer för mobilen." },
+      { property: "og:description", content: "Sudoku i sju nivåer för mobilen." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],

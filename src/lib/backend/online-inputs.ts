@@ -16,9 +16,12 @@ export const setAvatarInput = (d: { image: string | null }) => {
   };
 export const LEVELS = ["easy", "medium", "hard", "expert", "ultra", "impossible", "master"] as const;
 export const logEventInput = (d: { kind: string; deviceId?: string; platform?: string; detail?: Record<string, unknown> }) => {
-    const kind = ["session", "heartbeat", "session_end", "local_game", "error", "ad"].includes(d.kind) ? d.kind : "session";
-    const platform = ["ios", "android", "web"].includes(String(d.platform)) ? String(d.platform) : "web";
+    if (!d || !["session", "heartbeat", "session_end", "local_game", "error", "ad"].includes(d.kind)
+      || !["ios", "android", "web"].includes(String(d.platform))) throw new Error("err:bad_action");
+    const kind = d.kind;
+    const platform = String(d.platform);
     const raw = d.detail ?? {};
+    if (typeof raw !== "object" || Array.isArray(raw) || JSON.stringify(raw).length > 4000) throw new Error("err:bad_action");
     const v = typeof raw["v"] === "string" ? { v: raw["v"].slice(0, 30) } : {};
     let detail: Record<string, unknown>;
     if (kind === "session" || kind === "heartbeat" || kind === "session_end") {
@@ -28,10 +31,19 @@ export const logEventInput = (d: { kind: string; deviceId?: string; platform?: s
       const sid = typeof raw["sid"] === "string" && /^[A-Za-z0-9-]{1,40}$/.test(raw["sid"]) ? { sid: raw["sid"] } : {};
       detail = { ...sid, ...(Number.isFinite(secs) && secs >= 0 ? { seconds: Math.min(secs, 4 * 3600) } : {}), ...v };
     } else if (kind === "local_game") {
-      const level = (LEVELS as readonly string[]).includes(String(raw["level"])) ? String(raw["level"]) : "easy";
+      if (!(LEVELS as readonly string[]).includes(String(raw["level"])) || !["start", "finish"].includes(String(raw["phase"]))
+        || typeof raw["gid"] !== "string" || !/^[A-Za-z0-9_-]{1,40}$/.test(raw["gid"]) || platform === "web") throw new Error("err:bad_action");
+      const level = String(raw["level"]);
       const gid = typeof raw["gid"] === "string" && /^[A-Za-z0-9_-]{1,40}$/.test(raw["gid"]) ? { gid: raw["gid"] } : {};
       detail = { phase: raw["phase"] === "finish" ? "finish" : "start", level, ...gid, ...v };
-    } else detail = JSON.parse(JSON.stringify(raw).slice(0, 2000) || "{}");
+    } else {
+      detail = {};
+      for (const [key, value] of Object.entries(raw).slice(0, 16)) {
+        if (/token|password|authorization|consent|email|user_?id/i.test(key)) continue;
+        if (typeof value === "string") detail[key.slice(0, 40)] = value.slice(0, key === "stack" ? 600 : 300);
+        else if (typeof value === "boolean" || (typeof value === "number" && Number.isFinite(value))) detail[key.slice(0, 40)] = value;
+      }
+    }
     return { kind, platform, deviceId: String(d.deviceId ?? "").slice(0, 64) || null, detail };
   };
 export const deleteDataInput = (_d?: unknown) => ({ confirm: true as const });

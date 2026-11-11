@@ -24,9 +24,9 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Mr.B. Sudoku – Sudoku för mobilen" },
-      { name: "description", content: "Lös Sudoku i fyra nivåer med anteckningar, ledtrådar och statistik. Från skaparna av Mr. B Yatzy." },
+      { name: "description", content: "Lös Sudoku i sju nivåer med anteckningar, ledtrådar och statistik." },
       { property: "og:title", content: "Mr.B. Sudoku" },
-      { property: "og:description", content: "Lös Sudoku i fyra nivåer, även utan internet." },
+      { property: "og:description", content: "Lös Sudoku i sju nivåer, även utan internet." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],

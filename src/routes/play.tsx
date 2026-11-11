@@ -57,10 +57,10 @@ export function PlayPage() {
   const currentGame = useRef<GameState | null>(null);
   currentGame.current = state;
   // A stable cell handler reads the current tap context without invalidating every cell on clock ticks.
-  const cellContext = useRef({ state, adBusy: false, hintOffer, selected, hinted: new Set<number>(), lockedHints: new Set<number>() });
+  const cellContext = useRef({ state, adBusy: false, hintOffer, blocked: false, selected, hinted: new Set<number>(), lockedHints: new Set<number>() });
   const selectCell = useCallback((i: number) => {
     const ctx = cellContext.current;
-    if (!ctx.state || ctx.adBusy || ctx.hintOffer) return;
+    if (!ctx.state || ctx.adBusy || ctx.hintOffer || ctx.blocked || backgroundPaused.current || ctx.state.finished || isLost(ctx.state)) return;
     const v = ctx.state.values[i];
     if (ctx.hinted.has(i) && !ctx.lockedHints.has(i) && v === ctx.state.solution[i]) {
       setLockedHints((s) => new Set(s).add(i)); void playLightHaptic();
@@ -74,6 +74,16 @@ export function PlayPage() {
   const adBusy = hintBusy || adState !== "idle";
   const [unlocked, setUnlocked] = useState<Level[]>([]);
   const [confirmEnd, setConfirmEnd] = useState(false);
+  const gameTimers = useRef(new Set<number>());
+  const later = (callback: () => void, delay: number, gameId = currentGame.current?.id) => {
+    const timer = window.setTimeout(() => {
+      gameTimers.current.delete(timer);
+      if (mounted.current && gameId === currentGame.current?.id && (currentGame.current?.finished || loadGame()?.id === gameId)) callback();
+    }, delay);
+    gameTimers.current.add(timer);
+    return timer;
+  };
+  useEffect(() => () => { gameTimers.current.forEach(window.clearTimeout); gameTimers.current.clear(); }, [state?.id]);
   const [flash, setFlash] = useState<Set<number>>(new Set());
 
   // Idle selection: if no move is made for a while, the selection fades away on its own.
@@ -90,7 +100,7 @@ export function PlayPage() {
   const [hinted, setHinted] = useState<Set<number>>(new Set());
   const [lockedHints, setLockedHints] = useState<Set<number>>(new Set());
   const [holdDigit, setHoldDigit] = useState<number | null>(null);
-  cellContext.current = { state, adBusy, hintOffer, selected, hinted, lockedHints };
+  cellContext.current = { state, adBusy, hintOffer, blocked: paused || confirmEnd, selected, hinted, lockedHints };
   const holdTimer = useRef<number | null>(null);
   const held = useRef(false);
   const settings = useMemo(() => loadSettings(), []);
@@ -189,18 +199,19 @@ export function PlayPage() {
   }, [state]);
 
   const act = useCallback((fn: (s: GameState) => GameState) => {
-    setState((s) => (s && !paused && !adBusy && !hintOffer && !hintInFlight.current ? fn(s) : s));
-  }, [paused, adBusy, hintOffer, !!state]);
+    setState((s) => (s && !paused && !confirmEnd && !backgroundPaused.current && !adBusy && !hintOffer && !hintInFlight.current ? fn(s) : s));
+  }, [paused, confirmEnd, adBusy, hintOffer, !!state]);
 
   const input = (d: number, at: number | null = selected, fromHint = false, base: GameState | null = null) => {
     const selected = at;
-    if (selected == null || !state) return;
+    if (selected == null || !state || backgroundPaused.current || confirmEnd || hintOffer || adBusy || hintInFlight.current) return;
     setSameDigit(null);
     if (notesMode && !fromHint) { act((s) => toggleNote(s, selected, d)); void playLightHaptic(); setNotesMode(false); return; }
     if (paused || (!fromHint && (hintInFlight.current || adBusy || hintOffer))) return;
     const before = base ?? state;
     // A wrong digit fades away by itself, so it must not enter the undo history.
     const next = setValue(before, selected, d, settings.autoRemoveNotes, d === before.solution[selected]);
+    currentGame.current = next;
     setState(next);
     if (next === before) return;
     const k = Date.now();
@@ -210,9 +221,9 @@ export function PlayPage() {
       void playDiceLandHaptic();
       // The wrong digit fades away by itself after a moment; the cell empties but the mistake still counts.
       const cell = selected;
-      window.setTimeout(() => {
+      later(() => {
         setState((s) => {
-          if (!s || s.finished || s.values[cell] === 0 || s.values[cell] === s.solution[cell]) return s;
+          if (!s || s.id !== before.id || s.finished || s.values[cell] !== d || s.values[cell] === s.solution[cell]) return s;
           const values = s.values.slice() as GameState["values"];
           values[cell] = 0;
           return { ...s, values };
@@ -224,23 +235,24 @@ export function PlayPage() {
     setShakeCell(null);
     setPopCell({ i: selected, k });
     // Let the gold ripple finish, then let the cell return to its normal look.
-    window.setTimeout(() => setPopCell((p) => (p && p.k === k ? null : p)), 950);
-    if (next.finished) { setCelebrating(true); window.setTimeout(() => setCelebrating(false), 1600); }
+    later(() => setPopCell((p) => (p && p.k === k ? null : p)), 950);
+    if (next.finished) { setCelebrating(true); later(() => setCelebrating(false), 1600); }
     const done = completedGroups(next, selected).filter((i) => !completedGroups(before, selected).includes(i));
     if (done.length && !next.finished) {
       setFlash(new Set(done));
-      window.setTimeout(() => setFlash(new Set()), 700);
+      later(() => setFlash(new Set()), 700);
       void playSuccessHaptic();
     } else void playLightHaptic();
   };
 
   const onKey = useCallback((e: KeyboardEvent) => {
-    if (!state || paused) return;
+    if (!state || paused || hintOffer || confirmEnd || adBusy || hintInFlight.current || backgroundPaused.current || state.finished || isLost(state)
+      || (e.target instanceof HTMLElement && (e.target.closest('[role="dialog"], [role="alertdialog"]') || e.target.matches('input, textarea, select, [contenteditable="true"]')))) return;
     if (/^[1-9]$/.test(e.key)) { input(Number(e.key)); return; }
     if (e.key === "Backspace" || e.key === "Delete" || e.key === "0") { if (selected != null) act((s) => erase(s, selected)); return; }
     const move: Record<string, number> = { ArrowUp: -9, ArrowDown: 9, ArrowLeft: -1, ArrowRight: 1 };
     if (e.key in move) { e.preventDefault(); setSameDigit(null); setSelected((c) => { const n = (c ?? 40) + move[e.key]; return n >= 0 && n < 81 ? n : c; }); }
-  }, [state, paused, selected, notesMode]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [state, paused, selected, notesMode, hintOffer, confirmEnd, adBusy]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => { window.addEventListener("keydown", onKey); return () => window.removeEventListener("keydown", onKey); }, [onKey]);
 
   // A lost game (too many mistakes) is removed and never counted in the statistics.
@@ -305,8 +317,8 @@ export function PlayPage() {
       setShakeCell(null); setPopCell({ i: explanation.cell, k: Date.now() });
       setHinted((h) => new Set(h).add(explanation.cell));
       setHintInfo({ info: explanation, step: 1 });
-      window.setTimeout(() => setHintInfo((h) => (h?.info === explanation ? null : h)), 3500);
-      if (next.finished) { setCelebrating(true); window.setTimeout(() => setCelebrating(false), 1600); }
+      later(() => setHintInfo((h) => (h?.info === explanation ? null : h)), 3500);
+      if (next.finished) { setCelebrating(true); later(() => setCelebrating(false), 1600); }
       void playLightHaptic();
     });
     try {
@@ -329,12 +341,15 @@ export function PlayPage() {
     startingAgain.current = true;
     try {
     const g = await createGame(state.level);
+    if (!mounted.current || currentGame.current?.id !== state.id) return;
     startNewGame(g);
     finishedDone.current = false;
     setUnlocked([]);
     reportLocalGame("start", g);
     setSelected(null); setNotesMode(false); setPaused(false); setSameDigit(null);
     setHinted(new Set()); setLockedHints(new Set()); setHintInfo(null);
+    setPopCell(null); setShakeCell(null); setFlash(new Set()); setCelebrating(false);
+    currentGame.current = g;
     setState(g);
     } catch { toast.error(t("genericError")); }
     finally { startingAgain.current = false; }
@@ -388,7 +403,9 @@ export function PlayPage() {
                   flash={flash.has(i)} pop={popCell?.i === i} shake={shakeCell?.i === i} wave={celebrating}
                   wrong={wrong} hint={showHint === i} zone={hintZone?.has(i) ?? false}
                   hinted={hinted.has(i) && !lockedHints.has(i) && v === state.solution[i]}
-                  label={t("cellLabel", { row: r + 1, col: c + 1 }) + (v ? `: ${v}` : "") + (showHint === i ? ` (${t("hint")}: ${state.solution[i]})` : "")}
+                  label={t("cellLabel", { row: r + 1, col: c + 1 }) + (v ? `: ${v}` : "")
+                    + (wrong ? `, ${t("mistakes")}` : "")
+                    + (state.notes[i] ? `, ${t("notes")}: ${[1,2,3,4,5,6,7,8,9].filter(d => state.notes[i] & (1 << (d - 1))).join(", ")}` : "")}
                   onSelect={selectCell}
                 />
               );
@@ -409,7 +426,7 @@ export function PlayPage() {
           {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((d) => (
             <button
               key={d} className="sdk-key" data-notes={notesMode} data-done={counts[d] >= 9} data-hint={showHint != null && state.solution[showHint] === d} disabled={paused || counts[d] >= 9} aria-label={String(d)}
-              onPointerDown={() => { held.current = false; holdTimer.current = window.setTimeout(() => { held.current = true; setHoldDigit(d); void playLightHaptic(); }, 400); }}
+              onPointerDown={() => { held.current = false; holdTimer.current = later(() => { held.current = true; setHoldDigit(d); void playLightHaptic(); }, 400); }}
               onPointerUp={() => { if (holdTimer.current) window.clearTimeout(holdTimer.current); setHoldDigit(null); }}
               onPointerLeave={() => { if (holdTimer.current) window.clearTimeout(holdTimer.current); setHoldDigit(null); }}
               onContextMenu={(e) => e.preventDefault()}

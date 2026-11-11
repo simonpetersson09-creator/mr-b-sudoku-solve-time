@@ -604,6 +604,7 @@ async function showInterstitial(kind: 'optional' | 'postMatch', context?: { matc
   showing = true;
   let lastShowError: string | undefined;
   let shownLoadId = interstitialLoadId;
+  let nativePending = false;
   const listeners: Awaited<ReturnType<AdMobModule['AdMob']['addListener']>>[] = [];
   try {
     const ready = kind === 'postMatch' || await preloadInterstitial();
@@ -618,18 +619,26 @@ async function showInterstitial(kind: 'optional' | 'postMatch', context?: { matc
     // Native presentation resolves immediately; navigation waits for dismissal.
     let settle: (result: ShowAdResult) => void = () => {};
     const closed = new Promise<ShowAdResult>((resolve) => { settle = resolve; });
-    listeners.push(await mod.AdMob.addListener(mod.InterstitialAdPluginEvents.Dismissed, () => settle('shown')));
-    listeners.push(await mod.AdMob.addListener(mod.InterstitialAdPluginEvents.FailedToShow, () => settle('failed')));
+    const finish = (result: ShowAdResult) => {
+      nativePending = false;
+      showing = false;
+      settle(result);
+      void Promise.all(listeners.map(listener => listener.remove().catch(() => {})));
+    };
+    listeners.push(await mod.AdMob.addListener(mod.InterstitialAdPluginEvents.Dismissed, () => finish('shown')));
+    listeners.push(await mod.AdMob.addListener(mod.InterstitialAdPluginEvents.FailedToShow, () => finish('failed')));
     if (!adAllowed(generation)) return skip('unavailable', 'ads_state_changed');
     if (kind !== 'optional') {
       reportAd(kind, 'show_requested', startedAt, undefined, details);
       suppressAppOpenUntil = Date.now() + APP_OPEN_SUPPRESS_AFTER_REWARDED_MS;
       // Never free an uncancellable native attempt just because a timer elapsed.
-      void mod.AdMob.showInterstitial().catch((err) => { lastShowError = reasonOf(err); settle('failed'); });
+      nativePending = true;
+      void mod.AdMob.showInterstitial().catch((err) => { lastShowError = reasonOf(err); finish('failed'); });
     } else {
-      await withTimeout(mod.AdMob.showInterstitial(), SHOW_TIMEOUT_MS, 'show');
+      nativePending = true;
+      void mod.AdMob.showInterstitial().catch((err) => { lastShowError = reasonOf(err); finish('failed'); });
     }
-    // Safety net: if the SDK never reports dismissal, the app must not wait forever.
+    // Caller deadline is not SDK closure. Keep ownership and listeners for a late close.
     const giveUp = setTimeout(() => { lastShowError = 'dismiss_timeout'; settle('failed'); }, MAX_AD_WAIT_MS);
     const result = await closed;
     clearTimeout(giveUp);
@@ -645,8 +654,10 @@ async function showInterstitial(kind: 'optional' | 'postMatch', context?: { matc
     return 'failed';
   } finally {
     if (kind === 'postMatch') suppressAppOpenUntil = Date.now() + APP_OPEN_SUPPRESS_AFTER_REWARDED_MS;
-    await Promise.all(listeners.map((listener) => listener.remove().catch(() => {})));
-    showing = false;
+    if (!nativePending) {
+      await Promise.all(listeners.map((listener) => listener.remove().catch(() => {})));
+      showing = false;
+    }
   }
 }
 
@@ -1053,8 +1064,6 @@ export async function showAppOpenAd(canShow: () => boolean = () => true, source:
   if (!adAllowed(generation)) { reportSkip('appOpen', 'ads_not_ready'); return skip('ads_not_ready'); }
   // New players get one complete match before any startup/resume App Open ad.
   if (getRankedGames() < 1) { reportSkip('appOpen', 'first_match_pending'); return skip('first_match_pending'); }
-  const { waitingRoomAdBlocked } = await import('./waiting-room');
-  if (waitingRoomAdBlocked()) { reportSkip('appOpen', 'waiting_room'); return skip('waiting_room'); }
   const adId = adUnitId('appOpen');
   if (!isAdMobAvailable() || !adId) { reportSkip('appOpen', 'unavailable'); return skip('unavailable'); }
   if (appOpenShowing || showing || rewardedShowing) { reportSkip('appOpen', 'other_ad_showing'); return skip('other_ad_showing'); }
@@ -1080,14 +1089,14 @@ export async function showAppOpenAd(canShow: () => boolean = () => true, source:
     if (!adAllowed(generation)) return skip('ads_state_changed');
     if (!pre.value) {
       if (source === 'resume') { reportAd('appOpen', 'not_loaded', startedAt); return skip(appOpenNativeLoad ? 'still_loading' : 'not_loaded'); }
-      if (!canShow() || waitingRoomAdBlocked()) return skip(opportunityEnded ? 'left_home' : 'waiting_room');
+      if (!canShow()) return skip('left_home');
       await loadAppOpenOnce(mod, adId, APP_OPEN_LOAD_TIMEOUT_MS, 'load', source, generation);
     }
     const { value } = source === 'resume' ? pre : await mod.AdMob.isAppOpenLoaded();
     if (!adAllowed(generation)) return skip('ads_state_changed');
     if (!value) { reportAd('appOpen', 'not_loaded', startedAt); return skip('not_loaded'); }
     // Loaded too late (player already left the start screen): never cover a game.
-    if (getRankedGames() < 1 || !canShow() || waitingRoomAdBlocked()) { reportAd('appOpen', 'skipped_left_home', startedAt); return skip(getRankedGames() < 1 ? 'first_match_pending' : opportunityEnded ? 'left_home' : 'waiting_room'); }
+    if (getRankedGames() < 1 || !canShow()) { reportAd('appOpen', 'skipped_left_home', startedAt); return skip(getRankedGames() < 1 ? 'first_match_pending' : 'left_home'); }
     presentationAttempted = true;
     // Close the JS → native queue race: gameplay cannot mount while a
     // dispatched presentation is unresolved, even after our caller times out.
@@ -1101,9 +1110,7 @@ export async function showAppOpenAd(canShow: () => boolean = () => true, source:
       if (reasonOf(err) !== 'show_timeout') throw err;
       // Slow to confirm: the ad may still be on screen — wait for the real outcome.
       release = false;
-      // Safety net: never keep the game screen locked if native never answers.
-      const giveUp = setTimeout(() => { setAppOpenPresentationPending(false); appOpenShowing = false; }, MAX_AD_WAIT_MS);
-      void showP.finally(() => clearTimeout(giveUp));
+      // No deadline can cancel native presentation; only its actual outcome releases ownership.
       showP.then(
         () => { outcome('shown'); reportAd('appOpen', 'shown_late', startedAt); },
         (e) => { outcome('failed', 'sdk_show_failed'); reportAd('appOpen', 'failed', startedAt, reasonOf(e)); },

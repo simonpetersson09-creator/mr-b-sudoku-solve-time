@@ -1,5 +1,7 @@
 # Mr B Sudoku – iOS AdMob, 11 november 2026
 
+> Historisk rapport från före Rewarded-ändringen. Ledtrådar använder nu frivillig Rewarded med iOS-enheten `ca-app-pub-7448540924654868/8705213764` och SDK-belöning 1/Hint. Aktuellt flöde beskrivs i `ios-rewarded-hints.md`. Nedanstående beskrivning av ledtrådsinterstitial och dess kravkonflikt gäller inte längre aktuell kod. Annonsdeadline släpper inte längre helskärmsägarskapet innan SDK avslutat visningen.
+
 ## Genomfört
 
 | Inställning | iOS produktionsvärde |

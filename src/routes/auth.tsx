@@ -2,10 +2,11 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ensurePlayerSession } from "@/lib/auth/player";
+import { safeAuthDestination } from "@/lib/auth/destination";
 import { useTranslation } from "@/lib/i18n";
 
 export const Route = createFileRoute("/auth")({
-  validateSearch: (s: Record<string, unknown>) => ({ redirect: typeof s["redirect"] === "string" && s["redirect"].startsWith("/") && !s["redirect"].startsWith("//") ? s["redirect"] : "/online" }),
+  validateSearch: (s: Record<string, unknown>) => ({ redirect: safeAuthDestination(s["redirect"]) }),
   head: () => ({
     meta: [
       { property: "og:type", content: "website" },

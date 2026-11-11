@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
 import { Lock } from "lucide-react";
 import { loadProgress } from "@/lib/player/storage";
 import { isUnlocked, prevLevel, remainingFor, type Progress } from "@/lib/player/unlock";
@@ -16,25 +17,39 @@ const DIFFICULTY: Record<Level, number> = { easy: 1, medium: 2, hard: 3, expert:
 export function LevelPicker({ onSelect, onClose, busy = false }: { onSelect: (level: Level) => void; onClose: () => void; busy?: boolean }) {
   const { t } = useTranslation();
   const [progress] = useState<Progress>(() => loadProgress());
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    const previousFocus = document.activeElement;
+    const focusable = () => Array.from(dialogRef.current?.querySelectorAll<HTMLElement>('button:not(:disabled), [tabindex="0"]') ?? []);
+    focusable()[0]?.focus();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && !busy) onClose();
+      if (e.key !== "Tab") return;
+      const controls = focusable(), first = controls[0], last = controls[controls.length - 1];
+      if (!first) { e.preventDefault(); dialogRef.current?.focus(); return; }
+      if (e.shiftKey && (document.activeElement === first || !dialogRef.current?.contains(document.activeElement))) { e.preventDefault(); last?.focus(); }
+      else if (!e.shiftKey && (document.activeElement === last || !dialogRef.current?.contains(document.activeElement))) { e.preventDefault(); first.focus(); }
+    };
     document.addEventListener("keydown", onKey);
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = prev;
+      if (previousFocus instanceof HTMLElement) previousFocus.focus();
     };
-  }, [onClose]);
+  }, [onClose, busy]);
 
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-background/75 px-5 backdrop-blur-sm"
-      onClick={onClose}
+      onClick={() => { if (!busy) onClose(); }}
     >
       <div
         role="dialog"
+        ref={dialogRef}
+        tabIndex={-1}
         aria-modal="true"
         aria-label={t("chooseLevel")}
         onClick={(e) => e.stopPropagation()}
@@ -46,7 +61,7 @@ export function LevelPicker({ onSelect, onClose, busy = false }: { onSelect: (le
             const open = isUnlocked(progress, l);
             const prev = prevLevel(l);
             return (
-            <button key={l} type="button" disabled={!open || busy} onClick={() => onSelect(l)} className={`lvl-btn lvl-${l}`}>
+            <Button variant="ghost" key={l} type="button" disabled={!open || busy} onClick={() => onSelect(l)} className={`lvl-btn lvl-${l}`}>
               <span className="flex min-w-0 flex-col items-start">
                 <span className="lvl-name font-display flex items-center gap-1.5">{!open && <Lock size={14} />}{t(LEVEL_KEY[l])}</span>
                 {!open && prev && <span className="lvl-lock">{t("lockedNeed", { n: remainingFor(progress, l), level: t(LEVEL_KEY[prev]) })}</span>}
@@ -56,18 +71,18 @@ export function LevelPicker({ onSelect, onClose, busy = false }: { onSelect: (le
                   <span key={n} className={`lvl-bar${n <= DIFFICULTY[l] ? " lvl-bar-on" : ""}`} />
                 ))}
               </span>
-            </button>
+            </Button>
             );
           })}
         </div>
-        <button
+        <Button variant="ghost"
           type="button"
           disabled={busy}
           onClick={onClose}
           className="mt-1 min-h-11 w-full rounded-2xl text-xs font-semibold text-muted-foreground transition-transform active:scale-[0.97]"
         >
           {t("cancel")}
-        </button>
+        </Button>
       </div>
     </div>
   );

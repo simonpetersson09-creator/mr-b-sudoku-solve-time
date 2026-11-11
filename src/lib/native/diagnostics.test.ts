@@ -10,7 +10,7 @@ it("collects nothing by default or on web even with the native flag enabled", ()
   nativeDiagnostic("session", "ready");
   expect(log).not.toHaveBeenCalled();
   stop();
-  vi.stubEnv("VITE_MRB_LUDO_NATIVE_DIAGNOSTICS", "1");
+  vi.stubEnv("VITE_MRB_SUDOKU_NATIVE_DIAGNOSTICS", "1");
   vi.mocked(Capacitor.isNativePlatform).mockReturnValue(false);
   stop = installNativeDiagnostics();
   nativeDiagnostic("session", "ready");
@@ -21,7 +21,7 @@ it("collects nothing by default or on web even with the native flag enabled", ()
 
 it("records only safe categories, caps memory, and clears everything on removal", () => {
   vi.spyOn(Capacitor, "isNativePlatform").mockReturnValue(true);
-  vi.stubEnv("VITE_MRB_LUDO_NATIVE_DIAGNOSTICS", "1");
+  vi.stubEnv("VITE_MRB_SUDOKU_NATIVE_DIAGNOSTICS", "1");
   const log = vi.spyOn(console, "info").mockImplementation(() => {});
   const stop = installNativeDiagnostics();
   const sensitive = "private-test-token@example.test";

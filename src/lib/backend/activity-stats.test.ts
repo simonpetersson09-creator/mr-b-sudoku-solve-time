@@ -26,7 +26,7 @@ describe("admin activity", () => {
   });
   it("accepts heartbeat and local game reports with only allowed fields", () => {
     expect(logEventInput({ kind: "heartbeat", platform: "ios", detail: { sid: "abc", seconds: 61.2, v: "1.0 (5)", x: 1 } }).detail).toEqual({ sid: "abc", seconds: 61, v: "1.0 (5)" });
-    expect(logEventInput({ kind: "local_game", platform: "android", detail: { phase: "finish", level: "expert", humans: 1, v: "1.0", name: "x" } }).detail)
-      .toEqual({ phase: "finish", level: "expert", v: "1.0" });
+    expect(logEventInput({ kind: "local_game", platform: "android", detail: { phase: "finish", level: "expert", gid: "game-a", humans: 1, v: "1.0", name: "x" } }).detail)
+      .toEqual({ phase: "finish", level: "expert", gid: "game-a", v: "1.0" });
   });
 });

@@ -11,7 +11,8 @@ const admin = async () => (await import("@/integrations/supabase/client.server")
 type Admin = Awaited<ReturnType<typeof admin>>;
 
 async function logEventRow(db: Admin, row: { user_id?: string | null; kind: string; detail?: unknown; device_id?: string | null; platform?: string | null }) {
-  await db.from("app_events").insert({ ...row, detail: (row.detail ?? null) as never });
+  const { error } = await db.from("app_events").insert({ ...row, detail: (row.detail ?? null) as never });
+  if (error) throw new Error("err:bad_action");
 }
 
 export interface OnlineContext { supabase: SupabaseClient<Database>; userId: string }
@@ -52,6 +53,17 @@ export const deletePlayerDataAction = async ({ context }: { data?: unknown; cont
 // ---------- Reports ----------
 export const logEventAction = async ({ data, context }: { data: ReturnType<typeof logEventInput>; context: OnlineContext }) => {
   const db = await admin();
+  // Existing atomic server counter; client caps alone cannot protect this endpoint.
+  const limit = data.kind === "error" ? 30 : data.kind === "ad" ? 120 : 120;
+  const { data: allowed, error: rateError } = await db.rpc("rate_hit", { _key: `report:${context.userId}:${data.kind}`, _max: limit, _window_seconds: 60 });
+  if (rateError || allowed !== true) throw new Error("err:rate_limited");
+  if (data.kind === "local_game") {
+    const { data: existing, error } = await db.from("app_events").select("id").eq("user_id", context.userId)
+      .eq("kind", "local_game").eq("detail->>gid", String(data.detail["gid"]))
+      .eq("detail->>phase", String(data.detail["phase"])).limit(1);
+    if (error) throw new Error("err:bad_action");
+    if (existing?.length) return { ok: true };
+  }
   await logEventRow(db, { user_id: context.userId, kind: data.kind, device_id: data.deviceId, platform: data.platform, detail: data.detail });
   return { ok: true };
 };

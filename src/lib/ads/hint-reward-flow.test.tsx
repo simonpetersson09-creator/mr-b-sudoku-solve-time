@@ -113,3 +113,19 @@ it('native pause persists the partial clock tick once even when visibility also 
   clock.mockRestore();
   Object.defineProperty(document, 'visibilityState', { configurable: true, value: 'visible' });
 });
+it('blocks arrows, digits and deletion behind the hint dialog', async () => {
+  render(<PlayPage />); const cells = await screen.findAllByRole('gridcell');
+  fireEvent.click(cells[0]); const before = loadGame(); await offer();
+  for (const key of ['ArrowRight', '1', 'Delete']) fireEvent.keyDown(window, { key });
+  expect(loadGame()?.values).toEqual(before?.values);
+  expect(cells[0].getAttribute('aria-selected')).toBe('true');
+});
+it('an old wrong-digit timeout cannot modify a replacement saved game', async () => {
+  render(<PlayPage />); const cells = await screen.findAllByRole('gridcell');
+  const g = loadGame(); if (!g) throw new Error('fixture');
+  const i = g.values.findIndex(v => !v); fireEvent.click(cells[i]);
+  fireEvent.click(screen.getByRole('button', { name: String(g.solution[i] % 9 + 1) }));
+  const replacement = newGame('easy', 322, 'replacement'); startNewGame(replacement);
+  vi.useFakeTimers(); act(() => { vi.advanceTimersByTime(2000); });
+  expect(loadGame()?.id).toBe('replacement'); expect(loadGame()?.values).toEqual(replacement.values);
+});

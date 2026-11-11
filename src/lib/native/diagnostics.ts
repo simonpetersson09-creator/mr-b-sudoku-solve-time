@@ -21,7 +21,7 @@ export function nativeDiagnosticSnapshot() { return records.map(record => ({ ...
 
 /** Build-time opt-in, native only, memory only; disabling the flag removes listeners and collection. */
 export function installNativeDiagnostics() {
-  if (!Capacitor.isNativePlatform() || import.meta.env['VITE_MRB_LUDO_NATIVE_DIAGNOSTICS'] !== "1") return () => {};
+  if (!Capacitor.isNativePlatform() || import.meta.env['VITE_MRB_SUDOKU_NATIVE_DIAGNOSTICS'] !== "1") return () => {};
   enabled = true;
   startedAt = performance.now();
   records.length = 0;
