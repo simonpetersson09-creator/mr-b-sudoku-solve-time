@@ -1,5 +1,9 @@
 # Roadmap: Mr.B. Sudoku
 
+## Jämförelse och snabbare Sudoku (2026-11-11)
+- [x] Jämför Ludos spel, sidor, inställningar, statistik, annonser och admin utan att ändra Ludo; skillnader redovisade utan nya funktioner.
+- [x] Förladda lokala sidor, korta startsidans intoning och skapa brickor i browser worker med engångsförberedelse. 217 tester godkända; sju nivåer, spelstart, paus och sparning verifierade i telefonstor webbläsare. Installerad iPhone återstår.
+
 ## Före släpp
 - [ ] Riktiga annonser: ledtråd, uppstart och efter spel använder fortfarande Googles testannonser
 - [ ] Provning på riktig telefon: Mästare och Omöjlig, paus, avsluta spel, vinstfirande

@@ -9,11 +9,12 @@ import { AppOpenGameGate } from "@/components/AppOpenGameGate";
 import { usePostMatchExit } from "@/lib/ads/usePostMatchExit";
 import { reportLocalGame } from "@/lib/backend/report";
 import {
-  PEERS, MAX_MISTAKES, MAX_UNDOS, MAX_HINTS, explainHint, markHint, type HintInfo, completedGroups, isLost, digitCounts, erase, hasNote, isGiven, isWrong, newGame, setValue, toggleNote, undo, type GameState, type Level,
+  PEERS, MAX_MISTAKES, MAX_UNDOS, MAX_HINTS, explainHint, markHint, type HintInfo, completedGroups, isLost, digitCounts, erase, hasNote, isGiven, isWrong, setValue, toggleNote, undo, type GameState, type Level,
 } from "@/lib/sudoku/engine";
 import { LEVEL_KEY, formatTime } from "@/lib/sudoku/format";
 import { loadGame, loadProgress, loadSettings, loadStats, recordFinish, removeGame, saveGame, startNewGame } from "@/lib/player/storage";
-import { randomId } from "@/lib/random-id";
+import { createGame, prepareGame } from "@/lib/sudoku/generation";
+import { toast } from "sonner";
 import { newlyUnlocked } from "@/lib/player/unlock";
 import { playLightHaptic, playSuccessHaptic, playDiceLandHaptic } from "@/lib/native/haptics";
 import { useTranslation } from "@/lib/i18n";
@@ -70,6 +71,10 @@ function PlayPage() {
   }, []);
   const bestMs = stats[state?.level ?? "easy"].bestMs ?? previewBest;
   const finishedDone = useRef(false);
+  const startingAgain = useRef(false);
+  useEffect(() => {
+    if (state?.finished || (state && isLost(state))) prepareGame(state.level);
+  }, [state?.finished, state?.level, state?.mistakes]);
 
   useEffect(() => {
     const g = loadGame();
@@ -229,14 +234,19 @@ function PlayPage() {
   const hintText = !activeHint || paused ? null
     : t(activeHint.kind === "wrong" ? "hintWhyWrong" : activeHint.kind === "naked" ? "hintWhyNaked" : activeHint.kind === "hidden" ? "hintWhyHidden" : "hintWhyFewest", { digit: activeHint.digit });
 
-  const again = () => {
-    const g = newGame(state.level, Math.floor(Math.random() * 2 ** 31), randomId());
+  const again = async () => {
+    if (startingAgain.current) return;
+    startingAgain.current = true;
+    try {
+    const g = await createGame(state.level);
     startNewGame(g);
     finishedDone.current = false;
     setUnlocked([]);
     reportLocalGame("start", g);
     setSelected(null); setNotesMode(false); setPaused(false); setSameDigit(null);
     setState(g);
+    } catch { toast.error(t("genericError")); }
+    finally { startingAgain.current = false; }
   };
 
   return (

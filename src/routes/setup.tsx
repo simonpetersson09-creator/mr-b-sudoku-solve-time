@@ -1,11 +1,12 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ArrowLeft, Lock } from "lucide-react";
-import { LEVELS, GIVENS, newGame, type Level } from "@/lib/sudoku/engine";
+import { LEVELS, GIVENS, type Level } from "@/lib/sudoku/engine";
+import { createGame, prepareGame } from "@/lib/sudoku/generation";
 import { LEVEL_KEY } from "@/lib/sudoku/format";
 import { loadLevel, loadProgress, saveLevel, startNewGame } from "@/lib/player/storage";
 import { emptyProgress, highestUnlocked, isUnlocked, prevLevel, remainingFor, type Progress } from "@/lib/player/unlock";
-import { randomId } from "@/lib/random-id";
+import { toast } from "sonner";
 import { useTranslation } from "@/lib/i18n";
 
 export const Route = createFileRoute("/setup")({
@@ -35,15 +36,18 @@ function SetupPage() {
     setLevel(isUnlocked(p, l) ? l : highestUnlocked(p));
   }, []);
 
-  const start = () => {
+  useEffect(() => { prepareGame(level); }, [level]);
+
+  const start = async () => {
+    if (busy) return;
     setBusy(true);
-    saveLevel(level);
-    // Let the button show its busy state before the (short) generation runs.
-    window.setTimeout(() => {
-      const seed = Math.floor(Math.random() * 2 ** 31);
-      startNewGame(newGame(level, seed, randomId()));
-      void navigate({ to: "/play" });
-    }, 30);
+    try {
+      const game = await createGame(level);
+      saveLevel(level);
+      startNewGame(game);
+      await navigate({ to: "/play" });
+    } catch { toast.error(t("genericError")); }
+    finally { setBusy(false); }
   };
 
   return (

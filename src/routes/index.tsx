@@ -1,10 +1,11 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { BarChart3, BookOpen, Globe, Play, Settings } from "lucide-react";
-import { newGame, type Level } from "@/lib/sudoku/engine";
+import { type Level } from "@/lib/sudoku/engine";
+import { createGame, prepareGame } from "@/lib/sudoku/generation";
 import { LEVEL_KEY, formatTime } from "@/lib/sudoku/format";
 import { listGames, saveLevel, selectGame, startNewGame } from "@/lib/player/storage";
-import { randomId } from "@/lib/random-id";
+import { toast } from "sonner";
 import { LANGUAGES, setLanguage, useTranslation } from "@/lib/i18n";
 import { HomeStats } from "@/components/app/HomeStats";
 import { LevelPicker } from "@/components/app/LevelPicker";
@@ -35,6 +36,7 @@ export const Route = createFileRoute("/")({
 
 function HomePage() {
   const navigate = useNavigate();
+  const router = useRouter();
   const { t, lang } = useTranslation();
   const [resumes, setResumes] = useState<{ id: string; level: Level; elapsedMs: number; filled: number }[]>([]);
   const [showLangs, setShowLangs] = useState(false);
@@ -42,6 +44,15 @@ function HomePage() {
   const langPopRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => startHomeAds(), []);
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      for (const to of ["/play", "/settings", "/stats", "/rules"] as const) {
+        void router.preloadRoute({ to }).catch(() => {});
+      }
+      prepareGame("easy");
+    }, 150);
+    return () => window.clearTimeout(timer);
+  }, [router]);
 
   // Yatzy-style rating prompt after 5, then 15 and 35 finished games (app only).
   const [showRate, setShowRate] = useState(false);
@@ -81,10 +92,17 @@ function HomePage() {
   const toggleLangs = () => setShowLangs((v) => !v);
 
   const [showQuick, setShowQuick] = useState(false);
-  const startLevel = (level: Level) => {
-    saveLevel(level);
-    startNewGame(newGame(level, Math.floor(Math.random() * 2 ** 31), randomId()));
-    void navigate({ to: "/play" });
+  const [starting, setStarting] = useState(false);
+  const startLevel = async (level: Level) => {
+    if (starting) return;
+    setStarting(true);
+    try {
+      const game = await createGame(level);
+      saveLevel(level);
+      startNewGame(game);
+      await navigate({ to: "/play" });
+    } catch { toast.error(t("genericError")); }
+    finally { setStarting(false); }
   };
 
   return (
@@ -123,7 +141,7 @@ function HomePage() {
         {firstHint && <div className="home-quick-hint" role="note">{t("firstPlayHint")}</div>}
         <button className={`home-action w-full font-display${firstHint ? " home-quick-glow" : ""}`} aria-expanded={showQuick} onClick={() => { doneFirstHint(); setShowQuick((v) => !v); }}><span aria-hidden="true" className="home-action-icon">🧩</span><span>{t("newGame")}</span></button>
         </div>
-        {showQuick && <LevelPicker onSelect={startLevel} onClose={() => setShowQuick(false)} />}
+        {showQuick && <LevelPicker busy={starting} onSelect={(level) => void startLevel(level)} onClose={() => { if (!starting) setShowQuick(false); }} />}
         <Link to="/stats" className="home-action font-display"><BarChart3 size={16} /><span>{t("stats")}</span></Link>
       </div>
       <div className="home-round-row relative z-20">

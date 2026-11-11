@@ -28,3 +28,5 @@
 - AndroidBackButton is the only owner of native back events; leaving a game via back returns home because games save continuously.
 - App icon/splash source is `resources/icon.png`; `scripts/make-icons.mjs` regenerates committed `resources/` and `scripts/set-native-icons.mjs` copies them into the native projects.
 - DB integration tests (`*.db.test.ts`, `bun run test:db`) run only against a throwaway local PostgreSQL+PostgREST, never the live backend.
+- All new-game entry points use the browser worker generation helper; prepared puzzles are consumed once and start timestamps are reset on delivery, keeping solver work off the UI thread without changing the pure engine.
+- Home preloads only public local content routes; protected pages and authentication are not part of background navigation warming.
