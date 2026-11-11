@@ -1,5 +1,14 @@
 # Roadmap: Mr.B. Sudoku
 
+## D1–D14 från lanseringsgranskningen (2026-11-11)
+- [ ] Kontrollera tidigare rättningar och styrk varje risk före ändring; D10-regler och D12-annonsformat/frekvens lämnas oförändrade.
+- [ ] D2–D4: Stabil paginering, full diagnostik och verifierbara adminkolumner.
+- [ ] D7: Reproducera partiella lagringsfel och skydda resultat/sparning från dataförlust och dubbelräkning.
+- [ ] D8–D9: Rätta gamla texter, isolera avstängd kod och förbättra verifierad tangent-/texttillgänglighet.
+- [ ] D11/D13/D14: Begränsad bodyläsning, godkänd serveradress, atomiskt rapportskydd och native-aktivitet.
+- [ ] D1/D5/D6/D10/D12: Individuell bedömning med beslut/telefonprovning där koden inte bevisar ett fel.
+- [ ] Regressioner efter varje rättning, hela testsviten och individuella D1–D14-statusar; ingen publicering eller produktionsdatatest.
+
 ## A4–A11 från senaste lanseringsgranskningen (2026-11-11)
 - [x] A4: Cachad unikhetskontroll med hårt söknodstak; 350 pussel accepterade, högsta första kontroll 17,8ms i denna miljö.
 - [x] A5/A11: Write-ahead-kö med stabila ID, endast kvitterat objekt bort, spelrapporter utan diagnostikens 30/7-dagars-/sessionstak, 550ms mellan leveranser och återförsök efter serverfel; validerad originaltid styr dag/månad.
