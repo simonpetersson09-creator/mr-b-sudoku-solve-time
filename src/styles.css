@@ -469,7 +469,12 @@ html.native-ios { --safe-top: max(env(safe-area-inset-top, 0px), 50px); }
 .home-bg-glow { position: absolute; top: 25%; left: 50%; width: 500px; height: 500px; transform: translateX(-50%); border-radius: 9999px; background: radial-gradient(circle, color-mix(in oklch, var(--primary) 9%, transparent), transparent 70%); }
 .home-bg-dice { position: fixed; inset: 0; opacity: .035; background-size: 60px 60px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Crect x='6' y='6' width='48' height='48' rx='6' fill='none' stroke='white' stroke-width='1.5'/%3E%3Cpath d='M22 6v48M38 6v48M6 22h48M6 38h48' stroke='white' stroke-width='.8'/%3E%3C/svg%3E"); }
 @keyframes home-item-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
-.home-enter > * { animation: home-item-in .16s ease-out backwards; }
+.home-enter > * { animation: home-item-in .45s ease-out backwards; }
+.home-enter > *:nth-child(1) { animation-delay: .15s; }
+.home-enter > *:nth-child(2) { animation-delay: .23s; }
+.home-enter > *:nth-child(3) { animation-delay: .31s; }
+.home-enter > *:nth-child(4) { animation-delay: .39s; }
+.home-enter > *:nth-child(5) { animation-delay: .47s; }
 @keyframes home-logo-wiggle { 0%, 71% { transform: none; } 80% { transform: rotate(4deg) scale(1.05); } 89% { transform: rotate(-3deg) scale(1.02); } 100% { transform: none; } }
 .home-logo-wiggle { animation: home-logo-wiggle 4.2s ease-in-out infinite; will-change: transform; }
 @media (prefers-reduced-motion: reduce) { .home-enter > *, .home-logo-wiggle { animation: none; } }
