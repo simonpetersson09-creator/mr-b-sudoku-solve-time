@@ -50,12 +50,13 @@ function PlayPage() {
   const [flash, setFlash] = useState<Set<number>>(new Set());
 
   // Idle selection: if no move is made for a while, the selection fades away on its own.
-  // Any move or new tap resets the timer (state/selected change re-runs the effect).
+  // Any move or new tap resets the timer (updatedAt changes on real moves, not on the clock tick).
+  const lastMove = state?.updatedAt;
   useEffect(() => {
     if (selected == null || paused) return;
     const timer = window.setTimeout(() => { setSelected(null); setSameDigit(null); }, 8000);
     return () => window.clearTimeout(timer);
-  }, [selected, state, paused]);
+  }, [selected, lastMove, paused]);
   const [popCell, setPopCell] = useState<{ i: number; k: number } | null>(null);
   const [shakeCell, setShakeCell] = useState<{ i: number; k: number } | null>(null);
   const [celebrating, setCelebrating] = useState(false);
