@@ -64,7 +64,8 @@ export const logEventAction = async ({ data, context }: { data: ReturnType<typeo
     const { error } = await db.rpc('insert_sudoku_game_report', { _user_id: context.userId,
       _device_id: data.deviceId ?? '', _platform: data.platform, _detail: data.detail as Json,
       ...(typeof data.detail['occurredAt'] === 'string' ? { _created_at: data.detail['occurredAt'] } : {}) });
-    if (error) throw new Error("err:bad_action");
+    // Stable code so the client defers only this finish report and keeps sending the rest of its queue.
+    if (error) throw new Error(/daily finish limit/i.test(error.message ?? '') ? "err:daily_finish_limit" : "err:bad_action");
     return { ok: true };
   }
   await logEventRow(db, { user_id: context.userId, kind: data.kind, device_id: data.deviceId, platform: data.platform, detail: data.detail,

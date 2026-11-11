@@ -47,6 +47,9 @@ async function deliver(item: QueuedReport): Promise<void> {
     ...(item.kind === 'local_game' ? { occurredAt: new Date(item.at).toISOString() } : late ? { queued: new Date(item.at).toISOString() } : {}) } } });
 }
 
+const isFinish = (r: QueuedReport) => r.kind === 'local_game' && r.detail['phase'] === 'finish';
+export const isDailyFinishLimit = (e: unknown) => e instanceof Error && e.message.includes('err:daily_finish_limit');
+
 let flushing = false;
 let retryTimer: ReturnType<typeof setTimeout> | undefined;
 /** Sends reports saved while offline. Safe to call often. */
@@ -57,13 +60,20 @@ export async function flushQueuedReports(): Promise<void> {
   try {
     // Persist legacy IDs before awaiting. Always re-read before removing only the acknowledged ID.
     writeQueue(readQueue());
+    // A finish report over the server's daily limit stays queued (deferred) while other reports continue.
+    const deferred = new Set<string>();
+    let finishBlocked = false;
     while (true) {
-      const item = readQueue()[0];
+      const item = readQueue().find(r => !deferred.has(r.id) && !(finishBlocked && isFinish(r)));
       if (!item) break;
-      try { await deliver(item); } catch { break; }
+      try { await deliver(item); }
+      catch (e) {
+        if (isFinish(item) && isDailyFinishLimit(e)) { deferred.add(item.id); finishBlocked = true; continue; }
+        break;
+      }
       writeQueue(readQueue().filter(r => r.id !== item.id));
       // Under the existing 120/min server budget, including a long offline backlog.
-      if (readQueue().length) await new Promise(resolve => window.setTimeout(resolve, 550));
+      if (readQueue().some(r => !deferred.has(r.id) && !(finishBlocked && isFinish(r)))) await new Promise(resolve => window.setTimeout(resolve, 550));
     }
   } finally {
     flushing = false;

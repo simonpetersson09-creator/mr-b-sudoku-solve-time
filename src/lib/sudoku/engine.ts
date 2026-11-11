@@ -637,7 +637,7 @@ export function explainHint(s: GameState, selected: number | null = null): HintI
   const known = s.values.map((v, i) => (v === s.solution[i] ? v : 0));
   const masks = known.map((k, i) => {
     if (k) return 0;
-    let m = 0x3fe;
+    let m = 0x1ff; // digits 1-9: bit(d) = 1 << (d - 1)
     for (const p of PEERS[i]) if (known[p]) m &= ~bit(known[p]);
     return m;
   });
