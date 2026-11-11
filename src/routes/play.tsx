@@ -21,6 +21,7 @@ import { toast } from "sonner";
 import { newlyUnlocked } from "@/lib/player/unlock";
 import { playLightHaptic, playSuccessHaptic, playDiceLandHaptic } from "@/lib/native/haptics";
 import { useTranslation } from "@/lib/i18n";
+import { PAUSE_EVENT } from "@/lib/native/runtime";
 
 export const Route = createFileRoute("/play")({
   head: () => ({
@@ -45,6 +46,9 @@ export function PlayPage() {
   const [sameDigit, setSameDigit] = useState<number | null>(null);
   const [notesMode, setNotesMode] = useState(false);
   const [paused, setPaused] = useState(false);
+  const backgroundPaused = useRef(false);
+  const timerRunning = useRef(false);
+  const timerLast = useRef(0);
   const [hintInfo, setHintInfo] = useState<{ info: HintInfo; step: 1 | 2 } | null>(null);
   const [hintBusy, setHintBusy] = useState(false);
   const hintInFlight = useRef(false);
@@ -120,20 +124,52 @@ export function PlayPage() {
     if (g.history.length === 0 && g.elapsedMs === 0) reportLocalGame("start", g);
   }, [navigate]);
 
+  // Persist at the lifecycle boundary, before React effects or native suspension.
+  useEffect(() => {
+    const pauseAndSave = () => {
+      backgroundPaused.current = true;
+      const g = currentGame.current;
+      const now = Date.now();
+      const delta = timerRunning.current ? Math.max(0, Math.min(now - timerLast.current, 2000)) : 0;
+      timerRunning.current = false;
+      timerLast.current = now;
+      if (g && !g.finished && !isLost(g)) {
+        const next = { ...g, elapsedMs: g.elapsedMs + delta };
+        currentGame.current = next;
+        saveGame(next);
+        setState(next);
+      }
+      setPaused(true);
+    };
+    const onVisibility = () => { if (document.visibilityState !== "visible") pauseAndSave(); };
+    window.addEventListener(PAUSE_EVENT, pauseAndSave);
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => { window.removeEventListener(PAUSE_EVENT, pauseAndSave); document.removeEventListener("visibilitychange", onVisibility); };
+  }, []);
+  const resumePlay = () => {
+    if (document.visibilityState !== "visible") return;
+    backgroundPaused.current = false;
+    setPaused(false);
+  };
+
   // Timer: counts only while the screen is visible and not paused.
   useEffect(() => {
-    if (!state || state.finished || isLost(state) || paused || adBusy || hintOffer) return;
-    let last = Date.now();
+    if (!state || state.finished || isLost(state) || paused || adBusy || hintOffer || backgroundPaused.current) return;
+    timerLast.current = Date.now();
+    timerRunning.current = true;
     const tick = () => {
       const now = Date.now();
-      const dt = document.visibilityState === "visible" ? now - last : 0;
-      last = now;
-      if (dt > 0) setState((s) => (s && !s.finished ? { ...s, elapsedMs: s.elapsedMs + Math.min(dt, 2000) } : s));
+      const dt = timerRunning.current && document.visibilityState === "visible" ? now - timerLast.current : 0;
+      timerLast.current = now;
+      if (dt > 0) setState((s) => {
+        if (!s || s.finished || backgroundPaused.current) return s;
+        const next = { ...s, elapsedMs: s.elapsedMs + Math.min(dt, 2000) };
+        currentGame.current = next;
+        return next;
+      });
     };
     const id = window.setInterval(tick, 1000);
-    const onVis = () => { if (document.visibilityState !== "visible") setPaused(true); last = Date.now(); };
-    document.addEventListener("visibilitychange", onVis);
-    return () => { window.clearInterval(id); document.removeEventListener("visibilitychange", onVis); };
+    return () => { timerRunning.current = false; window.clearInterval(id); };
   }, [state?.finished, state ? isLost(state) : false, paused, adBusy, hintOffer, state?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Autosave every change (finished games are removed from the saved list).
@@ -229,10 +265,12 @@ export function PlayPage() {
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => {
         const board = col.querySelector<HTMLElement>(".sdk-board, .sdk-paused");
-        const first = col.firstElementChild as HTMLElement | null;
-        if (!board || !first) return;
-        const free = (first.getBoundingClientRect().top - col.getBoundingClientRect().top) * 2 - 6;
-        const size = Math.max(200, Math.min(col.clientWidth, board.getBoundingClientRect().width + free));
+        const header = col.querySelector<HTMLElement>(".sdk-board-head");
+        const best = col.firstElementChild as HTMLElement | null;
+        if (!board || !header || !best) return;
+        const overhead = best.getBoundingClientRect().height + header.getBoundingClientRect().height
+          + parseFloat(getComputedStyle(header).marginBottom) + parseFloat(getComputedStyle(best).marginBottom);
+        const size = Math.max(0, Math.min(col.clientWidth, col.clientHeight - overhead - 6));
         col.style.setProperty("--board-px", `${Math.floor(size)}px`);
       });
     };
@@ -240,7 +278,7 @@ export function PlayPage() {
     const ro = new ResizeObserver(fit); ro.observe(col);
     window.addEventListener("resize", fit);
     return () => { cancelAnimationFrame(raf); ro.disconnect(); window.removeEventListener("resize", fit); };
-  }, [paused]);
+  }, [paused, state?.id]);
 
   const counts = useMemo(() => state ? digitCounts(state) : [], [state?.values]);
   const peers = useMemo(() => selected != null ? new Set(PEERS[selected]) : new Set<number>(), [selected]);
@@ -278,7 +316,7 @@ export function PlayPage() {
         else if (!received) toast.message(t(result === "not_earned" ? "hintAdNotEarned" : "hintAdUnavailable"));
       }
     } catch { if (mounted.current && !received) toast.error(t("hintAdUnavailable")); }
-    finally { hintInFlight.current = false; if (mounted.current) { setHintBusy(false); setPaused(false); } }
+    finally { hintInFlight.current = false; if (mounted.current) { setHintBusy(false); if (!backgroundPaused.current) setPaused(false); } }
   };
   const activeHint = hintInfo?.info ?? null;
   const showHint: number | null = null;
@@ -304,13 +342,13 @@ export function PlayPage() {
 
   return (
     <main ref={fitMainRef} className="app-screen sdk-fixed flex flex-col" data-level={state.level} style={{ paddingTop: "calc(4px + var(--safe-top))", paddingBottom: "calc(20px + env(safe-area-inset-bottom))" }}>
-      <div className="mx-auto flex w-full max-w-md flex-1 flex-col gap-1">
-        <div className="flex items-center gap-2">
+      <div className="sdk-play-stack mx-auto flex min-h-0 w-full max-w-md flex-1 flex-col gap-1">
+        <div className="sdk-topbar flex items-center gap-2">
           <button onClick={() => navigate({ to: "/" })} aria-label={t("back")} className="sdk-back">
             <ArrowLeft className="h-4 w-4" /><span>{t("back")}</span>
           </button>
           <div className="ml-auto flex items-center gap-2">
-            <button onClick={() => setPaused((p) => !p)} disabled={state.finished || adBusy} aria-label={paused ? t("resume") : t("pause")} className="sdk-round-btn" data-active={paused}>
+            <button onClick={() => paused ? resumePlay() : setPaused(true)} disabled={state.finished || adBusy} aria-label={paused ? t("resume") : t("pause")} className="sdk-round-btn" data-active={paused}>
               {paused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}<span>{paused ? t("resume") : t("pause")}</span>
             </button>
             <button onClick={() => setConfirmEnd(true)} disabled={state.finished} aria-label={t("endGame")} className="sdk-round-btn sdk-round-end">
@@ -319,7 +357,7 @@ export function PlayPage() {
           </div>
         </div>
 
-        <div ref={fitColRef} className="flex min-h-0 flex-1 flex-col justify-center gap-0">
+        <div ref={fitColRef} className="sdk-board-column flex min-h-0 flex-1 flex-col justify-center gap-0">
         <p className="mb-0.5 text-center text-[11px] leading-none text-muted-foreground">
           {t("statBestTime")}: <span className="font-display font-bold tabular-nums text-gold">{bestMs != null ? formatTime(bestMs) : "–"}</span>
         </p>
@@ -333,7 +371,7 @@ export function PlayPage() {
         </div>
         {paused ? (
           <div className="sdk-paused">
-            <button onClick={() => setPaused(false)} className="flex flex-col items-center gap-2 rounded-xl p-4 active:scale-95"><Play className="h-12 w-12 text-gold" /><span className="font-display text-lg font-bold">{t("paused")}</span><span className="text-xs text-muted-foreground">{t("tapToResume")}</span></button>
+            <button onClick={resumePlay} className="flex flex-col items-center gap-2 rounded-xl p-4 active:scale-95"><Play className="h-12 w-12 text-gold" /><span className="font-display text-lg font-bold">{t("paused")}</span><span className="text-xs text-muted-foreground">{t("tapToResume")}</span></button>
           </div>
         ) : (
           <div className="sdk-board" data-dark={settings.darkBoard} data-lost={lost} role="grid" aria-label={t("board")}>
@@ -359,6 +397,7 @@ export function PlayPage() {
         )}
         </div>
 
+        <div className="sdk-controls flex shrink-0 flex-col gap-1">
         <div className="sdk-tools flex gap-1">
           <button className="sdk-tool" onClick={() => { setHintInfo(null); setSameDigit(null); act(undo); }} disabled={paused || !state.history.length || state.undosLeft <= 0} aria-label={`${t("undo")}: ${state.undosLeft}/${MAX_UNDOS}`}><Undo2 className="h-5 w-5" />{t("undo")}<span className="sdk-pips" aria-hidden="true">{Array.from({ length: MAX_UNDOS }, (_, i) => <span key={i} className="sdk-pip" data-on={i < state.undosLeft} />)}</span></button>
           <button className="sdk-tool" onClick={() => selected != null && act((s) => erase(s, selected))} disabled={paused}><Eraser className="h-5 w-5" />{t("eraseNotes")}</button>
@@ -382,6 +421,7 @@ export function PlayPage() {
           ))}
         </div>
         <p className="sdk-hint-tip" role="status" data-show={hintText != null}>{hintText != null && <><Lightbulb className="h-3 w-3 shrink-0" /><span>{hintText}</span></>}</p>
+        </div>
       </div>
       <AlertDialog open={hintOffer} onOpenChange={setHintOffer}>
         <AlertDialogContent className="max-w-[calc(100%-32px)] rounded-lg bg-card sm:max-w-md">

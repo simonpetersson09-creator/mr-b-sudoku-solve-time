@@ -22,7 +22,7 @@ beforeEach(() => {
   vi.stubGlobal('ResizeObserver', class { observe() {} disconnect() {} });
   startNewGame(newGame('easy', 321, 'ui-game'));
 });
-afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
+afterEach(() => { cleanup(); vi.useRealTimers(); vi.unstubAllGlobals(); });
 async function offer() { fireEvent.click(await screen.findByRole('button', { name: 'Ledtråd: 3/3' })); await screen.findByRole('alertdialog'); }
 it('placing a correct digit clears the selection immediately and saves the digit', async () => {
   const game = loadGame(); if (!game) throw new Error('fixture');
@@ -68,4 +68,48 @@ it('three used hints disable the offer, so no fourth ad can be accepted', async 
   render(<PlayPage />); const button = await screen.findByRole('button', { name: 'Ledtråd: 0/3' });
   expect(button).toBeDisabled(); fireEvent.click(button);
   expect(screen.queryByRole('alertdialog')).toBeNull(); expect(ads.show).not.toHaveBeenCalled();
+});
+it('native background saves digits and notes immediately and freezes time until explicit resume', async () => {
+  render(<PlayPage />);
+  const cells = await screen.findAllByRole('gridcell');
+  const game = loadGame(); if (!game) throw new Error('fixture');
+  const i = game.values.findIndex(v => v === 0);
+  fireEvent.click(cells[i]);
+  fireEvent.click(screen.getByRole('button', { name: 'Anteckningar' }));
+  fireEvent.click(screen.getByRole('button', { name: '4' }));
+  const before = loadGame();
+  vi.useFakeTimers();
+  act(() => { window.dispatchEvent(new Event('mrb-sudoku:pause')); });
+  const saved = loadGame();
+  expect(saved?.notes).toEqual(before?.notes);
+  expect(saved?.values).toEqual(before?.values);
+  expect(screen.queryByRole('grid')).toBeNull();
+  act(() => { vi.advanceTimersByTime(60_000); window.dispatchEvent(new Event('mrb-sudoku:resume')); });
+  expect(loadGame()?.elapsedMs).toBe(saved?.elapsedMs);
+  expect(screen.queryByRole('grid')).toBeNull();
+  fireEvent.click(screen.getByRole('button', { name: 'Fortsätt' }));
+  act(() => { vi.advanceTimersByTime(1000); });
+  expect(loadGame()?.elapsedMs).toBe((saved?.elapsedMs ?? 0) + 1000);
+});
+it('an ad finishing after native background cannot resume the paused board', async () => {
+  render(<PlayPage />); await offer();
+  fireEvent.click(screen.getByRole('button', { name: 'Se annons' }));
+  act(() => { window.dispatchEvent(new Event('mrb-sudoku:pause')); });
+  await act(async () => { ads.resolve?.('not_earned'); });
+  expect(screen.queryByRole('grid')).toBeNull();
+  expect(loadGame()?.hints).toBe(0);
+});
+it('native pause persists the partial clock tick once even when visibility also changes', async () => {
+  const now = Date.now();
+  const clock = vi.spyOn(Date, 'now').mockReturnValue(now);
+  render(<PlayPage />); await screen.findAllByRole('gridcell');
+  clock.mockReturnValue(now + 500);
+  const before = loadGame()?.elapsedMs ?? 0;
+  act(() => { window.dispatchEvent(new Event('mrb-sudoku:pause')); });
+  expect(loadGame()?.elapsedMs).toBe(before + 500);
+  Object.defineProperty(document, 'visibilityState', { configurable: true, value: 'hidden' });
+  act(() => { document.dispatchEvent(new Event('visibilitychange')); });
+  expect(loadGame()?.elapsedMs).toBe(before + 500);
+  clock.mockRestore();
+  Object.defineProperty(document, 'visibilityState', { configurable: true, value: 'visible' });
 });

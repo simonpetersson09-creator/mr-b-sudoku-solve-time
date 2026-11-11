@@ -1,5 +1,12 @@
 # Roadmap: Mr.B. Sudoku
 
+## Fyra fel från lanseringsgranskningen (2026-11-11)
+- [x] Liggande spelsida har bricka vänster och verktyg/siffror höger; kontroller inom skärmen på 852×394, 667×375 och 568×320. Stående mått verifierade på 394×852 och 320×568.
+- [x] Skadade sparningar valideras och filtreras individuellt; giltiga siffror, anteckningar och Ångra bevaras, äldre saknad Ångra-gräns normaliseras.
+- [x] Engångsräkning bevaras utan 200-ID-tak; 250-resultat och äldre listformat regressionstestade för år, all-time och progression.
+- [x] Native-bakgrund/telefonlås och dold sida pausar och sparar synkront; delsekunder räknas en gång och återkomst kräver Fortsätt. 372 ordinarie och 2 isolerade databastester godkända; telefonpaketering och källkontroll godkända.
+- [ ] Verklig telefonlåsning och installerad iOS/Android: kräver fysisk telefon och Xcode/Android SDK; simulerad native-händelse, liggande input, paus, Fortsätt och återöppning verifierade i webbläsare.
+
 ## K1: Telefonpaketets backendkoppling (2026-11-11)
 - [x] Rättad importstyrning och autentiserad native-klient för samtliga nio backendanrop; Sudokus egen tjänsteadress används.
 - [x] 347 ordinarie tester och 2 isolerade databastester godkända; lokalt telefonpaket byggt, native-källkontroll och AdMob-patchkontroll godkända. Faktisk profil och rapportering verifierade genom paketet via lokal testkoppling.

@@ -13,3 +13,19 @@ it("leaves Android back exclusively to the confirmation-aware component", async 
   expect(mocks.listen.mock.calls.map(call => call[0])).toEqual(["appStateChange", "networkStatusChange"]);
   cleanup();
 });
+it("emits the explicit pause event on background and only resume on foreground", async () => {
+  const { startNativeRuntime, PAUSE_EVENT, RESUME_EVENT } = await import("./runtime");
+  const pause = vi.fn(), resume = vi.fn();
+  window.addEventListener(PAUSE_EVENT, pause);
+  window.addEventListener(RESUME_EVENT, resume);
+  const cleanup = await startNativeRuntime(() => {});
+  const handler = mocks.listen.mock.calls.find(call => call[0] === "appStateChange")?.[1];
+  if (typeof handler !== "function") throw new Error("missing lifecycle handler");
+  handler({ isActive: false });
+  expect(pause).toHaveBeenCalledTimes(1);
+  expect(resume).not.toHaveBeenCalled();
+  handler({ isActive: true });
+  expect(pause).toHaveBeenCalledTimes(1);
+  expect(resume).toHaveBeenCalledTimes(1);
+  cleanup(); window.removeEventListener(PAUSE_EVENT, pause); window.removeEventListener(RESUME_EVENT, resume);
+});

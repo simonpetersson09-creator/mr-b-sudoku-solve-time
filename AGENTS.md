@@ -18,6 +18,9 @@
 - Board styling uses `--sudoku-*` tokens in `src/styles.css`; components never hardcode colors.
 - Board cells are memoized with primitive visual props and a stable selection callback so clock ticks do not re-render all 81 cells.
 - Normalize legacy gameplay-help settings on both reads and writes; hidden choices must not preserve different game behavior across devices.
+- Validate saved puzzle/solution, note masks, undo entries and counters before exposing a game to play; reject corrupt entries individually while retaining the legacy missing-undo-allowance migration.
+- Keep finished-game IDs without eviction in the existing local ledger so yearly/all-time statistics and unlock progress cannot recount older results.
+- Native background and document hiding share synchronous pause-and-save handling; foreground never resumes play without an explicit player action, and duplicate lifecycle signals cannot charge the clock twice.
 - `noUncheckedIndexedAccess` is off: the engine indexes fixed-size 81-cell arrays heavily.
 - i18n lives in `src/lib/i18n/`: sv.ts is the key source of truth; every one of the 40 dictionaries must have identical keys and placeholders and no unused keys (enforced by `i18n.test.ts`). Server functions throw stable `err:<code>` strings translated by `errorMessage()`.
 - App-owned auth goes through `src/lib/auth/client.ts` (anonymous identity; namespaced Keychain/Keystore storage on native); startup never discards a saved identity on storage/network failure, and server middleware verifies every private request.

@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { beforeEach, describe, expect, it } from "vitest";
-import { newGame, setValue } from "@/lib/sudoku/engine";
-import { MAX_SAVED_GAMES, addResult, cleanStats, emptyStats, stockholmYear, listGames, loadAllTime, loadGame, loadStats, recordFinish, removeGame, saveGame, selectGame, startNewGame, loadSettings, saveSettings } from "./storage";
+import { newGame, setValue, toggleNote, undo } from "@/lib/sudoku/engine";
+import { MAX_SAVED_GAMES, addResult, cleanStats, emptyStats, stockholmYear, listGames, loadAllTime, loadGame, loadStats, loadProgress, isValidSave, recordFinish, removeGame, saveGame, selectGame, startNewGame, loadSettings, saveSettings } from "./storage";
 
 const solved = (seed: number) => {
   let g = newGame("easy", seed, "s" + seed);
@@ -45,6 +45,46 @@ describe("saved games", () => {
     saveGame(solved(3));
     expect(listGames()).toHaveLength(0);
   });
+  it.each([null, {}, [null], [{ i: -1, value: 0, notes: 0 }], [{ i: 81, value: 0, notes: 0 }], [{ i: 0, value: 10, notes: 0 }], [{ i: 0, value: 0, notes: 512 }]])("rejects corrupt undo entry %j without exposing it to play", entry => {
+    const g = newGame("easy", 13, "corrupt");
+    const broken = { ...g, history: [entry] };
+    expect(isValidSave(broken)).toBe(false);
+    localStorage.setItem("mrb-sudoku:v1:games", JSON.stringify([{ id: g.id, game: broken, updatedAt: 1000 }]));
+    selectGame(g.id);
+    expect(loadGame()).toBeNull();
+  });
+  it("preserves valid notes, digits and undo history through reload", () => {
+    let g = newGame("easy", 14, "valid");
+    const i = g.values.findIndex(v => !v);
+    g = toggleNote(g, i, 4);
+    g = setValue(g, i, g.solution[i]);
+    startNewGame(g);
+    const restored = loadGame();
+    expect(restored).toEqual(g);
+    if (!restored) throw new Error("missing valid game");
+    expect(undo(restored).values[i]).toBe(0);
+    expect(undo(restored).notes[i]).toBe(8);
+    expect(undo(restored).undosLeft).toBe(2);
+  });
+  it("normalizes only the missing legacy undo allowance", () => {
+    const g = newGame("easy", 15, "legacy");
+    const { undosLeft: _legacy, ...legacy } = g;
+    localStorage.setItem("mrb-sudoku:v1:games", JSON.stringify([{ id: g.id, game: legacy, updatedAt: 1000 }]));
+    selectGame(g.id);
+    expect(loadGame()).toEqual({ ...legacy, undosLeft: 3 });
+  });
+  it.each(["notes", "solution", "puzzle", "mistakes", "hints", "elapsedMs", "startedAt", "updatedAt", "undosLeft"])("rejects invalid %s in a save", key => {
+    const g = newGame("easy", 16, "invalid");
+    const broken = { ...g, [key]: key === "notes" ? Array(81).fill(-1) : key === "solution" ? Array(81).fill(1) : key === "puzzle" ? Array(81).fill(9) : -1 };
+    expect(isValidSave(broken)).toBe(false);
+  });
+  it("skips a corrupt save without losing a healthy saved game", () => {
+    const good = newGame("easy", 17, "healthy");
+    localStorage.setItem("mrb-sudoku:v1:games", JSON.stringify([{ id: "bad", game: { ...good, id: "bad", history: [null] }, updatedAt: 1000 }, { id: good.id, game: good, updatedAt: 1001 }]));
+    selectGame(good.id);
+    expect(listGames().map(s => s.id)).toEqual(["healthy"]);
+    expect(loadGame()).toEqual(good);
+  });
 });
 
 describe("statistics per level", () => {
@@ -76,6 +116,26 @@ describe("statistics per level", () => {
     const g = solved(8);
     recordFinish(g); recordFinish(g);
     expect(loadStats().easy.played).toBe(1);
+  });
+  it("never recounts the oldest game after more than 200 finished games, including after reload", () => {
+    const g = solved(18);
+    for (let i = 0; i < 250; i++) recordFinish({ ...g, id: `finished-${i}` });
+    const before = { yearly: loadStats(), allTime: loadAllTime(), progress: loadProgress() };
+    expect(before.yearly.easy.played).toBe(250);
+    expect(before.allTime.easy.played).toBe(250);
+    recordFinish({ ...g, id: "finished-0" });
+    expect(loadStats()).toEqual(before.yearly);
+    expect(loadAllTime()).toEqual(before.allTime);
+    expect(loadProgress()).toEqual(before.progress);
+    expect(JSON.parse(localStorage.getItem("mrb-sudoku:v1:counted") ?? "[]")).toHaveLength(250);
+  });
+  it("preserves IDs written by the older 200-ID format", () => {
+    const g = solved(19);
+    localStorage.setItem("mrb-sudoku:v1:counted", JSON.stringify(Array.from({ length: 200 }, (_, i) => `legacy-${i}`)));
+    recordFinish({ ...g, id: "new-result" });
+    recordFinish({ ...g, id: "legacy-0" });
+    expect(loadStats().easy.played).toBe(1);
+    expect(loadAllTime().easy.played).toBe(1);
   });
   it("all-time stats count every finished game and survive a year change", () => {
     recordFinish(solved(9));

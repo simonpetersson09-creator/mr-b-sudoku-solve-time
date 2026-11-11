@@ -797,3 +797,20 @@ main[data-level="master"] .sdk-level-pill { background: color-mix(in oklab, var(
 .sdk-round-end svg { color: var(--destructive); }
 .sdk-round-end { border-color: color-mix(in oklab, var(--destructive) 30%, var(--border)); }
 .sdk-fixed .sdk-back { min-height: 36px; }
+
+/* Landscape phones: board and input occupy separate columns, never below the viewport. */
+@media (orientation: landscape) and (max-height: 600px) {
+  .sdk-fixed .sdk-play-stack { display: grid; max-width: 960px; grid-template-columns: minmax(0, 1fr) minmax(240px, 1fr); grid-template-rows: 36px minmax(0, 1fr); column-gap: 20px; row-gap: 4px; }
+  .sdk-fixed .sdk-topbar { grid-column: 1 / -1; }
+  .sdk-fixed .sdk-board-column { min-width: 0; }
+  .sdk-fixed .sdk-board, .sdk-fixed .sdk-paused { flex-shrink: 0; max-width: min(100%, var(--board-px, 240px)); }
+  .sdk-fixed .sdk-board-head { max-width: min(100%, var(--board-px, 240px)); margin-bottom: 6px; gap: 4px; }
+  .sdk-fixed .sdk-board-time { font-size: 18px; }
+  .sdk-fixed .sdk-fel-pill { padding-inline: 5px; gap: 3px; }
+  .sdk-fixed .sdk-controls { min-width: 0; min-height: 0; justify-content: center; gap: 8px; }
+  .sdk-fixed .sdk-tools, .sdk-fixed .sdk-pad { margin-top: 0; }
+  .sdk-fixed .sdk-pad { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .sdk-fixed .sdk-key { min-height: 42px; }
+  .sdk-fixed .sdk-cell { font-size: 20px; }
+  .sdk-fixed .sdk-notes span { font-size: 8px; }
+}

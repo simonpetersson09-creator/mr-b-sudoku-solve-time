@@ -4,6 +4,7 @@ import { supabase } from "@/lib/auth/client";
 import { nativeDiagnostic } from "./diagnostics";
 
 export const RESUME_EVENT = "mrb-sudoku:resume";
+export const PAUSE_EVENT = "mrb-sudoku:pause";
 export async function startNativeRuntime(goHome: () => void) {
   if (!Capacitor.isNativePlatform()) return () => {};
   const [{ App }, { Network }, { StatusBar, Style }] = await Promise.all([
@@ -18,7 +19,7 @@ export async function startNativeRuntime(goHome: () => void) {
   handles.push(await App.addListener("appStateChange", ({ isActive }) => {
     nativeDiagnostic("lifecycle", isActive ? "active" : "background");
     if (isActive) resume();
-    else { supabase.auth.stopAutoRefresh(); window.dispatchEvent(new Event("mrb-sudoku:pause")); }
+    else { window.dispatchEvent(new Event(PAUSE_EVENT)); supabase.auth.stopAutoRefresh(); }
   }));
   handles.push(await Network.addListener("networkStatusChange", ({ connected }) => {
     nativeDiagnostic("network", connected ? "online" : "offline");

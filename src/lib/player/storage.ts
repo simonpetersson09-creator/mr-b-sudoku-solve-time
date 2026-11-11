@@ -1,4 +1,4 @@
-import { isLevel, LEVELS, MAX_UNDOS, isLost, type GameState, type Level } from "@/lib/sudoku/engine";
+import { isLevel, LEVELS, MAX_UNDOS, MAX_HINTS, MAX_MISTAKES, isConsistent, isLost, type GameState, type Level } from "@/lib/sudoku/engine";
 import { emptyProgress, type Progress } from "@/lib/player/unlock";
 
 /** All Sudoku keys live in their own namespace; never shared with Ludo or Yatzy. */
@@ -27,13 +27,23 @@ function write(key: string, v: unknown) {
 export const MAX_SAVED_GAMES = 10;
 export interface SavedGame { id: string; game: GameState; updatedAt: number }
 
-const isGrid = (g: unknown) => Array.isArray(g) && g.length === 81 && g.every((v) => Number.isInteger(v) && v >= 0 && v <= 9);
+const integerIn = (v: unknown, min: number, max: number): v is number => typeof v === "number" && Number.isInteger(v) && v >= min && v <= max;
+const isGrid = (g: unknown, min = 0): g is number[] => Array.isArray(g) && g.length === 81 && Array.from(g).every((v) => integerIn(v, min, 9));
+const nonnegativeTime = (v: unknown): v is number => typeof v === "number" && Number.isFinite(v) && v >= 0;
 /** True only for a structurally sound, unfinished saved game. */
 export function isValidSave(g: unknown): g is GameState {
   if (!g || typeof g !== "object") return false;
   const s = g as GameState;
-  return typeof s.id === "string" && isLevel(s.level) && isGrid(s.puzzle) && isGrid(s.solution) && isGrid(s.values)
-    && Array.isArray(s.notes) && s.notes.length === 81 && Array.isArray(s.history) && Number.isFinite(s.elapsedMs) && !s.finished;
+  if (typeof s.id !== "string" || !s.id.length || !isLevel(s.level) || !Number.isInteger(s.seed)
+    || !isGrid(s.puzzle) || !isGrid(s.solution, 1) || !isGrid(s.values) || !isConsistent(s.solution)
+    || !Array.isArray(s.notes) || s.notes.length !== 81 || !Array.from(s.notes).every((v) => integerIn(v, 0, 511))
+    || !Array.isArray(s.history) || !integerIn(s.mistakes, 0, MAX_MISTAKES - 1) || !integerIn(s.hints, 0, MAX_HINTS)
+    || (s.undosLeft !== undefined && !integerIn(s.undosLeft, 0, MAX_UNDOS))
+    || !nonnegativeTime(s.elapsedMs) || !nonnegativeTime(s.startedAt) || !nonnegativeTime(s.updatedAt) || s.finished !== false) return false;
+  if (!s.puzzle.every((v, i) => v === 0 || (v === s.solution[i] && s.values[i] === v && s.notes[i] === 0))) return false;
+  return Array.from(s.history).every((entry) => Array.isArray(entry) && entry.length > 0 && Array.from(entry).every((c) =>
+    c && typeof c === "object" && integerIn(c.i, 0, 80) && integerIn(c.value, 0, 9) && integerIn(c.notes, 0, 511)
+    && (s.puzzle[c.i] === 0 || (c.value === s.puzzle[c.i] && c.notes === 0))));
 }
 
 /** Pure: newest first, at most MAX_SAVED_GAMES. */
@@ -45,7 +55,8 @@ function readSaves(): SavedGame[] {
   if (typeof window === "undefined") return [];
   try {
     const parsed: unknown = JSON.parse(localStorage.getItem(GAMES) ?? "[]");
-    return Array.isArray(parsed) ? parsed.filter((e): e is SavedGame => !!e && typeof e.id === "string" && isValidSave(e.game)) : [];
+    return Array.isArray(parsed) ? parsed.filter((e): e is SavedGame => !!e && typeof e === "object" && typeof e.id === "string"
+      && nonnegativeTime(e.updatedAt) && isValidSave(e.game) && e.id === e.game.id) : [];
   } catch { return []; }
 }
 const writeSaves = (list: SavedGame[]) => write(GAMES, capSaves(list));
@@ -194,7 +205,8 @@ export function recordFinish(g: GameState) {
   saveAllTime(addAllTimeResult(at, g));
   const p = loadProgress();
   saveProgress({ ...p, [g.level]: p[g.level] + 1 });
-  write(COUNTED, [...list, g.id].slice(-200));
+  // Keep the existing list format for older installations, but never evict a recorded ID.
+  write(COUNTED, [...list, g.id]);
 }
 
 // ---------- Level unlock progress (lifetime, never reset) ----------
