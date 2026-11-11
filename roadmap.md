@@ -1,5 +1,11 @@
 # Roadmap: Mr.B. Sudoku
 
+## Lanseringsförberedelser steg 1 (2026-11-11)
+- [x] Konsekvent native-identitet/version; endast tillfälligt Android-ID etablerat i projektet, Google Play-registrering ej tillgänglig.
+- [x] Sudoku-ikoner/startbilder, borttagna oanvända kamera-/pushinställningar och säkra AdMob-synkskript.
+- [x] Uppdaterade verifieringskontroller, tester och dokumentation; 250 tester och native source-kontroll godkända; ingen signering/publicering.
+- [ ] Externa produktionsuppgifter och installerad telefonprovning: inväntar ägarens uppgifter och native-verktyg.
+
 ## iPhone-frågor, profilbild och dokumentation (2026-11-11)
 - [x] Översatt spårnings- och bildfrågor på 40 språk och registrerat i iPhone-appen; 17 relevanta tester och native source-verifiering godkända.
 - [x] Befintlig bildväljare, autentiserad sparning och återöppning verifierade i 393×706 utan sidfel eller sidöverflöde; inga nya capabilities.

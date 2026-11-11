@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Mr.B. Sudoku</string>
-    <string name="title_activity_main">Mr.B. Sudoku</string>
-    <string name="package_name">com.pending.mrbsudoku</string>
-    <string name="custom_url_scheme">com.pending.mrbsudoku</string>
+    <string name="app_name">Mr B Sudoku</string>
+    <string name="title_activity_main">Mr B Sudoku</string>
+    <string name="package_name">se.shiningdays.mrbsudoku</string>
+    <string name="custom_url_scheme">mrbsudoku</string>
 </resources>

@@ -1,12 +1,12 @@
 import type { CapacitorConfig } from "@capacitor/cli";
 
-// Same local-bundle principle as Yatzy, with an entirely separate Ludo identity.
+// Sudoku's standalone, locally packaged native app.
 const config: CapacitorConfig = {
-  appId: "com.pending.mrbsudoku",
-  appName: "Mr.B. Sudoku",
+  appId: "se.shiningdays.mrbsudoku",
+  appName: "Mr B Sudoku",
   webDir: "dist-native",
   ios: { contentInset: "never" },
   android: { allowMixedContent: false },
-  plugins: { StatusBar: { style: "DARK" }, PushNotifications: { presentationOptions: ["alert", "sound"] } },
+  plugins: { StatusBar: { style: "DARK" } },
 };
 export default config;

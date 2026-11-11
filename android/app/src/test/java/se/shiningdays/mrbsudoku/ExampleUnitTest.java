@@ -1,4 +1,4 @@
-package com.getcapacitor.myapp;
+package se.shiningdays.mrbsudoku;
 
 import static org.junit.Assert.*;
 

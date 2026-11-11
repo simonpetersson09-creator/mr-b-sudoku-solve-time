@@ -1,6 +1,6 @@
 # Mr.B. Sudoku — mobile test installation
 
-This replaces inherited Ludo instructions. Sudoku has no push, QR scanning, multiplayer or shared Ludo/Yatzy identity. The temporary app identifier is `com.pending.mrbsudoku`; the Apple team stays empty until the owner supplies Sudoku’s approved values. No publication or store signing is automatic.
+This replaces inherited Ludo instructions. Sudoku has no push, QR scanning, multiplayer or shared Ludo/Yatzy identity. The approved app identifier is `se.shiningdays.mrbsudoku` (version 1.0.0, build 1); the Apple team stays empty until the owner supplies Sudoku’s approved values. No publication or store signing is automatic.
 
 ## Prepare the local package
 Use Node.js 22+ and Bun. Internet is required for dependencies, not local Sudoku play.

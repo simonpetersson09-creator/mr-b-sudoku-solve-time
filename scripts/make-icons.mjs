@@ -1,7 +1,7 @@
 /**
  * Regenerate every Mr.B. Sudoku launcher icon and splash from resources/icon.png.
  * Ported from Mr. B Yatzy's scripts/make-icons.js (same sizes and formats).
- * Ludo addition: splash images (Yatzy keeps Capacitor's default splash).
+ * Sudoku addition: splash images (Yatzy keeps Capacitor's default splash).
  *
  * Usage: node scripts/make-icons.mjs [new-source.png]   (needs ImageMagick 7)
  * Outputs (committed):
@@ -19,7 +19,7 @@ const MASTER = join(ROOT, "resources", "icon.png");
 const ANDROID_RES = join(ROOT, "resources", "android", "res");
 const IOS = join(ROOT, "resources", "ios");
 const PUBLIC = join(ROOT, "public");
-const BG = "#06262B"; // Ludo dark teal
+const BG = "#06262B"; // Brand dark teal
 
 const run = (args) => execFileSync("magick", args, { stdio: "inherit" });
 

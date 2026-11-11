@@ -211,7 +211,7 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
-			<key>CFBundleURLName</key><string>com.pending.mrbsudoku</string>
+			<key>CFBundleURLName</key><string>se.shiningdays.mrbsudoku</string>
 			<key>CFBundleURLSchemes</key><array><string>mrbsudoku</string></array>
 		</dict>
 	</array>
@@ -231,7 +231,7 @@
 		<string>mr</string><string>or</string><string>pa</string><string>ta</string><string>te</string>
 	</array>
 	<key>CFBundleDisplayName</key>
-        <string>Mr.B. Sudoku</string>
+        <string>Mr B Sudoku</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>

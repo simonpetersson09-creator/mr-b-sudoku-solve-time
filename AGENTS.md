@@ -23,10 +23,11 @@
 - Admin activity: durable device number, per-visit heartbeats, `local_game` reports, Stockholm days in pure `activity-stats.ts`; app errors/ad events reach admin only via `src/lib/backend/report.ts` → `app_events`.
 - The published website is download-only (`src/server.ts` + pure `src/lib/web-access.ts`); preview hosts and native origins are never gated.
 - Capacitor launches the `dist-native` static bundle from `vite.native.config.ts`, so local play needs no server; native projects contain no signing credentials, and build scripts never publish.
-- Native app ID is a temporary placeholder and the Apple team is intentionally empty until the owner supplies real values; `scripts/native.mjs` and `config.test.ts` enforce this and the absence of push.
+- Native identity/version must agree across Capacitor, both platform projects and verification tests; the Apple team stays empty until supplied, so unsigned preparation cannot silently become a release build.
 - Ads use the existing AdMob/UMP/ATT flow in `src/lib/ads/`; hints share the fullscreen dismissal lifecycle, result exits are deduplicated by game ID, and startup is guarded per launch. Use only Google's sample IDs until the app has its own AdMob account, so identities remain separate.
 - AndroidBackButton is the only owner of native back events; leaving a game via back returns home because games save continuously.
 - App icon/splash source is `resources/icon.png`; `scripts/make-icons.mjs` regenerates committed `resources/` and `scripts/set-native-icons.mjs` copies them into the native projects.
+- Native AdMob sync scripts share a conservative App ID selector: preserve production IDs and reject conflicts or unreadable configuration, preventing sample IDs from replacing production configuration.
 - DB integration tests (`*.db.test.ts`, `bun run test:db`) run only against a throwaway local PostgreSQL+PostgREST, never the live backend.
 - All new-game entry points use the browser worker generation helper; prepared puzzles are consumed once and start timestamps are reset on delivery, keeping solver work off the UI thread without changing the pure engine.
 - Home preloads only public local content routes; protected pages and authentication are not part of background navigation warming.

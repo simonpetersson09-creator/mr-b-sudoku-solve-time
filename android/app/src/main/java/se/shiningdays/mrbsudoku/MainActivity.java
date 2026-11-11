@@ -1,4 +1,4 @@
-package com.pending.mrbsudoku;
+package se.shiningdays.mrbsudoku;
 
 import com.getcapacitor.BridgeActivity;
 

@@ -1,8 +1,8 @@
 import { expect, it } from "vitest";
-import { allowedNativeOrigin, validateLudoOrigin } from "./origin";
-it("only accepts a separate stable HTTPS Ludo service", () => {
-  expect(validateLudoOrigin("https://ludo.example.org/")).toBe("https://ludo.example.org");
-  for (const value of ["http://ludo.example.org", "https://yatzy.example.org", "https://id-preview--example.lovable.app", "https://user:pass@ludo.example.org", "https://ludo.example.org/path"]) expect(() => validateLudoOrigin(value)).toThrow();
+import { allowedNativeOrigin, validateSudokuOrigin } from "./origin";
+it("only accepts a separate stable HTTPS Sudoku service", () => {
+  expect(validateSudokuOrigin("https://sudoku.example.org/")).toBe("https://sudoku.example.org");
+  for (const value of ["https://ludo.example.org", "http://sudoku.example.org", "https://yatzy.example.org", "https://id-preview--example.lovable.app", "https://user:pass@sudoku.example.org", "https://sudoku.example.org/path"]) expect(() => validateSudokuOrigin(value)).toThrow();
 });
 it("restricts native browser origins; bearer verification is still required", () => {
   expect(allowedNativeOrigin("capacitor://localhost")).toBe(true);

@@ -3,8 +3,7 @@
  *
  * Missing keys here are fatal on iOS:
  *  - GADApplicationIdentifier  → Google AdMob SDK crashes the app on init.
- *  - NSCameraUsageDescription  → iOS terminates the process when the camera
- *                                permission prompt would appear (QR scanner).
+ * Sudoku has no camera/QR flow and never adds a camera permission.
  *
  * Run after `npx cap add ios` / `npx cap sync ios` so the native iOS project
  * exists. The script is idempotent: it adds keys if missing, or updates them
@@ -13,14 +12,12 @@
 import { readFile, writeFile } from 'fs/promises';
 import { existsSync } from 'fs';
 import { resolve } from 'path';
+import { configuredAppId, selectAppId } from './admob-app-id.js';
 
 const PLIST_PATH = resolve(process.cwd(), 'ios/App/App/Info.plist');
 
 /** key → string value that must be present in Info.plist. */
 const REQUIRED_STRING_KEYS = {
-  GADApplicationIdentifier: 'ca-app-pub-3940256099942544~1458002511',
-  NSCameraUsageDescription:
-    "The camera is used only to scan a friend's match QR code.",
   NSPhotoLibraryUsageDescription:
     'Your photo library is used only when you choose a profile picture.',
   NSUserTrackingUsageDescription:
@@ -137,6 +134,11 @@ async function main() {
   }
 
   let content = await readFile(PLIST_PATH, 'utf-8');
+  const source = await readFile(resolve('src/lib/ads/admob.ts'), 'utf8');
+  const existing = content.match(/<key>GADApplicationIdentifier<\/key>\s*<string>([^<]*)<\/string>/)?.[1];
+  const appId = selectAppId('ios', configuredAppId(source, 'ios'), existing);
+  content = upsertStringKey(content, 'GADApplicationIdentifier', appId);
+  content = content.replace(/\s*<key>NSCameraUsageDescription<\/key>\s*<string>[^<]*<\/string>/g, '');
   for (const [key, value] of Object.entries(REQUIRED_STRING_KEYS)) {
     content = upsertStringKey(content, key, value);
   }
@@ -144,7 +146,7 @@ async function main() {
   await writeFile(PLIST_PATH, content, 'utf-8');
 
   // Verify — a silently-failed regex replace must not pass unnoticed.
-  const missing = Object.keys(REQUIRED_STRING_KEYS).filter(
+  const missing = ['GADApplicationIdentifier', ...Object.keys(REQUIRED_STRING_KEYS)].filter(
     (key) => !content.includes(`<key>${key}</key>`),
   );
   const missingSkad = GOOGLE_SKADNETWORK_IDS.filter((id) => !content.includes(`<string>${id}</string>`));

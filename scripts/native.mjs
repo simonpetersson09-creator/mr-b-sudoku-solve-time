@@ -16,11 +16,11 @@ try {
     const origin = process.env.VITE_MRB_SUDOKU_ORIGIN;
     if (origin) {
       const parsed = new URL(origin);
-      if (parsed.protocol !== "https:" || /localhost|id-preview|yatzy/i.test(parsed.hostname) || parsed.username || parsed.password || parsed.pathname !== "/" || parsed.search || parsed.hash) throw new Error("Only Mr.B. Sudoku's separately approved HTTPS origin may be bundled");
+      if (parsed.protocol !== "https:" || /localhost|id-preview|yatzy|ludo/i.test(parsed.hostname) || parsed.username || parsed.password || parsed.pathname !== "/" || parsed.search || parsed.hash) throw new Error("Only Mr.B. Sudoku's separately approved HTTPS origin may be bundled");
     }
     run("bunx", ["vite", "build", "--config", "vite.native.config.ts"]);
   } else if (action === "verify") {
-    requireFiles(["bun.lock", "android/gradlew", "android/gradlew.bat", "android/gradle/wrapper/gradle-wrapper.jar", "android/gradle/wrapper/gradle-wrapper.properties", "android/settings.gradle", "android/capacitor.settings.gradle", "android/app/capacitor.build.gradle", "android/app/src/main/java/com/pending/mrbsudoku/MainActivity.java", "android/app/src/main/res/xml/locales_config.xml", "ios/App/App/AppDelegate.swift", "ios/App/App/SceneDelegate.swift", "ios/App/App/Info.plist", "ios/App/App/App.entitlements", "ios/App/App/Base.lproj/Main.storyboard", "ios/App/App/Base.lproj/LaunchScreen.storyboard", "ios/App/CapApp-SPM/Package.swift", "ios/debug.xcconfig"]);
+    requireFiles(["bun.lock", "android/gradlew", "android/gradlew.bat", "android/gradle/wrapper/gradle-wrapper.jar", "android/gradle/wrapper/gradle-wrapper.properties", "android/settings.gradle", "android/capacitor.settings.gradle", "android/app/capacitor.build.gradle", "android/app/src/main/java/se/shiningdays/mrbsudoku/MainActivity.java", "android/app/src/main/res/xml/locales_config.xml", "ios/App/App/AppDelegate.swift", "ios/App/App/SceneDelegate.swift", "ios/App/App/Info.plist", "ios/App/App/App.entitlements", "ios/App/App/Base.lproj/Main.storyboard", "ios/App/App/Base.lproj/LaunchScreen.storyboard", "ios/App/CapApp-SPM/Package.swift", "ios/debug.xcconfig"]);
     const capacitorPackages = ["core", "cli", "android", "ios"].map(name => JSON.parse(readFileSync(`node_modules/@capacitor/${name}/package.json`, "utf8")).version);
     if (new Set(capacitorPackages).size !== 1 || capacitorPackages[0] !== "8.6.0") throw new Error("Capacitor core/CLI/platform version mismatch; use bun install --frozen-lockfile");
     const spm = readFileSync("ios/App/CapApp-SPM/Package.swift", "utf8");
@@ -42,18 +42,28 @@ try {
     const android = readFileSync("android/app/src/main/AndroidManifest.xml", "utf8");
     const gradle = readFileSync("android/app/build.gradle", "utf8");
     const ios = readFileSync("ios/App/App.xcodeproj/project.pbxproj", "utf8");
-    if (!config.includes('appId: "com.pending.mrbsudoku"') || !gradle.includes('applicationId "com.pending.mrbsudoku"') || (ios.match(/PRODUCT_BUNDLE_IDENTIFIER = com\.pending\.mrbsudoku;/g) || []).length !== 2) throw new Error("Mr.B. Sudoku app identity missing");
-    if (!gradle.includes('versionCode 1') || !gradle.includes('versionName "1.0"') || (ios.match(/CURRENT_PROJECT_VERSION = 1;/g) || []).length !== 2 || (ios.match(/MARKETING_VERSION = 1.0;/g) || []).length !== 2) throw new Error("Android/iOS app versions differ");
+    const plist = readFileSync("ios/App/App/Info.plist", "utf8");
+    const strings = readFileSync("android/app/src/main/res/values/strings.xml", "utf8");
+    if (!config.includes('appName: "Mr B Sudoku"') || !plist.includes('<string>Mr B Sudoku</string>') || !strings.includes('<string name="app_name">Mr B Sudoku</string>')) throw new Error("Native display names differ");
+    if (!gradle.includes('namespace = "se.shiningdays.mrbsudoku"') || !readFileSync("android/app/src/main/java/se/shiningdays/mrbsudoku/MainActivity.java", "utf8").includes('package se.shiningdays.mrbsudoku;')) throw new Error("Android namespace/package differs");
+    if (/android\.permission\.(CAMERA|POST_NOTIFICATIONS)|android\.hardware\.camera/.test(android) || config.includes("PushNotifications") || plist.includes("NSCameraUsageDescription")) throw new Error("Unused camera/push configuration must stay off");
+    for (const [source, destination] of [["resources/ios/AppIcon.appiconset", "ios/App/App/Assets.xcassets/AppIcon.appiconset"], ["resources/ios/Splash.imageset", "ios/App/App/Assets.xcassets/Splash.imageset"], ["resources/android/res", "android/app/src/main/res"]]) {
+      for (const relative of readdirSync(source, { recursive: true })) {
+        if (!/\.(png|json|xml)$/.test(relative)) continue;
+        if (!readFileSync(`${source}/${relative}`).equals(readFileSync(`${destination}/${relative}`))) throw new Error(`Stale native Sudoku asset: ${relative}`);
+      }
+    }
+    if (!config.includes('appId: "se.shiningdays.mrbsudoku"') || !gradle.includes('applicationId "se.shiningdays.mrbsudoku"') || (ios.match(/PRODUCT_BUNDLE_IDENTIFIER = se\.shiningdays\.mrbsudoku;/g) || []).length !== 2) throw new Error("Mr.B. Sudoku app identity missing");
+    if (!gradle.includes('versionCode 1') || !gradle.includes('versionName "1.0.0"') || (ios.match(/CURRENT_PROJECT_VERSION = 1;/g) || []).length !== 2 || (ios.match(/MARKETING_VERSION = 1.0.0;/g) || []).length !== 2) throw new Error("Android/iOS app versions differ");
     if (!spm.includes('exact: "8.6.0"')) throw new Error("iOS Capacitor package version differs");
     for (const path of sourceOnly ? [] : ["android/app/src/main/assets", "ios/App/App"]) {
       requireFiles([`${path}/public/index.html`, `${path}/capacitor.config.json`]);
       const synced = JSON.parse(readFileSync(`${path}/capacitor.config.json`, "utf8"));
-      if (synced.appId !== "com.pending.mrbsudoku" || synced.server?.url) throw new Error("Synced native configuration loads wrong identity or remote website");
+      if (synced.appId !== "se.shiningdays.mrbsudoku" || synced.server?.url) throw new Error("Synced native configuration loads wrong identity or remote website");
       if (readFileSync(`${path}/public/index.html`, "utf8") !== readFileSync("dist-native/index.html", "utf8")) throw new Error("Synced package is stale; repeat native:sync");
     }
     if (!android.includes('android:hardwareAccelerated="true"') || !android.includes('android:allowBackup="false"')) throw new Error("Android acceleration/backup protection missing");
     if ((ios.match(/DEVELOPMENT_TEAM = "";/g) || []).length !== 2 || gradle.includes("signingConfigs")) throw new Error("Apple team must stay empty until Mr.B. Sudoku's team is approved; no Android signing credentials");
-    if (/com\.pending\./.test(config)) console.warn("Temporary app ID com.pending.mrbsudoku: replace with the approved bundle ID before any store build.");
     if (readFileSync("ios/App/App/App.entitlements", "utf8").includes("aps-environment")) throw new Error("Push entitlement must stay off for Mr.B. Sudoku");
     if (ios.includes("com.apple.Push")) throw new Error("Push capability must stay off for Mr.B. Sudoku");
     const { permissionCopy } = await import("./ios-permission-copy.js");
@@ -66,7 +76,7 @@ try {
     for (const file of ["capacitor.config.ts", "android/app/build.gradle", "ios/App/App.xcodeproj/project.pbxproj"]) {
       if (/ixzqnmocplgbsawuufsm|sb_secret_|SERVICE_ROLE_KEY/.test(readFileSync(file, "utf8"))) throw new Error("Forbidden production configuration");
     }
-    console.log("Required native files, Capacitor 8.6.0 plugins, app version 1.0 (1), app identity, empty Apple team, language declarations and no push verified. No signing credentials; this is not a native compilation.");
+    console.log("Required native files, Capacitor 8.6.0 plugins, app version 1.0.0 (1), app identity, empty Apple team, language declarations and no push verified. No signing credentials; this is not a native compilation.");
     console.log(sourceOnly ? "Source-only: packaged assets and platform sync are NOT verified." : "Synced local package and bundled resources verified.");
     console.log("Mac/Xcode available:", existsSync("/Applications/Xcode.app"), "Android SDK configured:", !!(process.env.ANDROID_HOME || process.env.ANDROID_SDK_ROOT));
   } else if (["sync", "open", "build"].includes(action) && ["ios", "android"].includes(platform)) {

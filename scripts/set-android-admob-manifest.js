@@ -13,30 +13,21 @@
 import { readFile, writeFile } from 'fs/promises';
 import { existsSync } from 'fs';
 import { resolve } from 'path';
+import { configuredAppId, selectAppId } from './admob-app-id.js';
 
 const MANIFEST = resolve(process.cwd(), 'android/app/src/main/AndroidManifest.xml');
 const ADMOB_TS = resolve(process.cwd(), 'src/lib/ads/admob.ts');
-const GOOGLE_SAMPLE_APP_ID = 'ca-app-pub-3940256099942544~3347511713';
 const META = 'com.google.android.gms.ads.APPLICATION_ID';
-
-async function androidAppId() {
-  const src = await readFile(ADMOB_TS, 'utf8');
-  const block = src.match(/android:\s*\{\s*appId:\s*(null|'([^']+)')/);
-  return block && block[2] ? block[2] : null;
-}
 
 async function main() {
   if (!existsSync(MANIFEST)) {
     console.error(`[Android manifest] Not found: ${MANIFEST}. Run "npx cap add android" first.`);
     process.exit(1);
   }
-  let appId = await androidAppId();
-  if (!appId) {
-    appId = GOOGLE_SAMPLE_APP_ID;
-    console.warn('[Android manifest] WARNING: no Android AdMob App ID set in src/lib/ads/admob.ts.');
-    console.warn('[Android manifest] Using Google\'s SAMPLE App ID – OK for testing, NOT for release.');
-  }
   let xml = await readFile(MANIFEST, 'utf8');
+  const source = await readFile(ADMOB_TS, 'utf8');
+  const existing = xml.match(/<meta-data\s+android:name="com\.google\.android\.gms\.ads\.APPLICATION_ID"[^>]*android:value="([^"]*)"/)?.[1];
+  const appId = selectAppId('android', configuredAppId(source, 'android'), existing);
   const tag = `<meta-data android:name="${META}" android:value="${appId}"/>`;
   const re = new RegExp(`<meta-data\\s+android:name="${META.replace(/\./g, '\\.')}"[^>]*/>`);
   if (re.test(xml)) {
