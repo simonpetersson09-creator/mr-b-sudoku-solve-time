@@ -558,11 +558,11 @@ function apply(s: GameState, changes: Change[], record = true): GameState {
 }
 
 /** Places a digit and clears the cell's notes; with clearPeerNotes, also that digit's notes in peers (undone together). */
-export function setValue(s: GameState, i: number, d: number, clearPeerNotes = true): GameState {
+export function setValue(s: GameState, i: number, d: number, clearPeerNotes = true, record = true): GameState {
   if (over(s) || isGiven(s, i) || d < 1 || d > 9 || s.values[i] === d) return s;
   const changes: Change[] = [{ i, value: d, notes: 0 }];
   if (clearPeerNotes) for (const p of PEERS[i]) if (s.notes[p] & bit(d)) changes.push({ i: p, value: s.values[p], notes: s.notes[p] & ~bit(d) });
-  const next = apply(s, changes);
+  const next = apply(s, changes, record);
   return d !== s.solution[i] ? { ...next, mistakes: s.mistakes + 1 } : next;
 }
 

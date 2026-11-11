@@ -100,6 +100,17 @@ describe("play", () => {
     expect(s.values[open]).toBe(0);
     expect(s.undosLeft).toBe(MAX_UNDOS - 1);
   });
+  it("a wrong digit placed with record=false never enters the undo history", () => {
+    let s = setValue(g, open, right);
+    const other = g.puzzle.findIndex((v, i) => !v && i !== open);
+    const wrongOther = g.solution[other] % 9 + 1;
+    s = setValue(s, other, wrongOther, true, false);
+    expect(s.mistakes).toBe(1);
+    expect(s.history.length).toBe(1);
+    s = undo(s);
+    expect(s.values[open]).toBe(0);
+    expect(s.values[other]).toBe(wrongOther);
+  });
   it("erase never removes a placed digit, not even a wrong one", () => {
     const s = setValue(g, open, wrong);
     expect(erase(s, open)).toBe(s);

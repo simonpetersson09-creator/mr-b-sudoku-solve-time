@@ -123,7 +123,8 @@ function PlayPage() {
     if (notesMode && !fromHint) { act((s) => toggleNote(s, selected, d)); void playLightHaptic(); setNotesMode(false); return; }
     if (paused) return;
     const before = base ?? state;
-    const next = setValue(before, selected, d, settings.autoRemoveNotes);
+    // A wrong digit fades away by itself, so it must not enter the undo history.
+    const next = setValue(before, selected, d, settings.autoRemoveNotes, d === before.solution[selected]);
     setState(next);
     if (next === before) return;
     const k = Date.now();
