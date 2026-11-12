@@ -654,11 +654,27 @@ html::-webkit-scrollbar, body::-webkit-scrollbar, *::-webkit-scrollbar { display
 }
 .sdk-cell[data-shake="true"] { animation: sdk-shake .4s ease-in-out; }
 @keyframes sdk-shake { 0%, 100% { transform: none; } 20%, 60% { transform: translateX(-4px); } 40%, 80% { transform: translateX(4px); } }
-.sdk-cell[data-wave="true"] { animation: sdk-wave .6s ease-in-out both; animation-delay: calc(var(--d) * 60ms); }
-@keyframes sdk-wave { 0%, 100% { transform: none; } 45% { background: color-mix(in oklab, var(--game-gold) 70%, transparent); transform: translateY(-3px); } }
-.sdk-confetti { position: fixed; top: -12px; z-index: 30; width: 7px; height: 12px; border-radius: 2px; background: var(--game-gold); pointer-events: none; animation: sdk-fall 1.8s linear forwards; }
-.sdk-confetti:nth-child(3n) { background: var(--primary); } .sdk-confetti:nth-child(3n+1) { background: var(--game-gold-light); }
-@keyframes sdk-fall { from { transform: translateY(0) rotate(0); opacity: 1; } to { transform: translateY(85vh) rotate(540deg); opacity: 0; } }
+.sdk-cell[data-wave="true"] { animation: sdk-wave .8s cubic-bezier(.2,1.4,.4,1) both; animation-delay: calc(var(--w) * 1ms); }
+@keyframes sdk-wave { 0% { transform: scale(.85); } 35% { background: radial-gradient(circle at 40% 35%, var(--game-gold-light), var(--game-gold)); box-shadow: 0 0 14px color-mix(in oklab, var(--game-gold) 70%, transparent); transform: scale(1.1); } 100% { background: color-mix(in oklab, var(--game-gold-light) 60%, var(--game-gold)); transform: none; } }
+.sdk-board[data-win="true"] { position: relative; overflow: hidden; }
+.sdk-board[data-win="true"]::after { content: ""; position: absolute; top: -50%; left: -60%; width: 40%; height: 200%; transform: rotate(20deg); pointer-events: none; background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--game-gold-light) 20%, white 70%), transparent); animation: sdk-sweep 1s cubic-bezier(.5,0,.3,1) .65s both; }
+@keyframes sdk-sweep { from { left: -60%; } to { left: 130%; } }
+.sdk-win { position: fixed; inset: 0; z-index: 40; }
+.sdk-win-dim { position: absolute; inset: 0; background: radial-gradient(circle at 50% 42%, transparent 20%, color-mix(in oklab, var(--background) 85%, transparent) 75%); opacity: 0; animation: sdk-fin .8s ease-out .2s forwards; }
+.sdk-win-rays { position: absolute; left: 50%; top: 42%; width: 900px; height: 900px; margin: -450px 0 0 -450px; border-radius: 50%; pointer-events: none;
+  background: repeating-conic-gradient(color-mix(in oklab, var(--game-gold) 28%, transparent) 0 6deg, transparent 6deg 18deg);
+  -webkit-mask: radial-gradient(circle, black 10%, transparent 60%); mask: radial-gradient(circle, black 10%, transparent 60%);
+  opacity: 0; animation: sdk-fin .9s ease-out .3s forwards, sdk-spin 14s linear infinite; }
+.sdk-win-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.sdk-win-title { position: absolute; left: 0; right: 0; top: 18%; text-align: center; font-family: var(--font-display, inherit); font-weight: 800; font-size: clamp(44px, 15vw, 72px); line-height: 1; letter-spacing: -1px; pointer-events: none; }
+.sdk-win-title span { display: inline-block; background: linear-gradient(180deg, color-mix(in oklab, var(--game-gold-light) 30%, white), var(--game-gold-light) 35%, var(--game-gold) 70%, color-mix(in oklab, var(--game-gold) 65%, black)); -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 4px 0 color-mix(in oklab, var(--game-gold) 40%, black)) drop-shadow(0 0 18px color-mix(in oklab, var(--game-gold) 60%, transparent)); opacity: 0; animation: sdk-pop .7s cubic-bezier(.2,1.8,.4,1) both; }
+.sdk-win-pill { position: absolute; left: 50%; top: 70%; transform: translateX(-50%); padding: 10px 22px; border-radius: 999px; font-family: var(--font-display, inherit); font-weight: 700; font-size: 26px; font-variant-numeric: tabular-nums; color: var(--foreground); pointer-events: none;
+  background: color-mix(in oklab, var(--background) 70%, transparent); border: 1.5px solid var(--game-gold); box-shadow: 0 0 24px color-mix(in oklab, var(--game-gold) 45%, transparent); opacity: 0; animation: sdk-up .6s cubic-bezier(.2,1.4,.4,1) 1.4s both; }
+@keyframes sdk-fin { to { opacity: 1; } }
+@keyframes sdk-spin { to { transform: rotate(360deg); } }
+@keyframes sdk-pop { 0% { opacity: 0; transform: translateY(40px) scale(.3) rotate(-12deg); } 100% { opacity: 1; transform: none; } }
+@keyframes sdk-up { 0% { opacity: 0; transform: translate(-50%, 20px) scale(.8); } 100% { opacity: 1; transform: translate(-50%, 0); } }
 .sdk-key[data-done="true"] { opacity: .3; transform: scale(.92); box-shadow: 0 0 0 2px var(--primary); transition: opacity .4s, transform .4s; }
 .sdk-key[data-done="true"] small { color: var(--primary); }
 
@@ -803,7 +819,8 @@ main[data-level="master"] .sdk-level-pill { background: color-mix(in oklab, var(
 .sdk-round-end svg { color: var(--destructive); }
 .sdk-round-end { border-color: color-mix(in oklab, var(--destructive) 30%, var(--border)); }
 @media (prefers-reduced-motion: reduce) {
-  .sdk-confetti { display: none; }
+  .sdk-win-rays, .sdk-board[data-win="true"]::after { display: none; }
+  .sdk-win-title span, .sdk-win-pill, .sdk-win-dim { animation-duration: .01s; animation-delay: 0s; }
   .sdk-cell, .sdk-cell[data-pop="true"], .sdk-cell[data-shake="true"], .sdk-cell[data-wave="true"], .sdk-cell[data-flash="true"] { animation: none; transition: none; }
 }
 .sdk-fixed .sdk-back { min-height: 36px; }

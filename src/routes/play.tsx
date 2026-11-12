@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { AppOpenGameGate } from "@/components/AppOpenGameGate";
 import { SudokuCell } from "@/components/app/SudokuCell";
+import { WinCelebration } from "@/components/app/WinCelebration";
 import { usePostMatchExit } from "@/lib/ads/usePostMatchExit";
 import { reportLocalGame } from "@/lib/backend/report";
 import {
@@ -242,7 +243,7 @@ export function PlayPage() {
     setPopCell({ i: selected, k });
     // Let the gold ripple finish, then let the cell return to its normal look.
     later(() => setPopCell((p) => (p && p.k === k ? null : p)), 950);
-    if (next.finished) { setCelebrating(true); later(() => setCelebrating(false), 1600); }
+    if (next.finished) { setCelebrating(true); later(() => setCelebrating(false), 3600); }
     const done = completedGroups(next, selected).filter((i) => !completedGroups(before, selected).includes(i));
     if (done.length && !next.finished) {
       setFlash(new Set(done));
@@ -332,7 +333,7 @@ export function PlayPage() {
       setHinted((h) => new Set(h).add(explanation.cell));
       setHintInfo({ info: explanation, step: 1 });
       later(() => setHintInfo((h) => (h?.info === explanation ? null : h)), 3500);
-      if (next.finished) { setCelebrating(true); later(() => setCelebrating(false), 1600); }
+      if (next.finished) { setCelebrating(true); later(() => setCelebrating(false), 3600); }
       void playLightHaptic();
     });
     try {
@@ -403,7 +404,7 @@ export function PlayPage() {
             <button onClick={resumePlay} className="flex flex-col items-center gap-2 rounded-xl p-4 active:scale-95"><Play className="h-12 w-12 text-gold" /><span className="font-display text-lg font-bold">{t("paused")}</span><span className="text-xs text-muted-foreground">{t("tapToResume")}</span></button>
           </div>
         ) : (
-          <div className="sdk-board" data-dark={settings.darkBoard} data-lost={lost} role="grid" aria-rowcount={9} aria-colcount={9} aria-label={t("board")}>
+          <div className="sdk-board" data-dark={settings.darkBoard} data-lost={lost} data-win={celebrating} role="grid" aria-rowcount={9} aria-colcount={9} aria-label={t("board")}>
             {Array.from({ length: 9 }, (_, row) => <div key={row} role="row" className="contents">{state.values.slice(row * 9, row * 9 + 9).map((v, col) => {
               const i = row * 9 + col;
               const r = Math.floor(i / 9), c = i % 9;
@@ -493,7 +494,7 @@ export function PlayPage() {
           </div>
         </div>
       )}
-      {celebrating && Array.from({ length: record != null ? 60 : 28 }, (_, n) => <span key={n} className="sdk-confetti" style={{ left: `${(n * 37) % 100}%`, animationDelay: `${(n % 7) * 0.12}s` }} />)}
+      {celebrating && <WinCelebration title={t("solvedTitle")} elapsedMs={state.elapsedMs} big={record != null} onSkip={() => setCelebrating(false)} />}
       {state.finished && !celebrating && <ResultOverlay state={state} record={record} unlocked={unlocked} onAgain={again} onHome={() => navigate({ to: "/" })} />}
     </main>
   );

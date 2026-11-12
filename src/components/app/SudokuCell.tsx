@@ -18,7 +18,7 @@ export const SudokuCell = memo(function SudokuCell(p: Props) {
       data-given={p.given} data-selected={p.selected} data-peer={p.peer} data-same={p.same}
       data-flash={p.flash} data-pop={p.pop} data-shake={p.shake} data-wave={p.wave}
       data-wrong={p.wrong} data-hint={p.hint} data-hint-zone={p.zone || undefined}
-      data-hinted={p.hinted || undefined} style={{ '--d': row + col } as CSSProperties}
+      data-hinted={p.hinted || undefined} style={{ '--d': row + col, '--w': Math.round(Math.hypot(row - 4, col - 4) * 70) } as CSSProperties}
       aria-label={p.label} aria-selected={p.selected} aria-readonly={p.given} aria-invalid={p.wrong}
       tabIndex={p.tabStop ? 0 : -1} aria-rowindex={row + 1} aria-colindex={col + 1} onClick={() => p.onSelect(p.index)}>
       {p.hint && <span className="sdk-hint-digit" aria-hidden="true">{p.solution}</span>}
