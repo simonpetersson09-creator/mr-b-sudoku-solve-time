@@ -38,7 +38,7 @@ const GOOGLE_TEST_IDS: Record<'ios' | 'android', Omit<PlatformAdIds, 'appId'>> =
 };
 
 export const ADMOB_IDS: Record<'ios' | 'android', PlatformAdIds> = {
-  // Sudoku's approved iOS units; Android has its own App ID, Interstitial and Rewarded; App Open stays off until supplied.
+  // Sudoku's approved iOS units; Android has its own App ID and all Sudoku units.
   ios: {
     appId: 'ca-app-pub-7448540924654868~5197213597',
     appOpen: 'ca-app-pub-7448540924654868/5823578752',
@@ -46,7 +46,7 @@ export const ADMOB_IDS: Record<'ios' | 'android', PlatformAdIds> = {
   },
   android: {
     appId: 'ca-app-pub-7448540924654868~3905854247',
-    appOpen: null,
+    appOpen: 'ca-app-pub-7448540924654868/3139567484',
     optional: 'ca-app-pub-7448540924654868/7141732539',
   },
 };

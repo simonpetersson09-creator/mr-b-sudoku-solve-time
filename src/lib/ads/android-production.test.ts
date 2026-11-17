@@ -5,16 +5,16 @@ vi.mock('./local-stats', () => ({ getRankedGames: () => 1 }));
 vi.mock('./analytics', () => ({ trackEvent: vi.fn() }));
 vi.mock('@capacitor-community/admob', () => ({ AdmobConsentStatus: { REQUIRED: 'REQUIRED' }, AdMob: {
   requestConsentInfo: async () => ({ canRequestAds: true }), initialize: async () => {},
-  prepareInterstitial: sdk.prepare, loadAppOpen: sdk.load,
+  prepareInterstitial: sdk.prepare, loadAppOpen: sdk.load, addListener: async () => ({ remove: async () => {} }), isAppOpenLoaded: async () => ({ value: sdk.load.mock.calls.length > 0 }),
 } }));
 afterEach(() => { vi.unstubAllEnvs(); vi.clearAllMocks(); });
-it('Android release uses only the real Interstitial and keeps App Open off', async () => {
-  vi.resetModules(); vi.stubEnv('DEV', false);
+it('Android release uses only the real Interstitial and App Open units', async () => {
+  vi.resetModules(); vi.stubEnv('DEV', false); sdk.load.mockResolvedValue({});
   const ads = await import('./admob');
   expect(await ads.preloadInterstitial()).toBe(true);
   expect(sdk.prepare).toHaveBeenCalledWith(expect.objectContaining({ adId: 'ca-app-pub-7448540924654868/7141732539' }));
-  expect(await ads.preloadAppOpenAd()).toBe(false);
-  expect(sdk.load).not.toHaveBeenCalled();
+  expect(await ads.preloadAppOpenAd()).toBe(true);
+  expect(sdk.load).toHaveBeenCalledWith(expect.objectContaining({ adId: 'ca-app-pub-7448540924654868/3139567484' }));
 });
 it('Android development retains the official interstitial sample with explicit testing mode', async () => {
   vi.resetModules(); vi.stubEnv('DEV', true);
