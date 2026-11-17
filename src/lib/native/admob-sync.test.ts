@@ -47,7 +47,7 @@ describe.each(['ios', 'android'] as const)('%s App ID safety', platform => {
     expect(() => selectAppId(platform, 'invalid', production)).toThrow();
   });
   it('reads the actual platform config, not the earlier test-ID block', () => {
-    expect(configuredAppId(readFileSync('src/lib/ads/admob.ts', 'utf8'), platform)).toBe(platform === 'ios' ? 'ca-app-pub-7448540924654868~5197213597' : SAMPLE_APP_IDS.android);
+    expect(configuredAppId(readFileSync('src/lib/ads/admob.ts', 'utf8'), platform)).toBe(platform === 'ios' ? 'ca-app-pub-7448540924654868~5197213597' : 'ca-app-pub-7448540924654868~3905854247');
   });
   it('runs the actual sync script twice without overwriting production or restoring camera permission', () => {
     const dir = mkdtempSync(join(tmpdir(), 'sudoku-admob-sync-'));
@@ -56,10 +56,10 @@ describe.each(['ios', 'android'] as const)('%s App ID safety', platform => {
       mkdirSync(join(dir, 'src/lib/ads'), { recursive: true });
       const source = readFileSync('src/lib/ads/admob.ts', 'utf8');
       // Exercise an existing native production ID while the central config still has samples.
-      writeFileSync(join(dir, 'src/lib/ads/admob.ts'), source.replace('ca-app-pub-7448540924654868~5197213597', SAMPLE_APP_IDS.ios));
+      writeFileSync(join(dir, 'src/lib/ads/admob.ts'), source.replace('ca-app-pub-7448540924654868~5197213597', SAMPLE_APP_IDS.ios).replace('ca-app-pub-7448540924654868~3905854247', SAMPLE_APP_IDS.android));
       const file = platform === 'ios' ? 'ios/App/App/Info.plist' : 'android/app/src/main/AndroidManifest.xml';
       mkdirSync(join(dir, platform === 'ios' ? 'ios/App/App' : 'android/app/src/main'), { recursive: true });
-      let initial = readFileSync(file, 'utf8').replace(platform === 'ios' ? 'ca-app-pub-7448540924654868~5197213597' : SAMPLE_APP_IDS.android, production);
+      let initial = readFileSync(file, 'utf8').replace(platform === 'ios' ? 'ca-app-pub-7448540924654868~5197213597' : 'ca-app-pub-7448540924654868~3905854247', production);
       if (platform === 'ios') initial = initial.replace('<dict>', '<dict><key>NSCameraUsageDescription</key><string>Old QR camera</string>');
       writeFileSync(join(dir, file), initial);
       const script = platform === 'ios' ? 'set-ios-admob-plist.js' : 'set-android-admob-manifest.js';

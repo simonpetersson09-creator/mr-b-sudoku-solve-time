@@ -8,13 +8,14 @@ vi.mock('@capacitor-community/admob', () => ({ AdmobConsentStatus: { REQUIRED: '
   prepareInterstitial: sdk.prepare, loadAppOpen: sdk.load,
 } }));
 afterEach(() => { vi.unstubAllEnvs(); vi.clearAllMocks(); });
-it('Android release never requests Google sample units in production mode', async () => {
+it('Android release uses only the real Interstitial and keeps unsupplied units off', async () => {
   vi.resetModules(); vi.stubEnv('DEV', false);
   const ads = await import('./admob');
-  expect(await ads.preloadInterstitial()).toBe(false);
+  expect(await ads.preloadInterstitial()).toBe(true);
+  expect(sdk.prepare).toHaveBeenCalledWith(expect.objectContaining({ adId: 'ca-app-pub-7448540924654868/7141732539' }));
   expect(await ads.preloadAppOpenAd()).toBe(false);
   expect(await ads.preloadRewarded()).toBe(false);
-  expect(sdk.prepare).not.toHaveBeenCalled(); expect(sdk.load).not.toHaveBeenCalled();
+  expect(sdk.load).not.toHaveBeenCalled();
 });
 it('Android development retains the official interstitial sample with explicit testing mode', async () => {
   vi.resetModules(); vi.stubEnv('DEV', true);
