@@ -44,15 +44,15 @@ it('uses approved production Rewarded only after UMP and ATT, and preload never 
   const ads = await import('./admob'); expect(await ads.preloadRewarded()).toBe(true);
   expect(sdk.order).toEqual(['ump', 'att', 'initialize', 'rewarded']);
   expect(sdk.prepare).toHaveBeenCalledWith({ adId: 'ca-app-pub-7448540924654868/8705213764', isTesting: false });
-  expect(sdk.show).not.toHaveBeenCalled(); expect(ads.REWARDED_IDS.android).toBeNull();
+  expect(sdk.show).not.toHaveBeenCalled(); expect(ads.REWARDED_IDS.android?.real).toBe('ca-app-pub-7448540924654868/4887763423');
 });
 it('uses Google Rewarded sample inventory only in development', async () => {
   vi.stubEnv('DEV', true); const ads = await import('./admob'); await ads.preloadRewarded();
   expect(sdk.prepare).toHaveBeenCalledWith({ adId: 'ca-app-pub-3940256099942544/1712485313', isTesting: true });
 });
-it('does not configure or request iOS Rewarded on Android', async () => {
-  sdk.platform = 'android'; const ads = await import('./admob'); expect(await ads.preloadRewarded()).toBe(false);
-  expect(await ads.showOptionalRewarded()).toBe('unavailable'); expect(sdk.prepare).not.toHaveBeenCalled();
+it('uses the own Android Rewarded unit on Android, never the iOS one', async () => {
+  sdk.platform = 'android'; const ads = await import('./admob'); expect(await ads.preloadRewarded()).toBe(true);
+  expect(sdk.prepare).toHaveBeenCalledWith(expect.objectContaining({ adId: 'ca-app-pub-7448540924654868/4887763423' }));
 });
 it('UMP false blocks every reward request', async () => {
   sdk.eligible = false; const ads = await import('./admob'); const reward = vi.fn();

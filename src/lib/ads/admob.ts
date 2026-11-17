@@ -38,7 +38,7 @@ const GOOGLE_TEST_IDS: Record<'ios' | 'android', Omit<PlatformAdIds, 'appId'>> =
 };
 
 export const ADMOB_IDS: Record<'ios' | 'android', PlatformAdIds> = {
-  // Sudoku's approved iOS units; Android has its own App ID and Interstitial; App Open/Rewarded stay off until supplied.
+  // Sudoku's approved iOS units; Android has its own App ID, Interstitial and Rewarded; App Open stays off until supplied.
   ios: {
     appId: 'ca-app-pub-7448540924654868~5197213597',
     appOpen: 'ca-app-pub-7448540924654868/5823578752',
@@ -657,10 +657,10 @@ async function showInterstitial(kind: 'optional' | 'postMatch', context?: { matc
 /* Rewarded: frivilligt erbjudande om en ledtråd                       */
 /* ------------------------------------------------------------------ */
 
-/** Android remains unconfigured; no iOS unit may be requested there. */
+/** Each platform uses its own Sudoku unit; never cross-platform IDs. */
 export const REWARDED_IDS: Record<'ios' | 'android', { real: string; test: string } | null> = {
   ios: { real: 'ca-app-pub-7448540924654868/8705213764', test: 'ca-app-pub-3940256099942544/1712485313' },
-  android: null,
+  android: { real: 'ca-app-pub-7448540924654868/4887763423', test: 'ca-app-pub-3940256099942544/5224354917' },
 };
 /** Android: load and "ad actually opened" limits; never cuts a running ad. */
 const ANDROID_REWARDED_LOAD_TIMEOUT_MS = 20_000;
