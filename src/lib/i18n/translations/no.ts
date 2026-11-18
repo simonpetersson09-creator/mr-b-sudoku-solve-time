@@ -42,9 +42,7 @@ export const no: Record<TranslationKey, string> = {
 
   signIn: "Logg inn",
   playerName: "Spillernavn",
-  pinCode: "PIN",
 
-  admin: "Admin",
 
 
   profileTitle: "Profil",
@@ -55,18 +53,7 @@ export const no: Record<TranslationKey, string> = {
 
 
 
-  adminTitle: "Admin",
   noAdmin: "Du har ikke admintilgang.",
-  adminPlayers: "Spillere totalt",
-  adminActive24: "Aktive 24 t",
-  adminRetD1: "Retensjon D1 %",
-  adminRetD7: "Retensjon D7 %",
-  adminRetD30: "Retensjon D30 %",
-  last30Days: "Siste 30 dager",
-  colDate: "Dato",
-  colAppDevices: "Appenheter",
-  colStarted: "Startet",
-  colFinished: "Fullført",
 
   errNameShort: "Navnet må ha minst 2 tegn",
   errInvalidCountry: "Ugyldig land",
@@ -94,10 +81,6 @@ export const no: Record<TranslationKey, string> = {
   storeApple: "App Store",
   storeGoogle: "Google Play",
   appVersion: "Versjon {v}",
-  adminChartDevices: "App-enheter per dag",
-  adminChartMinutes: "Snittlengde per besøk (min)",
-  adminChartMinutesNote: "Hvor lenge appen er åpen per besøk, iPhone og Android.",
-  adminSessions: "Besøk",
   firstPlayHint: "Start her – spill nå!",
   adPrivacyChange: "Endre annonsevalg",
   adChoiceStorage: "Lagre på enheten",
@@ -120,7 +103,6 @@ export const no: Record<TranslationKey, string> = {
   rule7: "Maks 3 hint per spill. Hvert hint fyller inn ett riktig tall etter en frivillig annonse med bekreftet belønning. Uten belønning brukes ingen hint. Et løst spill med hint teller som spilt, men ikke som seier, feilfritt eller beste tid.",
   rule6: "Spillet lagres automatisk. Du kan ha opptil 10 spill på gang.",
   statPlayed: "Spilt",
-  adminInMatch: "Aktive nå",
   adsOffInfo: "Mr.B. Sudoku viser annonser fra Google. Du kan endre annonsevalgene dine nedenfor.",
   deleteDataDescription: "Navnet ditt, profilbildet, statistikken og lagrede spill slettes fra telefonen og serveren. Hvis du fortsetter å spille, opprettes en ny spilleridentitet.",
   storeSoon: "Mr.B. Sudoku kommer snart til App Store og Google Play.",

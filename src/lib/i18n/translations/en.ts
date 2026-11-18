@@ -42,9 +42,7 @@ export const en: Record<TranslationKey, string> = {
 
   signIn: "Sign in",
   playerName: "Player name",
-  pinCode: "PIN",
 
-  admin: "Admin",
 
 
   profileTitle: "Profile",
@@ -55,18 +53,7 @@ export const en: Record<TranslationKey, string> = {
 
 
 
-  adminTitle: "Admin",
   noAdmin: "You don't have admin access.",
-  adminPlayers: "Total players",
-  adminActive24: "Active 24 h",
-  adminRetD1: "Retention D1 %",
-  adminRetD7: "Retention D7 %",
-  adminRetD30: "Retention D30 %",
-  last30Days: "Last 30 days",
-  colDate: "Date",
-  colAppDevices: "App devices",
-  colStarted: "Started",
-  colFinished: "Finished",
 
   errNameShort: "The name must be at least 2 characters",
   errInvalidCountry: "Invalid country",
@@ -94,10 +81,6 @@ export const en: Record<TranslationKey, string> = {
   storeApple: "App Store",
   storeGoogle: "Google Play",
   appVersion: "Version {v}",
-  adminChartDevices: "App devices per day",
-  adminChartMinutes: "Average visit length (min)",
-  adminChartMinutesNote: "How long the app is open per visit, iPhone and Android.",
-  adminSessions: "Visits",
   firstPlayHint: "Start here – play now!",
   adPrivacyChange: "Change ad choices",
   adChoiceStorage: "Store on device",
@@ -120,7 +103,6 @@ export const en: Record<TranslationKey, string> = {
   rule7: "Up to 3 hints per game. Each fills one correct digit after a voluntary ad with a confirmed reward. Without a reward, no hint is used. A solved game with hints counts as played, but not as a win, perfect game or best time.",
   rule6: "Your game is saved automatically. You can have up to 10 games in progress.",
   statPlayed: "Played",
-  adminInMatch: "Active now",
   adsOffInfo: "Mr.B. Sudoku shows ads from Google. You can change your ad choices below.",
   deleteDataDescription: "Your name, profile picture, statistics and saved games are deleted from the phone and the server. If you keep playing, a new player identity is created.",
   storeSoon: "Mr.B. Sudoku is coming soon to the App Store and Google Play.",

@@ -42,9 +42,7 @@ export const ml: Record<TranslationKey, string> = {
 
   signIn: "ലോഗിൻ",
   playerName: "കളിക്കാരന്റെ പേര്",
-  pinCode: "PIN",
 
-  admin: "അഡ്മിൻ",
 
 
   profileTitle: "പ്രൊഫൈൽ",
@@ -55,18 +53,7 @@ export const ml: Record<TranslationKey, string> = {
 
 
 
-  adminTitle: "അഡ്മിൻ",
   noAdmin: "നിനക്ക് അഡ്മിൻ അനുമതിയില്ല.",
-  adminPlayers: "ആകെ കളിക്കാർ",
-  adminActive24: "24 മണിക്കൂർ സജീവം",
-  adminRetD1: "റിടൻഷൻ D1 %",
-  adminRetD7: "റിടൻഷൻ D7 %",
-  adminRetD30: "റിടൻഷൻ D30 %",
-  last30Days: "കഴിഞ്ഞ 30 ദിവസം",
-  colDate: "തീയതി",
-  colAppDevices: "ആപ്പ് ഉപകരണങ്ങൾ",
-  colStarted: "തുടങ്ങിയവ",
-  colFinished: "പൂർത്തിയായവ",
 
   errNameShort: "പേരിന് കുറഞ്ഞത് 2 അക്ഷരങ്ങൾ വേണം",
   errInvalidCountry: "അസാധുവായ രാജ്യം",
@@ -94,10 +81,6 @@ export const ml: Record<TranslationKey, string> = {
   storeApple: "App Store",
   storeGoogle: "Google Play",
   appVersion: "പതിപ്പ് {v}",
-  adminChartDevices: "പ്രതിദിന ആപ്പ് ഉപകരണങ്ങൾ",
-  adminChartMinutes: "ശരാശരി സന്ദർശന സമയം (മിനിറ്റ്)",
-  adminChartMinutesNote: "ഓരോ സന്ദർശനത്തിലും ആപ്പ് എത്ര നേരം തുറന്നിരിക്കുന്നു, iPhone, Android.",
-  adminSessions: "സന്ദർശനങ്ങൾ",
   firstPlayHint: "ഇവിടെ തുടങ്ങൂ – ഇപ്പോൾ കളിക്കൂ!",
   adPrivacyChange: "പരസ്യ ഓപ്ഷനുകൾ മാറ്റുക",
   adChoiceStorage: "ഉപകരണത്തിൽ സംഭരണം",
@@ -120,7 +103,6 @@ export const ml: Record<TranslationKey, string> = {
   rule7: "ഓരോ കളിയിലും പരമാവധി 3 സൂചനകൾ. സ്വമേധയാ പരസ്യം കണ്ട് പ്രതിഫലം സ്ഥിരീകരിച്ചാൽ ഓരോ സൂചനയും ഒരു ശരിയായ അക്കം പൂരിപ്പിക്കും. പ്രതിഫലമില്ലെങ്കിൽ സൂചന ചെലവാകില്ല. സൂചനയോടെ പരിഹരിച്ച കളി കളിച്ചതായി കണക്കാക്കും, പക്ഷേ വിജയമോ പിഴവില്ലാത്ത കളിയോ മികച്ച സമയമോ ആയി കണക്കാക്കില്ല.",
   rule6: "നിങ്ങളുടെ കളി സ്വയമേവ സേവ് ചെയ്യും. ഒരേസമയം 10 കളികൾ വരെ തുടരാം.",
   statPlayed: "കളിച്ചത്",
-  adminInMatch: "ഇപ്പോൾ സജീവം",
   adsOffInfo: "Mr.B. Sudoku-യിൽ Google പരസ്യങ്ങൾ കാണിക്കുന്നു. പരസ്യ മുൻഗണനകൾ താഴെ മാറ്റാം.",
   deleteDataDescription: "നിങ്ങളുടെ പേര്, പ്രൊഫൈൽ ചിത്രം, സ്ഥിതിവിവരക്കണക്കുകൾ, സേവ് ചെയ്ത കളികൾ എന്നിവ ഫോണിൽ നിന്നും സെർവറിൽ നിന്നും മായ്ക്കും. തുടർന്നും കളിച്ചാൽ പുതിയ കളിക്കാരന്റെ ഐഡന്റിറ്റി സൃഷ്ടിക്കും.",
   storeSoon: "Mr.B. Sudoku ഉടൻ App Store, Google Play എന്നിവയിൽ ലഭ്യമാകും.",

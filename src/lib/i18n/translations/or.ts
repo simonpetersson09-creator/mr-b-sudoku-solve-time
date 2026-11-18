@@ -42,9 +42,7 @@ export const or: Record<TranslationKey, string> = {
 
   signIn: "ଲଗ୍ ଇନ୍",
   playerName: "ଖେଳାଳିଙ୍କ ନାମ",
-  pinCode: "PIN",
 
-  admin: "ଆଡମିନ୍",
 
 
   profileTitle: "ପ୍ରୋଫାଇଲ୍",
@@ -55,18 +53,7 @@ export const or: Record<TranslationKey, string> = {
 
 
 
-  adminTitle: "ଆଡମିନ୍",
   noAdmin: "ତୁମର ଆଡମିନ୍ ଅନୁମତି ନାହିଁ।",
-  adminPlayers: "ମୋଟ ଖେଳାଳି",
-  adminActive24: "24 ଘଣ୍ଟା ସକ୍ରିୟ",
-  adminRetD1: "ରିଟେନସନ୍ D1 %",
-  adminRetD7: "ରିଟେନସନ୍ D7 %",
-  adminRetD30: "ରିଟେନସନ୍ D30 %",
-  last30Days: "ଗତ 30 ଦିନ",
-  colDate: "ତାରିଖ",
-  colAppDevices: "ଆପ୍ ଡିଭାଇସ୍",
-  colStarted: "ଆରମ୍ଭ",
-  colFinished: "ସମାପ୍ତ",
 
   errNameShort: "ନାମ ଅତିକମରେ 2 ଅକ୍ଷରର ହେବା ଉଚିତ୍",
   errInvalidCountry: "ଅବୈଧ ଦେଶ",
@@ -94,10 +81,6 @@ export const or: Record<TranslationKey, string> = {
   storeApple: "App Store",
   storeGoogle: "Google Play",
   appVersion: "ସଂସ୍କରଣ {v}",
-  adminChartDevices: "ଦୈନିକ ଆପ୍ ଡିଭାଇସ୍",
-  adminChartMinutes: "ହାରାହାରି ଭ୍ରମଣ ସମୟ (ମିନିଟ୍)",
-  adminChartMinutesNote: "ପ୍ରତି ଭ୍ରମଣରେ ଆପ୍ କେତେ ସମୟ ଖୋଲା ରହେ, iPhone ଓ Android।",
-  adminSessions: "ଭ୍ରମଣ",
   firstPlayHint: "ଏଠାରୁ ଆରମ୍ଭ କରନ୍ତୁ – ଏବେ ଖେଳନ୍ତୁ!",
   adPrivacyChange: "ବିଜ୍ଞାପନ ପସନ୍ଦ ବଦଳାନ୍ତୁ",
   adChoiceStorage: "ଡିଭାଇସରେ ସଂରକ୍ଷଣ",
@@ -120,7 +103,6 @@ export const or: Record<TranslationKey, string> = {
   rule7: "ପ୍ରତି ଖେଳରେ ସର୍ବାଧିକ 3 ସଙ୍କେତ। ସ୍ୱଇଚ୍ଛାରେ ବିଜ୍ଞାପନ ଦେଖି ପୁରସ୍କାର ନିଶ୍ଚିତ ହେଲେ ପ୍ରତ୍ୟେକ ସଙ୍କେତ ଗୋଟିଏ ସଠିକ୍ ଅଙ୍କ ଭରେ। ପୁରସ୍କାର ନଥିଲେ ସଙ୍କେତ ଖର୍ଚ୍ଚ ହୁଏ ନାହିଁ। ସଙ୍କେତରେ ସମାଧାନ ହୋଇଥିବା ଖେଳ ଖେଳାଯାଇଥିବା ଭାବେ ଗଣାଯାଏ, କିନ୍ତୁ ବିଜୟ, ଭୁଲରହିତ କିମ୍ବା ଶ୍ରେଷ୍ଠ ସମୟ ଭାବେ ନୁହେଁ।",
   rule6: "ଆପଣଙ୍କ ଖେଳ ଆପେ ଆପେ ସେଭ୍ ହୁଏ। ଆପଣ ଏକା ସମୟରେ ୧୦ଟି ଯାଏଁ ଖେଳ ଚାଲୁ ରଖିପାରିବେ।",
   statPlayed: "ଖେଳିଛନ୍ତି",
-  adminInMatch: "ଏବେ ସକ୍ରିୟ",
   adsOffInfo: "Mr.B. Sudoku ରେ Google ର ବିଜ୍ଞାପନ ଦେଖାଯାଏ। ତଳେ ଆପଣ ବିଜ୍ଞାପନ ପସନ୍ଦ ବଦଳାଇପାରିବେ।",
   deleteDataDescription: "ଆପଣଙ୍କ ନାମ, ପ୍ରୋଫାଇଲ୍ ଫଟୋ, ପରିସଂଖ୍ୟାନ ଓ ସେଭ୍ ହୋଇଥିବା ଖେଳ ଫୋନ୍ ଓ ସର୍ଭରରୁ ଡିଲିଟ୍ ହେବ। ଖେଳିବା ଜାରି ରଖିଲେ ଏକ ନୂଆ ଖେଳାଳି ପରିଚୟ ତିଆରି ହେବ।",
   storeSoon: "Mr.B. Sudoku ଖୁବ୍ ଶୀଘ୍ର App Store ଓ Google Play ରେ ଆସୁଛି।",

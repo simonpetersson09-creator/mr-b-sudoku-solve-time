@@ -42,9 +42,7 @@ export const kn: Record<TranslationKey, string> = {
 
   signIn: "ಲಾಗ್ ಇನ್",
   playerName: "ಆಟಗಾರರ ಹೆಸರು",
-  pinCode: "PIN",
 
-  admin: "ಅಡ್ಮಿನ್",
 
 
   profileTitle: "ಪ್ರೊಫೈಲ್",
@@ -55,18 +53,7 @@ export const kn: Record<TranslationKey, string> = {
 
 
 
-  adminTitle: "ಅಡ್ಮಿನ್",
   noAdmin: "ನಿಮಗೆ ಅಡ್ಮಿನ್ ಅನುಮತಿಯಿಲ್ಲ.",
-  adminPlayers: "ಒಟ್ಟು ಆಟಗಾರರು",
-  adminActive24: "24 ಗಂಟೆ ಸಕ್ರಿಯ",
-  adminRetD1: "ರಿಟೆನ್ಷನ್ D1 %",
-  adminRetD7: "ರಿಟೆನ್ಷನ್ D7 %",
-  adminRetD30: "ರಿಟೆನ್ಷನ್ D30 %",
-  last30Days: "ಕಳೆದ 30 ದಿನಗಳು",
-  colDate: "ದಿನಾಂಕ",
-  colAppDevices: "ಆ್ಯಪ್ ಸಾಧನಗಳು",
-  colStarted: "ಪ್ರಾರಂಭಿಸಿದವು",
-  colFinished: "ಮುಗಿದವು",
 
   errNameShort: "ಹೆಸರು ಕನಿಷ್ಠ 2 ಅಕ್ಷರಗಳಿರಬೇಕು",
   errInvalidCountry: "ಅಮಾನ್ಯ ದೇಶ",
@@ -94,10 +81,6 @@ export const kn: Record<TranslationKey, string> = {
   storeApple: "App Store",
   storeGoogle: "Google Play",
   appVersion: "ಆವೃತ್ತಿ {v}",
-  adminChartDevices: "ದಿನಕ್ಕೆ ಆ್ಯಪ್ ಸಾಧನಗಳು",
-  adminChartMinutes: "ಸರಾಸರಿ ಭೇಟಿ ಅವಧಿ (ನಿಮಿ)",
-  adminChartMinutesNote: "ಪ್ರತಿ ಭೇಟಿಗೆ ಆ್ಯಪ್ ಎಷ್ಟು ಹೊತ್ತು ತೆರೆದಿರುತ್ತದೆ, iPhone ಮತ್ತು Android.",
-  adminSessions: "ಭೇಟಿಗಳು",
   firstPlayHint: "ಇಲ್ಲಿ ಪ್ರಾರಂಭಿಸಿ – ಈಗಲೇ ಆಡಿ!",
   adPrivacyChange: "ಜಾಹೀರಾತು ಆಯ್ಕೆಗಳನ್ನು ಬದಲಿಸಿ",
   adChoiceStorage: "ಸಾಧನದಲ್ಲಿ ಸಂಗ್ರಹ",
@@ -120,7 +103,6 @@ export const kn: Record<TranslationKey, string> = {
   rule7: "ಪ್ರತಿ ಆಟದಲ್ಲಿ ಹೆಚ್ಚೆಂದರೆ 3 ಸುಳಿವುಗಳು. ಸ್ವಯಂಪ್ರೇರಿತ ಜಾಹೀರಾತಿನ ದೃಢೀಕೃತ ಬಹುಮಾನದ ನಂತರ ಪ್ರತಿ ಸುಳಿವು ಒಂದು ಸರಿಯಾದ ಅಂಕೆಯನ್ನು ತುಂಬುತ್ತದೆ. ಬಹುಮಾನವಿಲ್ಲದೆ ಸುಳಿವು ಖರ್ಚಾಗುವುದಿಲ್ಲ. ಸುಳಿವಿನಿಂದ ಪರಿಹರಿಸಿದ ಆಟ ಆಡಿದ ಆಟವೆಂದು ಎಣಿಸಲಾಗುತ್ತದೆ, ಆದರೆ ಗೆಲುವು, ದೋಷರಹಿತ ಆಟ ಅಥವಾ ಅತ್ಯುತ್ತಮ ಸಮಯವೆಂದು ಅಲ್ಲ.",
   rule6: "ನಿಮ್ಮ ಆಟ ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಉಳಿಯುತ್ತದೆ. ಒಂದೇ ಸಮಯದಲ್ಲಿ 10 ಆಟಗಳನ್ನು ಆಡಬಹುದು.",
   statPlayed: "ಆಡಿದ ಆಟಗಳು",
-  adminInMatch: "ಈಗ ಸಕ್ರಿಯ",
   adsOffInfo: "Mr.B. Sudoku Google ಜಾಹೀರಾತುಗಳನ್ನು ತೋರಿಸುತ್ತದೆ. ಜಾಹೀರಾತು ಆಯ್ಕೆಗಳನ್ನು ಕೆಳಗೆ ಬದಲಾಯಿಸಬಹುದು.",
   deleteDataDescription: "ನಿಮ್ಮ ಹೆಸರು, ಪ್ರೊಫೈಲ್ ಚಿತ್ರ, ಅಂಕಿಅಂಶಗಳು ಮತ್ತು ಉಳಿಸಿದ ಆಟಗಳನ್ನು ಫೋನ್ ಮತ್ತು ಸರ್ವರ್‌ನಿಂದ ಅಳಿಸಲಾಗುತ್ತದೆ. ನೀವು ಆಟ ಮುಂದುವರಿಸಿದರೆ, ಹೊಸ ಆಟಗಾರರ ಗುರುತನ್ನು ರಚಿಸಲಾಗುತ್ತದೆ.",
   storeSoon: "Mr.B. Sudoku ಶೀಘ್ರದಲ್ಲೇ App Store ಮತ್ತು Google Play ನಲ್ಲಿ ಬರಲಿದೆ.",

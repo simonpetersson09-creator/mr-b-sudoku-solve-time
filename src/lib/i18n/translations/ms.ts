@@ -42,9 +42,7 @@ export const ms: Record<TranslationKey, string> = {
 
   signIn: "Log masuk",
   playerName: "Nama pemain",
-  pinCode: "PIN",
 
-  admin: "Pentadbir",
 
 
   profileTitle: "Profil",
@@ -55,18 +53,7 @@ export const ms: Record<TranslationKey, string> = {
 
 
 
-  adminTitle: "Pentadbir",
   noAdmin: "Anda tiada hak pentadbir.",
-  adminPlayers: "Jumlah pemain",
-  adminActive24: "Aktif 24 j",
-  adminRetD1: "Pengekalan D1 %",
-  adminRetD7: "Pengekalan D7 %",
-  adminRetD30: "Pengekalan D30 %",
-  last30Days: "30 hari terakhir",
-  colDate: "Tarikh",
-  colAppDevices: "Peranti aplikasi",
-  colStarted: "Bermula",
-  colFinished: "Selesai",
 
   errNameShort: "Nama mesti sekurang-kurangnya 2 aksara",
   errInvalidCountry: "Negara tidak sah",
@@ -94,10 +81,6 @@ export const ms: Record<TranslationKey, string> = {
   storeApple: "App Store",
   storeGoogle: "Google Play",
   appVersion: "Versi {v}",
-  adminChartDevices: "Peranti aplikasi sehari",
-  adminChartMinutes: "Purata tempoh lawatan (min)",
-  adminChartMinutesNote: "Berapa lama aplikasi dibuka setiap lawatan, iPhone dan Android.",
-  adminSessions: "Lawatan",
   firstPlayHint: "Mula di sini – main sekarang!",
   adPrivacyChange: "Tukar pilihan iklan",
   adChoiceStorage: "Simpan pada peranti",
@@ -120,7 +103,6 @@ export const ms: Record<TranslationKey, string> = {
   rule7: "Maksimum 3 petunjuk setiap permainan. Setiap satu mengisi satu digit betul selepas iklan sukarela dengan ganjaran disahkan. Tanpa ganjaran, tiada petunjuk digunakan. Permainan diselesaikan dengan petunjuk dikira sebagai dimainkan, bukan kemenangan, sempurna atau masa terbaik.",
   rule6: "Permainan anda disimpan secara automatik. Anda boleh mempunyai sehingga 10 permainan yang sedang berlangsung.",
   statPlayed: "Dimainkan",
-  adminInMatch: "Aktif sekarang",
   adsOffInfo: "Mr.B. Sudoku memaparkan iklan daripada Google. Anda boleh mengubah pilihan iklan di bawah.",
   deleteDataDescription: "Nama, gambar profil, statistik dan permainan tersimpan anda akan dipadamkan daripada telefon dan pelayan. Jika anda terus bermain, identiti pemain baharu akan dicipta.",
   storeSoon: "Mr.B. Sudoku akan hadir tidak lama lagi di App Store dan Google Play.",

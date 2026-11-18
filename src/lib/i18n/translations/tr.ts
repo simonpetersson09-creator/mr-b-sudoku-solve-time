@@ -42,9 +42,7 @@ export const tr: Record<TranslationKey, string> = {
 
   signIn: "Giriş yap",
   playerName: "Oyuncu adı",
-  pinCode: "PIN",
 
-  admin: "Yönetici",
 
 
   profileTitle: "Profil",
@@ -55,18 +53,7 @@ export const tr: Record<TranslationKey, string> = {
 
 
 
-  adminTitle: "Yönetici",
   noAdmin: "Yönetici yetkin yok.",
-  adminPlayers: "Toplam oyuncu",
-  adminActive24: "24 sa aktif",
-  adminRetD1: "Tutma D1 %",
-  adminRetD7: "Tutma D7 %",
-  adminRetD30: "Tutma D30 %",
-  last30Days: "Son 30 gün",
-  colDate: "Tarih",
-  colAppDevices: "Uygulama cihazları",
-  colStarted: "Başlayan",
-  colFinished: "Biten",
 
   errNameShort: "Ad en az 2 karakter olmalı",
   errInvalidCountry: "Geçersiz ülke",
@@ -94,10 +81,6 @@ export const tr: Record<TranslationKey, string> = {
   storeApple: "App Store",
   storeGoogle: "Google Play",
   appVersion: "Sürüm {v}",
-  adminChartDevices: "Günlük uygulama cihazları",
-  adminChartMinutes: "Ort. ziyaret süresi (dk)",
-  adminChartMinutesNote: "Uygulamanın ziyaret başına açık kalma süresi, iPhone ve Android.",
-  adminSessions: "Ziyaretler",
   firstPlayHint: "Buradan başla – hemen oyna!",
   adPrivacyChange: "Reklam tercihlerini değiştir",
   adChoiceStorage: "Cihazda saklama",
@@ -120,7 +103,6 @@ export const tr: Record<TranslationKey, string> = {
   rule7: "Oyun başına en fazla 3 ipucu. Her biri gönüllü bir reklamın onaylanmış ödülünden sonra bir doğru rakam yerleştirir. Ödül yoksa ipucu harcanmaz. İpucuyla çözülen oyun oynanmış sayılır ancak galibiyet, hatasız oyun veya en iyi süre sayılmaz.",
   rule6: "Oyunun otomatik kaydedilir. Aynı anda en fazla 10 oyun oynayabilirsin.",
   statPlayed: "Oynanan",
-  adminInMatch: "Şu an aktif",
   adsOffInfo: "Mr.B. Sudoku, Google reklamları gösterir. Reklam tercihlerini aşağıdan değiştirebilirsin.",
   deleteDataDescription: "Adın, profil resmin, istatistiklerin ve kayıtlı oyunların telefondan ve sunucudan silinir. Oynamaya devam edersen yeni bir oyuncu kimliği oluşturulur.",
   storeSoon: "Mr.B. Sudoku yakında App Store ve Google Play'de.",

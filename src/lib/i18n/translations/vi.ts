@@ -42,9 +42,7 @@ export const vi: Record<TranslationKey, string> = {
 
   signIn: "Đăng nhập",
   playerName: "Tên người chơi",
-  pinCode: "PIN",
 
-  admin: "Quản trị",
 
 
   profileTitle: "Hồ sơ",
@@ -55,18 +53,7 @@ export const vi: Record<TranslationKey, string> = {
 
 
 
-  adminTitle: "Quản trị",
   noAdmin: "Bạn không có quyền quản trị.",
-  adminPlayers: "Tổng người chơi",
-  adminActive24: "Hoạt động 24 h",
-  adminRetD1: "Giữ chân D1 %",
-  adminRetD7: "Giữ chân D7 %",
-  adminRetD30: "Giữ chân D30 %",
-  last30Days: "30 ngày gần nhất",
-  colDate: "Ngày",
-  colAppDevices: "Thiết bị app",
-  colStarted: "Bắt đầu",
-  colFinished: "Hoàn thành",
 
   errNameShort: "Tên phải có ít nhất 2 ký tự",
   errInvalidCountry: "Quốc gia không hợp lệ",
@@ -94,10 +81,6 @@ export const vi: Record<TranslationKey, string> = {
   storeApple: "App Store",
   storeGoogle: "Google Play",
   appVersion: "Phiên bản {v}",
-  adminChartDevices: "Thiết bị ứng dụng mỗi ngày",
-  adminChartMinutes: "Thời lượng truy cập TB (phút)",
-  adminChartMinutesNote: "Ứng dụng mở bao lâu mỗi lần truy cập, iPhone và Android.",
-  adminSessions: "Lượt truy cập",
   firstPlayHint: "Bắt đầu tại đây – chơi ngay!",
   adPrivacyChange: "Thay đổi lựa chọn quảng cáo",
   adChoiceStorage: "Lưu trên thiết bị",
@@ -120,7 +103,6 @@ export const vi: Record<TranslationKey, string> = {
   rule7: "Tối đa 3 gợi ý mỗi ván. Mỗi gợi ý điền một số đúng sau quảng cáo tự nguyện với phần thưởng được xác nhận. Không có phần thưởng thì không mất gợi ý. Ván giải xong với gợi ý được tính là đã chơi, nhưng không là thắng, hoàn hảo hay thời gian tốt nhất.",
   rule6: "Ván chơi được lưu tự động. Bạn có thể chơi dở tối đa 10 ván.",
   statPlayed: "Đã chơi",
-  adminInMatch: "Đang chơi",
   adsOffInfo: "Mr.B. Sudoku hiển thị quảng cáo từ Google. Bạn có thể thay đổi tùy chọn quảng cáo bên dưới.",
   deleteDataDescription: "Tên, ảnh đại diện, thống kê và các ván đã lưu của bạn sẽ bị xóa khỏi điện thoại và máy chủ. Nếu tiếp tục chơi, bạn sẽ có một danh tính người chơi mới.",
   storeSoon: "Mr.B. Sudoku sẽ sớm có mặt trên App Store và Google Play.",

@@ -42,9 +42,7 @@ export const gu: Record<TranslationKey, string> = {
 
   signIn: "લોગ ઇન",
   playerName: "ખેલાડીનું નામ",
-  pinCode: "PIN",
 
-  admin: "એડમિન",
 
 
   profileTitle: "પ્રોફાઇલ",
@@ -55,18 +53,7 @@ export const gu: Record<TranslationKey, string> = {
 
 
 
-  adminTitle: "એડમિન",
   noAdmin: "તમારી પાસે એડમિન અધિકાર નથી.",
-  adminPlayers: "કુલ ખેલાડીઓ",
-  adminActive24: "24 કલાક સક્રિય",
-  adminRetD1: "રિટેન્શન D1 %",
-  adminRetD7: "રિટેન્શન D7 %",
-  adminRetD30: "રિટેન્શન D30 %",
-  last30Days: "છેલ્લા 30 દિવસ",
-  colDate: "તારીખ",
-  colAppDevices: "એપ ડિવાઇસ",
-  colStarted: "શરૂ",
-  colFinished: "પૂરી",
 
   errNameShort: "નામ ઓછામાં ઓછા 2 અક્ષરનું હોવું જોઈએ",
   errInvalidCountry: "અમાન્ય દેશ",
@@ -94,10 +81,6 @@ export const gu: Record<TranslationKey, string> = {
   storeApple: "App Store",
   storeGoogle: "Google Play",
   appVersion: "આવૃત્તિ {v}",
-  adminChartDevices: "દરરોજ એપ ઉપકરણો",
-  adminChartMinutes: "સરેરાશ મુલાકાત સમય (મિનિટ)",
-  adminChartMinutesNote: "દરેક મુલાકાતમાં એપ કેટલો સમય ખુલ્લી રહે છે, iPhone અને Android.",
-  adminSessions: "મુલાકાતો",
   firstPlayHint: "અહીંથી શરૂ કરો – હમણાં રમો!",
   adPrivacyChange: "જાહેરાત પસંદગીઓ બદલો",
   adChoiceStorage: "ઉપકરણ પર સંગ્રહ",
@@ -120,7 +103,6 @@ export const gu: Record<TranslationKey, string> = {
   rule7: "દરેક રમતમાં વધુમાં વધુ 3 સંકેતો. સ્વેચ્છાએ જાહેરાત જોઈને પુરસ્કારની પુષ્ટિ થયા પછી દરેક સંકેત એક સાચો અંક ભરે છે. પુરસ્કાર વગર સંકેત વપરાતો નથી. સંકેતથી ઉકેલેલી રમત રમાયેલી ગણાય છે, પણ જીત, ભૂલરહિત કે શ્રેષ્ઠ સમય તરીકે નહીં.",
   rule6: "તમારી રમત આપમેળે સેવ થાય છે. તમે એકસાથે ૧૦ જેટલી રમતો ચાલુ રાખી શકો છો.",
   statPlayed: "રમેલી",
-  adminInMatch: "હમણાં સક્રિય",
   adsOffInfo: "Mr.B. Sudoku Googleની જાહેરાતો બતાવે છે. તમે નીચે જાહેરાતો માટેની પસંદગી બદલી શકો છો.",
   deleteDataDescription: "તમારું નામ, પ્રોફાઇલ ફોટો, આંકડા અને સેવ કરેલી રમતો ફોન અને સર્વરમાંથી કાઢી નાખવામાં આવશે. જો તમે રમવાનું ચાલુ રાખશો, તો નવી ખેલાડી ઓળખ બનાવવામાં આવશે.",
   storeSoon: "Mr.B. Sudoku ટૂંક સમયમાં App Store અને Google Play પર આવી રહ્યું છે.",

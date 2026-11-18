@@ -42,9 +42,7 @@ export const mr: Record<TranslationKey, string> = {
 
   signIn: "लॉग इन",
   playerName: "खेळाडूचे नाव",
-  pinCode: "PIN",
 
-  admin: "अ‍ॅडमिन",
 
 
   profileTitle: "प्रोफाइल",
@@ -55,18 +53,7 @@ export const mr: Record<TranslationKey, string> = {
 
 
 
-  adminTitle: "अ‍ॅडमिन",
   noAdmin: "तुम्हाला अ‍ॅडमिन परवानगी नाही.",
-  adminPlayers: "एकूण खेळाडू",
-  adminActive24: "24 तास सक्रिय",
-  adminRetD1: "रिटेन्शन D1 %",
-  adminRetD7: "रिटेन्शन D7 %",
-  adminRetD30: "रिटेन्शन D30 %",
-  last30Days: "गेल्या 30 दिवसांत",
-  colDate: "तारीख",
-  colAppDevices: "अ‍ॅप डिव्हाइस",
-  colStarted: "सुरू",
-  colFinished: "पूर्ण",
 
   errNameShort: "नावात किमान 2 अक्षरे हवीत",
   errInvalidCountry: "अवैध देश",
@@ -94,10 +81,6 @@ export const mr: Record<TranslationKey, string> = {
   storeApple: "App Store",
   storeGoogle: "Google Play",
   appVersion: "आवृत्ती {v}",
-  adminChartDevices: "दररोज अ‍ॅप उपकरणे",
-  adminChartMinutes: "सरासरी भेट कालावधी (मिनिटे)",
-  adminChartMinutesNote: "प्रत्येक भेटीत अ‍ॅप किती वेळ उघडे असते, iPhone आणि Android.",
-  adminSessions: "भेटी",
   firstPlayHint: "इथून सुरू करा – आता खेळा!",
   adPrivacyChange: "जाहिरात पर्याय बदला",
   adChoiceStorage: "डिव्हाइसवर साठवणे",
@@ -120,7 +103,6 @@ export const mr: Record<TranslationKey, string> = {
   rule7: "प्रत्येक खेळात जास्तीत जास्त 3 इशारे. स्वेच्छेने जाहिरात पाहिल्यावर बक्षीस निश्चित झाल्यानंतर प्रत्येक इशारा एक योग्य अंक भरतो. बक्षीस नसल्यास इशारा खर्च होत नाही. इशाऱ्याने सोडवलेला खेळ खेळलेला मोजला जातो, पण विजय, निर्दोष खेळ किंवा सर्वोत्तम वेळ म्हणून नाही.",
   rule6: "तुमचा खेळ आपोआप जतन होतो. एकाच वेळी १० खेळ सुरू ठेवता येतात.",
   statPlayed: "खेळलेले",
-  adminInMatch: "सध्या सक्रिय",
   adsOffInfo: "Mr.B. Sudoku मध्ये Google च्या जाहिराती दिसतात. तुम्ही खाली जाहिरातींच्या निवडी बदलू शकता.",
   deleteDataDescription: "तुमचे नाव, प्रोफाइल फोटो, आकडेवारी आणि जतन केलेले खेळ फोन आणि सर्व्हरवरून हटवले जातील. तुम्ही पुढे खेळल्यास नवीन खेळाडू ओळख तयार होईल.",
   storeSoon: "Mr.B. Sudoku लवकरच App Store आणि Google Play वर येत आहे.",

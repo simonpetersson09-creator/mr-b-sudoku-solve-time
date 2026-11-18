@@ -42,9 +42,7 @@ export const ko: Record<TranslationKey, string> = {
 
   signIn: "로그인",
   playerName: "플레이어 이름",
-  pinCode: "PIN",
 
-  admin: "관리",
 
 
   profileTitle: "프로필",
@@ -55,18 +53,7 @@ export const ko: Record<TranslationKey, string> = {
 
 
 
-  adminTitle: "관리",
   noAdmin: "관리자 권한이 없습니다.",
-  adminPlayers: "총 플레이어",
-  adminActive24: "24시간 활동",
-  adminRetD1: "리텐션 D1 %",
-  adminRetD7: "리텐션 D7 %",
-  adminRetD30: "리텐션 D30 %",
-  last30Days: "최근 30일",
-  colDate: "날짜",
-  colAppDevices: "앱 기기",
-  colStarted: "시작됨",
-  colFinished: "완료됨",
 
   errNameShort: "이름은 2자 이상이어야 합니다",
   errInvalidCountry: "잘못된 국가입니다",
@@ -94,10 +81,6 @@ export const ko: Record<TranslationKey, string> = {
   storeApple: "App Store",
   storeGoogle: "Google Play",
   appVersion: "버전 {v}",
-  adminChartDevices: "일별 앱 기기 수",
-  adminChartMinutes: "평균 방문 시간(분)",
-  adminChartMinutesNote: "방문당 앱이 열려 있는 시간, iPhone 및 Android.",
-  adminSessions: "방문",
   firstPlayHint: "여기서 시작 – 바로 플레이!",
   adPrivacyChange: "광고 선택 변경",
   adChoiceStorage: "기기에 저장",
@@ -120,7 +103,6 @@ export const ko: Record<TranslationKey, string> = {
   rule7: "힌트는 게임당 최대 3개입니다. 자발적으로 광고를 보고 보상이 확인되면 힌트 하나가 정답 숫자 하나를 채웁니다. 보상이 없으면 힌트는 소모되지 않습니다. 힌트로 푼 게임은 플레이 횟수에 포함되지만 승리, 완벽한 게임 또는 최고 기록에는 포함되지 않습니다.",
   rule6: "게임은 자동으로 저장됩니다. 진행 중인 게임은 최대 10개까지 보관할 수 있습니다.",
   statPlayed: "플레이",
-  adminInMatch: "현재 게임 중",
   adsOffInfo: "Mr.B. Sudoku는 Google 광고를 표시합니다. 아래에서 광고 설정을 변경할 수 있습니다.",
   deleteDataDescription: "이름, 프로필 사진, 통계, 저장된 게임이 휴대폰과 서버에서 삭제됩니다. 계속 플레이하면 새 플레이어 ID가 생성됩니다.",
   storeSoon: "Mr.B. Sudoku가 곧 App Store와 Google Play에 출시됩니다.",

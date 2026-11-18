@@ -42,9 +42,7 @@ export const bn: Record<TranslationKey, string> = {
 
   signIn: "লগ ইন",
   playerName: "খেলোয়াড়ের নাম",
-  pinCode: "PIN",
 
-  admin: "অ্যাডমিন",
 
 
   profileTitle: "প্রোফাইল",
@@ -55,18 +53,7 @@ export const bn: Record<TranslationKey, string> = {
 
 
 
-  adminTitle: "অ্যাডমিন",
   noAdmin: "আপনার অ্যাডমিন অনুমতি নেই।",
-  adminPlayers: "মোট খেলোয়াড়",
-  adminActive24: "২৪ ঘণ্টায় সক্রিয়",
-  adminRetD1: "রিটেনশন D1 %",
-  adminRetD7: "রিটেনশন D7 %",
-  adminRetD30: "রিটেনশন D30 %",
-  last30Days: "শেষ ৩০ দিন",
-  colDate: "তারিখ",
-  colAppDevices: "অ্যাপ ডিভাইস",
-  colStarted: "শুরু",
-  colFinished: "সম্পন্ন",
 
   errNameShort: "নাম কমপক্ষে ২ অক্ষরের হতে হবে",
   errInvalidCountry: "অবৈধ দেশ",
@@ -94,10 +81,6 @@ export const bn: Record<TranslationKey, string> = {
   storeApple: "App Store",
   storeGoogle: "Google Play",
   appVersion: "সংস্করণ {v}",
-  adminChartDevices: "প্রতিদিন অ্যাপ ডিভাইস",
-  adminChartMinutes: "গড় ভিজিট সময় (মিনিট)",
-  adminChartMinutesNote: "প্রতি ভিজিটে অ্যাপ কতক্ষণ খোলা থাকে, iPhone ও Android।",
-  adminSessions: "ভিজিট",
   firstPlayHint: "এখান থেকে শুরু – এখনই খেলুন!",
   adPrivacyChange: "বিজ্ঞাপন পছন্দ বদলান",
   adChoiceStorage: "ডিভাইসে সংরক্ষণ",
@@ -120,7 +103,6 @@ export const bn: Record<TranslationKey, string> = {
   rule7: "প্রতি খেলায় সর্বোচ্চ 3টি ইঙ্গিত। স্বেচ্ছায় বিজ্ঞাপন দেখে পুরস্কার নিশ্চিত হলে প্রতিটি ইঙ্গিত একটি সঠিক অঙ্ক বসায়। পুরস্কার ছাড়া ইঙ্গিত খরচ হয় না। ইঙ্গিত দিয়ে সমাধান করা খেলা খেলার সংখ্যায় গণনা হয়, কিন্তু জয়, নিখুঁত খেলা বা সেরা সময় হিসেবে নয়।",
   rule6: "আপনার খেলা স্বয়ংক্রিয়ভাবে সংরক্ষিত হয়। একসঙ্গে সর্বোচ্চ ১০টি খেলা চালু রাখতে পারেন।",
   statPlayed: "খেলা হয়েছে",
-  adminInMatch: "এখন সক্রিয়",
   adsOffInfo: "Mr.B. Sudoku-তে Google-এর বিজ্ঞাপন দেখানো হয়। নিচে বিজ্ঞাপনের পছন্দ বদলাতে পারেন।",
   deleteDataDescription: "আপনার নাম, প্রোফাইল ছবি, পরিসংখ্যান ও সংরক্ষিত খেলাগুলো ফোন ও সার্ভার থেকে মুছে ফেলা হবে। খেলা চালিয়ে গেলে নতুন খেলোয়াড় পরিচয় তৈরি হবে।",
   storeSoon: "Mr.B. Sudoku শিগগিরই App Store ও Google Play-তে আসছে।",

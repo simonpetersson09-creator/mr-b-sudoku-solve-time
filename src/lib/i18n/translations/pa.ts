@@ -42,9 +42,7 @@ export const pa: Record<TranslationKey, string> = {
 
   signIn: "ਲੌਗ ਇਨ",
   playerName: "ਖਿਡਾਰੀ ਦਾ ਨਾਮ",
-  pinCode: "PIN",
 
-  admin: "ਐਡਮਿਨ",
 
 
   profileTitle: "ਪ੍ਰੋਫਾਈਲ",
@@ -55,18 +53,7 @@ export const pa: Record<TranslationKey, string> = {
 
 
 
-  adminTitle: "ਐਡਮਿਨ",
   noAdmin: "ਤੁਹਾਨੂੰ ਐਡਮਿਨ ਇਜਾਜ਼ਤ ਨਹੀਂ ਹੈ।",
-  adminPlayers: "ਕੁੱਲ ਖਿਡਾਰੀ",
-  adminActive24: "24 ਘੰਟੇ ਸਰਗਰਮ",
-  adminRetD1: "ਰਿਟੈਂਸ਼ਨ D1 %",
-  adminRetD7: "ਰਿਟੈਂਸ਼ਨ D7 %",
-  adminRetD30: "ਰਿਟੈਂਸ਼ਨ D30 %",
-  last30Days: "ਪਿਛਲੇ 30 ਦਿਨ",
-  colDate: "ਮਿਤੀ",
-  colAppDevices: "ਐਪ ਡਿਵਾਈਸ",
-  colStarted: "ਸ਼ੁਰੂ",
-  colFinished: "ਪੂਰੇ",
 
   errNameShort: "ਨਾਮ ਘੱਟੋ-ਘੱਟ 2 ਅੱਖਰਾਂ ਦਾ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ",
   errInvalidCountry: "ਗ਼ਲਤ ਦੇਸ਼",
@@ -94,10 +81,6 @@ export const pa: Record<TranslationKey, string> = {
   storeApple: "App Store",
   storeGoogle: "Google Play",
   appVersion: "ਸੰਸਕਰਣ {v}",
-  adminChartDevices: "ਪ੍ਰਤੀ ਦਿਨ ਐਪ ਡਿਵਾਈਸ",
-  adminChartMinutes: "ਔਸਤ ਫੇਰੀ ਸਮਾਂ (ਮਿੰਟ)",
-  adminChartMinutesNote: "ਹਰ ਫੇਰੀ ਵਿੱਚ ਐਪ ਕਿੰਨੀ ਦੇਰ ਖੁੱਲ੍ਹੀ ਰਹਿੰਦੀ ਹੈ, iPhone ਅਤੇ Android।",
-  adminSessions: "ਫੇਰੀਆਂ",
   firstPlayHint: "ਇੱਥੋਂ ਸ਼ੁਰੂ ਕਰੋ – ਹੁਣੇ ਖੇਡੋ!",
   adPrivacyChange: "ਇਸ਼ਤਿਹਾਰ ਚੋਣਾਂ ਬਦਲੋ",
   adChoiceStorage: "ਡਿਵਾਈਸ 'ਤੇ ਸਟੋਰ ਕਰਨਾ",
@@ -120,7 +103,6 @@ export const pa: Record<TranslationKey, string> = {
   rule7: "ਹਰ ਗੇਮ ਵਿੱਚ ਵੱਧ ਤੋਂ ਵੱਧ 3 ਇਸ਼ਾਰੇ। ਆਪਣੀ ਮਰਜ਼ੀ ਨਾਲ ਇਸ਼ਤਿਹਾਰ ਦੇਖਣ ਉੱਤੇ ਇਨਾਮ ਦੀ ਪੁਸ਼ਟੀ ਤੋਂ ਬਾਅਦ ਹਰ ਇਸ਼ਾਰਾ ਇੱਕ ਸਹੀ ਅੰਕ ਭਰਦਾ ਹੈ। ਇਨਾਮ ਬਿਨਾਂ ਇਸ਼ਾਰਾ ਖਰਚ ਨਹੀਂ ਹੁੰਦਾ। ਇਸ਼ਾਰੇ ਨਾਲ ਹੱਲ ਕੀਤੀ ਗੇਮ ਖੇਡੀ ਹੋਈ ਗਿਣੀ ਜਾਂਦੀ ਹੈ, ਪਰ ਜਿੱਤ, ਬਿਨਾਂ ਗਲਤੀ ਜਾਂ ਸਭ ਤੋਂ ਵਧੀਆ ਸਮੇਂ ਵਜੋਂ ਨਹੀਂ।",
   rule6: "ਤੁਹਾਡੀ ਗੇਮ ਆਪਣੇ ਆਪ ਸੇਵ ਹੁੰਦੀ ਹੈ। ਤੁਸੀਂ ਇੱਕੋ ਸਮੇਂ 10 ਗੇਮਾਂ ਤੱਕ ਖੇਡ ਸਕਦੇ ਹੋ।",
   statPlayed: "ਖੇਡੀਆਂ",
-  adminInMatch: "ਹੁਣ ਸਰਗਰਮ",
   adsOffInfo: "Mr.B. Sudoku ਵਿੱਚ Google ਦੇ ਇਸ਼ਤਿਹਾਰ ਦਿਖਾਏ ਜਾਂਦੇ ਹਨ। ਤੁਸੀਂ ਹੇਠਾਂ ਇਸ਼ਤਿਹਾਰਾਂ ਦੀਆਂ ਚੋਣਾਂ ਬਦਲ ਸਕਦੇ ਹੋ।",
   deleteDataDescription: "ਤੁਹਾਡਾ ਨਾਮ, ਪ੍ਰੋਫਾਈਲ ਤਸਵੀਰ, ਅੰਕੜੇ ਅਤੇ ਸੇਵ ਕੀਤੀਆਂ ਗੇਮਾਂ ਫ਼ੋਨ ਅਤੇ ਸਰਵਰ ਤੋਂ ਮਿਟਾ ਦਿੱਤੀਆਂ ਜਾਣਗੀਆਂ। ਜੇ ਤੁਸੀਂ ਖੇਡਣਾ ਜਾਰੀ ਰੱਖਦੇ ਹੋ, ਤਾਂ ਨਵੀਂ ਖਿਡਾਰੀ ਪਛਾਣ ਬਣਾਈ ਜਾਵੇਗੀ।",
   storeSoon: "Mr.B. Sudoku ਜਲਦ ਹੀ App Store ਅਤੇ Google Play 'ਤੇ ਆ ਰਹੀ ਹੈ।",

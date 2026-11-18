@@ -42,9 +42,7 @@ export const fr: Record<TranslationKey, string> = {
 
   signIn: "Se connecter",
   playerName: "Nom de joueur",
-  pinCode: "PIN",
 
-  admin: "Admin",
 
 
   profileTitle: "Profil",
@@ -55,18 +53,7 @@ export const fr: Record<TranslationKey, string> = {
 
 
 
-  adminTitle: "Admin",
   noAdmin: "Tu n'as pas les droits admin.",
-  adminPlayers: "Joueurs au total",
-  adminActive24: "Actifs 24 h",
-  adminRetD1: "Rétention J1 %",
-  adminRetD7: "Rétention J7 %",
-  adminRetD30: "Rétention J30 %",
-  last30Days: "30 derniers jours",
-  colDate: "Date",
-  colAppDevices: "Appareils app",
-  colStarted: "Commencées",
-  colFinished: "Terminées",
 
   errNameShort: "Le nom doit contenir au moins 2 caractères",
   errInvalidCountry: "Pays invalide",
@@ -94,10 +81,6 @@ export const fr: Record<TranslationKey, string> = {
   storeApple: "App Store",
   storeGoogle: "Google Play",
   appVersion: "Version {v}",
-  adminChartDevices: "Appareils (app) par jour",
-  adminChartMinutes: "Durée moyenne de visite (min)",
-  adminChartMinutesNote: "Durée d'ouverture de l'app par visite, iPhone et Android.",
-  adminSessions: "Visites",
   firstPlayHint: "Commence ici – joue maintenant !",
   adPrivacyChange: "Modifier les choix publicitaires",
   adChoiceStorage: "Stockage sur l'appareil",
@@ -120,7 +103,6 @@ export const fr: Record<TranslationKey, string> = {
   rule7: "Au maximum 3 indices par partie. Chacun place un chiffre correct après une publicité volontaire avec récompense confirmée. Sans récompense, aucun indice n’est consommé. Une grille résolue avec un indice compte comme jouée, mais pas comme victoire, sans faute ou meilleur temps.",
   rule6: "Votre partie est enregistrée automatiquement. Vous pouvez avoir jusqu’à 10 parties en cours.",
   statPlayed: "Parties jouées",
-  adminInMatch: "Actifs en ce moment",
   adsOffInfo: "Mr.B. Sudoku affiche des publicités de Google. Vous pouvez modifier vos préférences publicitaires ci-dessous.",
   deleteDataDescription: "Votre nom, votre photo de profil, vos statistiques et vos parties enregistrées sont supprimés du téléphone et du serveur. Si vous continuez à jouer, une nouvelle identité de joueur sera créée.",
   storeSoon: "Mr.B. Sudoku arrive bientôt sur l’App Store et Google Play.",

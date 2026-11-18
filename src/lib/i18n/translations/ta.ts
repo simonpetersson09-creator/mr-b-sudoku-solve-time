@@ -42,9 +42,7 @@ export const ta: Record<TranslationKey, string> = {
 
   signIn: "உள்நுழை",
   playerName: "வீரர் பெயர்",
-  pinCode: "PIN",
 
-  admin: "நிர்வாகி",
 
 
   profileTitle: "சுயவிவரம்",
@@ -55,18 +53,7 @@ export const ta: Record<TranslationKey, string> = {
 
 
 
-  adminTitle: "நிர்வாகி",
   noAdmin: "உனக்கு நிர்வாக அனுமதி இல்லை.",
-  adminPlayers: "மொத்த வீரர்கள்",
-  adminActive24: "24 மணி நேரம் செயலில்",
-  adminRetD1: "தக்கவைப்பு D1 %",
-  adminRetD7: "தக்கவைப்பு D7 %",
-  adminRetD30: "தக்கவைப்பு D30 %",
-  last30Days: "கடந்த 30 நாட்கள்",
-  colDate: "தேதி",
-  colAppDevices: "ஆப் சாதனங்கள்",
-  colStarted: "தொடங்கியவை",
-  colFinished: "முடிந்தவை",
 
   errNameShort: "பெயர் குறைந்தது 2 எழுத்துகள் இருக்க வேண்டும்",
   errInvalidCountry: "தவறான நாடு",
@@ -94,10 +81,6 @@ export const ta: Record<TranslationKey, string> = {
   storeApple: "App Store",
   storeGoogle: "Google Play",
   appVersion: "பதிப்பு {v}",
-  adminChartDevices: "நாள்தோறும் ஆப் சாதனங்கள்",
-  adminChartMinutes: "சராசரி வருகை நேரம் (நிமி)",
-  adminChartMinutesNote: "ஒவ்வொரு வருகையிலும் ஆப் எவ்வளவு நேரம் திறந்திருக்கிறது, iPhone மற்றும் Android.",
-  adminSessions: "வருகைகள்",
   firstPlayHint: "இங்கே தொடங்குங்கள் – இப்போதே விளையாடுங்கள்!",
   adPrivacyChange: "விளம்பரத் தேர்வுகளை மாற்று",
   adChoiceStorage: "சாதனத்தில் சேமித்தல்",
@@ -120,7 +103,6 @@ export const ta: Record<TranslationKey, string> = {
   rule7: "ஒவ்வொரு ஆட்டத்திலும் அதிகபட்சம் 3 உதவிக்குறிப்புகள். விருப்பத்துடன் விளம்பரம் பார்த்து வெகுமதி உறுதியான பிறகு ஒவ்வொன்றும் ஒரு சரியான எண்ணை நிரப்பும். வெகுமதி இல்லையெனில் உதவிக்குறிப்பு செலவாகாது. உதவிக்குறிப்புடன் முடித்த ஆட்டம் விளையாடியதாகக் கணக்கிடப்படும்; வெற்றி, தவறில்லா ஆட்டம் அல்லது சிறந்த நேரமாக அல்ல.",
   rule6: "உங்கள் ஆட்டம் தானாகச் சேமிக்கப்படும். ஒரே நேரத்தில் 10 ஆட்டங்கள் வரை விளையாடலாம்.",
   statPlayed: "விளையாடியவை",
-  adminInMatch: "இப்போது செயலில்",
   adsOffInfo: "Mr.B. Sudoku, Google விளம்பரங்களைக் காட்டுகிறது. உங்கள் விளம்பர விருப்பங்களைக் கீழே மாற்றலாம்.",
   deleteDataDescription: "உங்கள் பெயர், சுயவிவரப் படம், புள்ளிவிவரங்கள் மற்றும் சேமித்த ஆட்டங்கள் தொலைபேசியிலிருந்தும் சேவையகத்திலிருந்தும் நீக்கப்படும். தொடர்ந்து விளையாடினால், புதிய வீரர் அடையாளம் உருவாக்கப்படும்.",
   storeSoon: "Mr.B. Sudoku விரைவில் App Store மற்றும் Google Play-ல் வருகிறது.",

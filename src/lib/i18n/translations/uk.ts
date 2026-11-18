@@ -42,9 +42,7 @@ export const uk: Record<TranslationKey, string> = {
 
   signIn: "Увійти",
   playerName: "Ім'я гравця",
-  pinCode: "PIN",
 
-  admin: "Адмін",
 
 
   profileTitle: "Профіль",
@@ -55,18 +53,7 @@ export const uk: Record<TranslationKey, string> = {
 
 
 
-  adminTitle: "Адмін",
   noAdmin: "У тебе немає прав адміністратора.",
-  adminPlayers: "Усього гравців",
-  adminActive24: "Активні 24 год",
-  adminRetD1: "Утримання D1 %",
-  adminRetD7: "Утримання D7 %",
-  adminRetD30: "Утримання D30 %",
-  last30Days: "Останні 30 днів",
-  colDate: "Дата",
-  colAppDevices: "Пристрої",
-  colStarted: "Розпочато",
-  colFinished: "Завершено",
 
   errNameShort: "Ім'я має містити щонайменше 2 символи",
   errInvalidCountry: "Недійсна країна",
@@ -94,10 +81,6 @@ export const uk: Record<TranslationKey, string> = {
   storeApple: "App Store",
   storeGoogle: "Google Play",
   appVersion: "Версія {v}",
-  adminChartDevices: "Пристрої (застосунок) на день",
-  adminChartMinutes: "Середня тривалість візиту (хв)",
-  adminChartMinutesNote: "Скільки застосунок відкритий за візит, iPhone і Android.",
-  adminSessions: "Візити",
   firstPlayHint: "Почни тут – грай зараз!",
   adPrivacyChange: "Змінити налаштування реклами",
   adChoiceStorage: "Зберігання на пристрої",
@@ -120,7 +103,6 @@ export const uk: Record<TranslationKey, string> = {
   rule7: "Не більше 3 підказок за гру. Кожна вписує одну правильну цифру після добровільної реклами з підтвердженою нагородою. Без нагороди підказка не витрачається. Гра, розв’язана з підказками, рахується як зіграна, але не як перемога, безпомилкова гра чи найкращий час.",
   rule6: "Гра зберігається автоматично. Ви можете мати до 10 незавершених ігор.",
   statPlayed: "Зіграно",
-  adminInMatch: "Зараз у грі",
   adsOffInfo: "Mr.B. Sudoku показує рекламу від Google. Нижче можна змінити налаштування реклами.",
   deleteDataDescription: "Ваше ім’я, фото профілю, статистику та збережені ігри буде видалено з телефона і сервера. Якщо ви продовжите грати, буде створено новий профіль гравця.",
   storeSoon: "Mr.B. Sudoku незабаром з’явиться в App Store та Google Play.",

@@ -42,9 +42,7 @@ export const pt: Record<TranslationKey, string> = {
 
   signIn: "Iniciar sessão",
   playerName: "Nome de jogador",
-  pinCode: "PIN",
 
-  admin: "Admin",
 
 
   profileTitle: "Perfil",
@@ -55,18 +53,7 @@ export const pt: Record<TranslationKey, string> = {
 
 
 
-  adminTitle: "Admin",
   noAdmin: "Não tens permissões de administrador.",
-  adminPlayers: "Jogadores totais",
-  adminActive24: "Ativos 24 h",
-  adminRetD1: "Retenção D1 %",
-  adminRetD7: "Retenção D7 %",
-  adminRetD30: "Retenção D30 %",
-  last30Days: "Últimos 30 dias",
-  colDate: "Data",
-  colAppDevices: "Dispositivos app",
-  colStarted: "Começadas",
-  colFinished: "Terminadas",
 
   errNameShort: "O nome deve ter pelo menos 2 caracteres",
   errInvalidCountry: "País inválido",
@@ -94,10 +81,6 @@ export const pt: Record<TranslationKey, string> = {
   storeApple: "App Store",
   storeGoogle: "Google Play",
   appVersion: "Versão {v}",
-  adminChartDevices: "Dispositivos (app) por dia",
-  adminChartMinutes: "Duração média da visita (min)",
-  adminChartMinutesNote: "Quanto tempo a app fica aberta por visita, iPhone e Android.",
-  adminSessions: "Visitas",
   firstPlayHint: "Começa aqui – joga já!",
   adPrivacyChange: "Alterar escolhas de anúncios",
   adChoiceStorage: "Guardar no dispositivo",
@@ -120,7 +103,6 @@ export const pt: Record<TranslationKey, string> = {
   rule7: "Até 3 ajudas por jogo. Cada uma coloca um algarismo correto após um anúncio voluntário com recompensa confirmada. Sem recompensa, não se gasta nenhuma ajuda. Um jogo resolvido com ajudas conta como jogado, mas não como vitória, perfeito ou melhor tempo.",
   rule6: "O jogo é guardado automaticamente. Podes ter até 10 jogos em curso.",
   statPlayed: "Jogos concluídos",
-  adminInMatch: "Ativos agora",
   adsOffInfo: "Mr.B. Sudoku apresenta anúncios da Google. Podes alterar as tuas preferências de anúncios abaixo.",
   deleteDataDescription: "O teu nome, foto de perfil, estatísticas e jogos guardados são apagados do telemóvel e do servidor. Se continuares a jogar, será criada uma nova identidade de jogador.",
   storeSoon: "Mr.B. Sudoku chegará em breve à App Store e ao Google Play.",

@@ -42,9 +42,7 @@ export const da: Record<TranslationKey, string> = {
 
   signIn: "Log ind",
   playerName: "Spillernavn",
-  pinCode: "PIN",
 
-  admin: "Admin",
 
 
   profileTitle: "Profil",
@@ -55,18 +53,7 @@ export const da: Record<TranslationKey, string> = {
 
 
 
-  adminTitle: "Admin",
   noAdmin: "Du har ikke adminadgang.",
-  adminPlayers: "Spillere i alt",
-  adminActive24: "Aktive 24 t",
-  adminRetD1: "Retention D1 %",
-  adminRetD7: "Retention D7 %",
-  adminRetD30: "Retention D30 %",
-  last30Days: "Seneste 30 dage",
-  colDate: "Dato",
-  colAppDevices: "App-enheder",
-  colStarted: "Startede",
-  colFinished: "Afsluttede",
 
   errNameShort: "Navnet skal have mindst 2 tegn",
   errInvalidCountry: "Ugyldigt land",
@@ -94,10 +81,6 @@ export const da: Record<TranslationKey, string> = {
   storeApple: "App Store",
   storeGoogle: "Google Play",
   appVersion: "Version {v}",
-  adminChartDevices: "App-enheder pr. dag",
-  adminChartMinutes: "Gns. besøgslængde (min)",
-  adminChartMinutesNote: "Hvor længe appen er åben pr. besøg, iPhone og Android.",
-  adminSessions: "Besøg",
   firstPlayHint: "Start her – spil nu!",
   adPrivacyChange: "Skift annoncevalg",
   adChoiceStorage: "Gem på enheden",
@@ -120,7 +103,6 @@ export const da: Record<TranslationKey, string> = {
   rule7: "Højst 3 tip pr. spil. Hvert tip indsætter ét korrekt tal efter en frivillig annonce med bekræftet belønning. Uden belønning bruges intet tip. Et løst spil med tip tæller som spillet, men ikke som sejr, fejlfrit eller bedste tid.",
   rule6: "Dit spil gemmes automatisk. Du kan have op til 10 spil i gang.",
   statPlayed: "Spillet",
-  adminInMatch: "Aktive nu",
   adsOffInfo: "Mr.B. Sudoku viser annoncer fra Google. Du kan ændre dine annoncevalg nedenfor.",
   deleteDataDescription: "Dit navn, profilbillede, dine statistikker og gemte spil slettes fra telefonen og serveren. Hvis du fortsætter med at spille, oprettes en ny spilleridentitet.",
   storeSoon: "Mr.B. Sudoku kommer snart til App Store og Google Play.",

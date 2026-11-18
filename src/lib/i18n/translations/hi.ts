@@ -42,9 +42,7 @@ export const hi: Record<TranslationKey, string> = {
 
   signIn: "लॉग इन",
   playerName: "खिलाड़ी का नाम",
-  pinCode: "PIN",
 
-  admin: "एडमिन",
 
 
   profileTitle: "प्रोफ़ाइल",
@@ -55,18 +53,7 @@ export const hi: Record<TranslationKey, string> = {
 
 
 
-  adminTitle: "एडमिन",
   noAdmin: "आपके पास एडमिन अधिकार नहीं हैं।",
-  adminPlayers: "कुल खिलाड़ी",
-  adminActive24: "24 घं सक्रिय",
-  adminRetD1: "रिटेंशन D1 %",
-  adminRetD7: "रिटेंशन D7 %",
-  adminRetD30: "रिटेंशन D30 %",
-  last30Days: "पिछले 30 दिन",
-  colDate: "तारीख",
-  colAppDevices: "ऐप डिवाइस",
-  colStarted: "शुरू",
-  colFinished: "पूरे",
 
   errNameShort: "नाम में कम से कम 2 अक्षर होने चाहिए",
   errInvalidCountry: "अमान्य देश",
@@ -94,10 +81,6 @@ export const hi: Record<TranslationKey, string> = {
   storeApple: "App Store",
   storeGoogle: "Google Play",
   appVersion: "संस्करण {v}",
-  adminChartDevices: "प्रति दिन ऐप डिवाइस",
-  adminChartMinutes: "औसत विज़िट अवधि (मिनट)",
-  adminChartMinutesNote: "हर विज़िट में ऐप कितनी देर खुला रहता है, iPhone और Android।",
-  adminSessions: "विज़िट",
   firstPlayHint: "यहाँ से शुरू करें – अभी खेलें!",
   adPrivacyChange: "विज्ञापन विकल्प बदलें",
   adChoiceStorage: "डिवाइस पर सहेजना",
@@ -120,7 +103,6 @@ export const hi: Record<TranslationKey, string> = {
   rule7: "हर खेल में अधिकतम 3 संकेत। स्वेच्छा से विज्ञापन देखने पर पुष्टि किए गए पुरस्कार के बाद हर संकेत एक सही अंक भरता है। पुरस्कार के बिना संकेत खर्च नहीं होता। संकेत से हल हुआ खेल खेला गया माना जाता है, पर जीत, त्रुटिहीन या सर्वोत्तम समय नहीं।",
   rule6: "आपका खेल अपने आप सेव होता है। एक साथ अधिकतम 10 खेल जारी रख सकते हैं।",
   statPlayed: "खेले गए",
-  adminInMatch: "अभी सक्रिय",
   adsOffInfo: "Mr.B. Sudoku, Google के विज्ञापन दिखाता है। आप नीचे अपनी विज्ञापन पसंद बदल सकते हैं।",
   deleteDataDescription: "आपका नाम, प्रोफ़ाइल फ़ोटो, आँकड़े और सेव किए गए खेल फ़ोन और सर्वर से मिटा दिए जाएँगे। अगर आप खेलना जारी रखते हैं, तो नई खिलाड़ी पहचान बनाई जाएगी।",
   storeSoon: "Mr.B. Sudoku जल्द ही App Store और Google Play पर आएगा।",

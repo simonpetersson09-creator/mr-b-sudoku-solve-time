@@ -42,9 +42,7 @@ export const th: Record<TranslationKey, string> = {
 
   signIn: "เข้าสู่ระบบ",
   playerName: "ชื่อผู้เล่น",
-  pinCode: "PIN",
 
-  admin: "ผู้ดูแล",
 
 
   profileTitle: "โปรไฟล์",
@@ -55,18 +53,7 @@ export const th: Record<TranslationKey, string> = {
 
 
 
-  adminTitle: "ผู้ดูแล",
   noAdmin: "คุณไม่มีสิทธิ์ผู้ดูแล",
-  adminPlayers: "ผู้เล่นทั้งหมด",
-  adminActive24: "ใช้งาน 24 ชม.",
-  adminRetD1: "การกลับมา D1 %",
-  adminRetD7: "การกลับมา D7 %",
-  adminRetD30: "การกลับมา D30 %",
-  last30Days: "30 วันล่าสุด",
-  colDate: "วันที่",
-  colAppDevices: "อุปกรณ์แอป",
-  colStarted: "เริ่ม",
-  colFinished: "จบ",
 
   errNameShort: "ชื่อต้องมีอย่างน้อย 2 ตัวอักษร",
   errInvalidCountry: "ประเทศไม่ถูกต้อง",
@@ -94,10 +81,6 @@ export const th: Record<TranslationKey, string> = {
   storeApple: "App Store",
   storeGoogle: "Google Play",
   appVersion: "เวอร์ชัน {v}",
-  adminChartDevices: "อุปกรณ์แอปต่อวัน",
-  adminChartMinutes: "ระยะเวลาเฉลี่ยต่อครั้ง (นาที)",
-  adminChartMinutesNote: "แอปเปิดนานเท่าไรต่อครั้ง, iPhone และ Android",
-  adminSessions: "การเข้าใช้",
   firstPlayHint: "เริ่มที่นี่ – เล่นเลย!",
   adPrivacyChange: "เปลี่ยนตัวเลือกโฆษณา",
   adChoiceStorage: "จัดเก็บบนอุปกรณ์",
@@ -120,7 +103,6 @@ export const th: Record<TranslationKey, string> = {
   rule7: "คำใบ้สูงสุด 3 ครั้งต่อเกม แต่ละครั้งเติมตัวเลขที่ถูกต้องหนึ่งตัวหลังดูโฆษณาโดยสมัครใจและได้รับรางวัลที่ยืนยันแล้ว หากไม่ได้รางวัลจะไม่เสียคำใบ้ เกมที่แก้สำเร็จด้วยคำใบ้นับว่าเล่นแล้ว แต่ไม่นับเป็นชนะ ไร้ข้อผิดพลาด หรือเวลาที่ดีที่สุด",
   rule6: "เกมจะบันทึกอัตโนมัติ คุณเล่นเกมค้างไว้ได้สูงสุด 10 เกม",
   statPlayed: "เกมที่เล่น",
-  adminInMatch: "กำลังเล่นอยู่",
   adsOffInfo: "Mr.B. Sudoku แสดงโฆษณาจาก Google คุณเปลี่ยนการตั้งค่าโฆษณาได้ด้านล่าง",
   deleteDataDescription: "ชื่อ รูปโปรไฟล์ สถิติ และเกมที่บันทึกไว้จะถูกลบจากโทรศัพท์และเซิร์ฟเวอร์ หากเล่นต่อ ระบบจะสร้างตัวตนผู้เล่นใหม่",
   storeSoon: "Mr.B. Sudoku กำลังจะมาใน App Store และ Google Play",

@@ -23,9 +23,8 @@ function AdminLogin() {
   const [pin, setPin] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  return <main className="app-screen"><div className="home-stack">
-    <h1 className="brand-title text-3xl">{t("admin")}</h1>
-    <form className="flex flex-col gap-2" onSubmit={async e => {
+  return <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-6">
+    <form className="w-full max-w-sm space-y-3" onSubmit={async e => {
       e.preventDefault(); setBusy(true); setError("");
       try {
         // The PIN unlocks admin for this device's own player identity; nothing is replaced.
@@ -36,10 +35,11 @@ function AdminLogin() {
       } catch (e) { setError(errorMessage(e, t)); }
       finally { setPin(""); setBusy(false); }
     }}>
-      <input className="h-11 rounded-lg border bg-card px-3 text-center text-lg tracking-[0.4em]" type="password" inputMode="numeric" pattern="[0-9]*" autoComplete="one-time-code" maxLength={12} aria-label={t("pinCode")} placeholder={t("pinCode")} value={pin} onChange={e => setPin(e.target.value.replace(/\D/g, ""))} required />
-      <Button type="submit" className="home-action home-action-gold" disabled={busy || pin.length < 4}>{t("signIn")}</Button>
+      <h1 className="text-xl font-semibold">Admin</h1>
+      <input name="admin-password" className="w-full rounded-md border border-border bg-card px-3 py-2" type="password" inputMode="numeric" pattern="[0-9]*" autoComplete="current-password" maxLength={12} aria-label="Adminnyckel" placeholder="Adminnyckel" value={pin} onChange={e => setPin(e.target.value.replace(/\D/g, ""))} required />
+      <Button type="submit" className="w-full" disabled={busy || pin.length < 4}>{busy ? "Laddar…" : "Logga in"}</Button>
       {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
+      <Link to="/" className="block text-center text-sm text-muted-foreground">Tillbaka</Link>
     </form>
-    <Link to="/" className="home-action home-action-ghost">{t("home")}</Link>
-  </div></main>;
+  </div>;
 }

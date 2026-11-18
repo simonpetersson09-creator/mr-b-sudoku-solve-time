@@ -48,10 +48,8 @@ export const sv = {
   // Inloggning
   signIn: "Logga in",
   playerName: "Spelarnamn",
-  pinCode: "PIN",
 
   // Online-lobby
-  admin: "Admin",
 
   // Väntrum
 
@@ -67,18 +65,7 @@ export const sv = {
   // Topplista
 
   // Admin
-  adminTitle: "Admin",
   noAdmin: "Du har inte adminbehörighet.",
-  adminPlayers: "Spelare totalt",
-  adminActive24: "Aktiva 24 h",
-  adminRetD1: "Retention D1 %",
-  adminRetD7: "Retention D7 %",
-  adminRetD30: "Retention D30 %",
-  last30Days: "Senaste 30 dagarna",
-  colDate: "Datum",
-  colAppDevices: "Appenheter",
-  colStarted: "Startade",
-  colFinished: "Avslutade",
 
   // Serverfel (koder från online-funktionerna)
   errNameShort: "Namnet måste ha minst 2 tecken",
@@ -107,10 +94,6 @@ export const sv = {
   storeApple: "App Store",
   storeGoogle: "Google Play",
   appVersion: "Version {v}",
-  adminChartDevices: "Appenheter per dag",
-  adminChartMinutes: "Snittid per besök (min)",
-  adminChartMinutesNote: "Hur länge appen är öppen per besök, iPhone och Android.",
-  adminSessions: "Besök",
   firstPlayHint: "Börja här – spela direkt!",
   adPrivacyChange: "Ändra annonsval",
   adChoiceStorage: "Spara på enheten",
@@ -133,7 +116,6 @@ export const sv = {
   rule7: "Du kan få högst 3 ledtrådar per spel. Varje ledtråd fyller en rätt siffra efter en frivillig annons med bekräftad belöning. Utan belöning förbrukas ingen ledtråd. Ett löst spel med ledtråd räknas som spelat, men inte som vinst, felfritt eller bästa tid.",
   rule6: "Spelet sparas automatiskt. Du kan ha upp till 10 pågående spel.",
   statPlayed: "Spelade",
-  adminInMatch: "Aktiva nu",
   adsOffInfo: "Mr.B. Sudoku visar annonser från Google. Du kan ändra dina annonsval här nedan.",
   deleteDataDescription: "Ditt namn, profilbild, statistik och sparade spel raderas från telefonen och servern. Fortsätter du spela skapas en ny spelaridentitet.",
   storeSoon: "Mr.B. Sudoku finns snart i App Store och Google Play.",

@@ -42,9 +42,7 @@ export const ro: Record<TranslationKey, string> = {
 
   signIn: "Conectează-te",
   playerName: "Nume de jucător",
-  pinCode: "PIN",
 
-  admin: "Admin",
 
 
   profileTitle: "Profil",
@@ -55,18 +53,7 @@ export const ro: Record<TranslationKey, string> = {
 
 
 
-  adminTitle: "Admin",
   noAdmin: "Nu ai drepturi de administrator.",
-  adminPlayers: "Jucători în total",
-  adminActive24: "Activi 24 h",
-  adminRetD1: "Retenție D1 %",
-  adminRetD7: "Retenție D7 %",
-  adminRetD30: "Retenție D30 %",
-  last30Days: "Ultimele 30 de zile",
-  colDate: "Data",
-  colAppDevices: "Dispozitive app",
-  colStarted: "Începute",
-  colFinished: "Terminate",
 
   errNameShort: "Numele trebuie să aibă cel puțin 2 caractere",
   errInvalidCountry: "Țară invalidă",
@@ -94,10 +81,6 @@ export const ro: Record<TranslationKey, string> = {
   storeApple: "App Store",
   storeGoogle: "Google Play",
   appVersion: "Versiunea {v}",
-  adminChartDevices: "Dispozitive (app) pe zi",
-  adminChartMinutes: "Durată medie vizită (min)",
-  adminChartMinutesNote: "Cât timp e deschisă aplicația per vizită, iPhone și Android.",
-  adminSessions: "Vizite",
   firstPlayHint: "Începe aici – joacă acum!",
   adPrivacyChange: "Schimbă opțiunile de reclame",
   adChoiceStorage: "Stocare pe dispozitiv",
@@ -120,7 +103,6 @@ export const ro: Record<TranslationKey, string> = {
   rule7: "Cel mult 3 indicii pe joc. Fiecare completează o cifră corectă după o reclamă voluntară cu recompensă confirmată. Fără recompensă nu se consumă niciun indiciu. Un joc rezolvat cu indicii contează ca jucat, dar nu ca victorie, fără greșeli sau cel mai bun timp.",
   rule6: "Jocul se salvează automat. Poți avea până la 10 jocuri în desfășurare.",
   statPlayed: "Jocuri jucate",
-  adminInMatch: "Activ acum",
   adsOffInfo: "Mr.B. Sudoku afișează reclame de la Google. Poți schimba mai jos opțiunile pentru reclame.",
   deleteDataDescription: "Numele, poza de profil, statisticile și jocurile salvate sunt șterse de pe telefon și de pe server. Dacă joci în continuare, se creează o nouă identitate de jucător.",
   storeSoon: "Mr.B. Sudoku va fi disponibil în curând în App Store și Google Play.",
