@@ -10,6 +10,8 @@ import { LEVELS } from "@/lib/sudoku/engine";
 import { LEVEL_KEY, formatTime } from "@/lib/sudoku/format";
 import { loadAllTime, type AllTimeStats } from "@/lib/player/storage";
 import { useTranslation } from "@/lib/i18n";
+import { reportAppEvent } from "@/lib/backend/report";
+import { platform } from "@/lib/backend/telemetry";
 
 export const Route = createFileRoute("/stats")({
   head: () => ({
@@ -28,7 +30,10 @@ export const Route = createFileRoute("/stats")({
 function StatsPage() {
   const { t } = useTranslation();
   const [s, setS] = useState<AllTimeStats | null>(null);
-  useEffect(() => setS(loadAllTime()), []);
+  useEffect(() => {
+    setS(loadAllTime());
+    if (platform() !== "web") reportAppEvent("stats_opened");
+  }, []);
   return (
     <main className="app-screen">
       <div className="home-stack">

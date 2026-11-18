@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { loadSettings, resetStats, saveSettings, type Settings } from "@/lib/player/storage";
 import { adoptOwnAvatarFromServer, fileToAvatarDataUrl, setOwnAvatar, syncOwnAvatar, useOwnAvatar } from "@/lib/player/avatar";
 import { LANGUAGES, setLanguage, useTranslation } from "@/lib/i18n";
+import { reportAppEvent } from "@/lib/backend/report";
 
 export const Route = createFileRoute("/settings")({
   head: () => ({
@@ -93,6 +94,7 @@ function SettingsPage() {
     toast.success(shared ? t("avatarRemoved") : t("avatarLocalOnly"));
   };
   useEffect(() => {
+    reportAppEvent("settings_opened");
     setS(loadSettings());
     let alive = true;
     void syncProfileName().then(() => { if (alive) setS(loadSettings()); });
@@ -192,7 +194,7 @@ function SettingsPage() {
             {langOpen && (
               <div className="max-h-72 overflow-y-auto overscroll-contain border-t border-border/40">
                 {LANGUAGES.map((l, i) => (
-                  <button key={l.code} onClick={() => setLanguage(l.code)}
+                  <button key={l.code} onClick={() => { setLanguage(l.code); reportAppEvent("language_changed", { language: l.code }); }}
                     className={`flex w-full items-center gap-3 px-4 py-3 text-left transition-colors active:bg-secondary/60 ${i > 0 ? "border-t border-border/40" : ""}`}>
                     <span className="text-xl leading-none">{l.flag}</span>
                     <span className="flex-1 text-sm font-medium">{l.label}</span>
@@ -260,6 +262,7 @@ function AdChoices() {
   const change = async () => {
     setBusy(true);
     try {
+      reportAppEvent("ad_privacy_opened");
       const m = await import("@/lib/ads/admob");
       if (!(await m.showAdPrivacyOptions())) toast.error(t("adPrivacyFailed"));
       await read();

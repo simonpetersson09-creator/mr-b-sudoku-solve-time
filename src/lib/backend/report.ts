@@ -8,10 +8,11 @@
 import { enqueue, parseQueue, type QueuedReport } from "./report-queue";
 import { randomId } from '../random-id';
 import { redactSensitive } from "./redact";
+import type { AppEventName } from "./app-events";
 
-const MAX_PER_SESSION = { error: 10, ad: 60 } as const;
+const MAX_PER_SESSION = { error: 10, ad: 60, app: 60 } as const;
 const QUEUE_KEY = "mrb-sudoku:v1:report-queue";
-const sent = { error: 0, ad: 0 };
+const sent = { error: 0, ad: 0, app: 0 };
 const seenErrors = new Set<string>();
 
 function clean(data: Record<string, unknown>): Record<string, string | number | boolean> {
@@ -112,6 +113,11 @@ export function reportAdEvent(name: string, data: Record<string, unknown> = {}):
   // Consent and tracking-permission answers stay on the device.
   if (/consent|att_|privacy/i.test(name)) return;
   void send("ad", { name: name.slice(0, 60), ...clean(data) });
+}
+
+/** Yatzy-equivalent low-volume feature events; never includes profile or consent data. */
+export function reportAppEvent(name: AppEventName, data: { language?: string } = {}): void {
+  void send("app", { name, ...(data.language ? { language: data.language } : {}) });
 }
 
 /** A local game started or finished on this phone (admin counts all play, not only online). */

@@ -1,4 +1,5 @@
 import { redactSensitive } from "./redact";
+import { isAppEventName } from "./app-events";
 export const updateProfileInput = (d: { display_name: string; avatar: string; country: string }) => {
     const name = String(d.display_name ?? "").trim().slice(0, 20);
     if (name.length < 2) throw new Error("err:name_short");
@@ -17,7 +18,7 @@ export const setAvatarInput = (d: { image: string | null }) => {
   };
 export const LEVELS = ["easy", "medium", "hard", "expert", "ultra", "impossible", "master"] as const;
 export const logEventInput = (d: { kind: string; deviceId?: string; platform?: string; detail?: Record<string, unknown> }) => {
-    if (!d || !["session", "heartbeat", "session_end", "local_game", "error", "ad"].includes(d.kind)
+    if (!d || !["session", "heartbeat", "session_end", "local_game", "error", "ad", "app"].includes(d.kind)
       || !["ios", "android", "web"].includes(String(d.platform))) throw new Error("err:bad_action");
     const kind = d.kind;
     const platform = String(d.platform);
@@ -44,6 +45,15 @@ export const logEventInput = (d: { kind: string; deviceId?: string; platform?: s
         occurredAt = new Date(Math.min(at, Date.now())).toISOString();
       }
       detail = { phase: raw["phase"] === "finish" ? "finish" : "start", level, ...gid, ...v, ...(occurredAt ? { occurredAt } : {}) };
+    } else if (kind === "app") {
+      const name = raw["name"];
+      if (!isAppEventName(name)) throw new Error("err:bad_action");
+      detail = { name, ...v };
+      if (name === "language_changed") {
+        const language = raw["language"];
+        if (typeof language !== "string" || !/^[a-z]{2,3}(?:-[A-Z]{2})?$/.test(language)) throw new Error("err:bad_action");
+        detail["language"] = language;
+      }
     } else {
       detail = {};
       for (const [key, value] of Object.entries(raw).slice(0, 16)) {

@@ -29,10 +29,27 @@ function fmtDay(d: string) {
 
 export default function AdminAnalytics({ data, loading, onRefresh }: { data: Awaited<ReturnType<typeof adminOverview>>; loading: boolean; onRefresh: () => Promise<void> }) {
   const [diagram, setDiagram] = useState(false);
-  const rows = useMemo<DayRow[]>(() => [...data.days].reverse().map((r) => ({ day: r.date, devices: r.appDevices, ios: r.ios ?? null, android: r.android ?? null, played: r.played ?? null, new_players: r.newPlayers, returning_played: r.returningPlayed, total: r.finished, cpu_finished: null, online_finished: null, forfeits: null, issues: 0, incomplete_columns: ["issues", "avg_app_age_days", "post_match_shown", "post_match_opportunities"] })), [data.days]);
+  const rows = useMemo<DayRow[]>(() => [...data.days].reverse().map((r) => ({
+    day: r.date,
+    devices: r.appDevices,
+    ios: r.ios ?? null,
+    android: r.android ?? null,
+    played: r.played ?? null,
+    new_players: r.newPlayers,
+    returning_played: r.returningPlayed,
+    avg_app_age_days: r.avgAppAgeDays,
+    total: r.finished,
+    cpu_finished: null,
+    online_finished: null,
+    forfeits: null,
+    issues: r.issues,
+    issue_devices: r.issueDevices,
+    post_match_shown: r.postMatchShown,
+    post_match_opportunities: r.postMatchOpportunities,
+  })), [data.days]);
   const [collapsedColumns, setCollapsedColumns] = useState<AdminColumnKey[]>([]);
   const means = useMemo(() => Object.fromEntries(rows.map((row) => [row.day,
-    Object.fromEntries([...COLUMNS.map((column) => column.key), "android" as const].map((key) => [key, adminRollingMean(rows, row.day, key)])),
+    Object.fromEntries([...COLUMNS.map((column) => column.key), "android" as const, "issue_devices" as const, "post_match_opportunities" as const].map((key) => [key, adminRollingMean(rows, row.day, key)])),
   ])), [rows]);
   const meanText = (day: string, key: AdminColumnKey) => {
     const value = means[day]?.[key];
@@ -183,9 +200,9 @@ export default function AdminAnalytics({ data, loading, onRefresh }: { data: Awa
                         {c.key === "ios" ? <>{r.ios ?? "—"} <span className="text-muted-foreground">({meanText(r.day, "ios")})</span> / {r.android ?? "—"} <span className="text-muted-foreground">({meanText(r.day, "android")})</span></> : <>
                           {c.key === "avg_app_age_days" ? r[c.key] == null ? "—" : Number(r[c.key]).toLocaleString("sv-SE", { maximumFractionDigits: 0 }) : c.key === "total" ? r.total : adminValueIncomplete(r, c.key) ? "—" : r[c.key] ?? "—"}
                           {" "}<span className="text-muted-foreground">({meanText(r.day, c.key)})</span>
-                          {c.key === "issues" && <><br /><span className="text-muted-foreground">{r.issue_devices ?? "—"} enheter</span></>}
+                          {c.key === "issues" && <><br /><span className="text-muted-foreground">{r.issue_devices ?? "—"} enheter ({meanText(r.day, "issue_devices")})</span></>}
                           {c.key === "returning_played" && <><br /><span className="text-muted-foreground">{adminReturningShare(r) == null ? "—" : `${adminReturningShare(r)?.toLocaleString("sv-SE", { maximumFractionDigits: 1 })} %`} av {r.played ?? "—"}</span></>}
-                          {c.key === "post_match_shown" && <> / {r.post_match_opportunities ?? "—"}</>}
+                          {c.key === "post_match_shown" && <> / {r.post_match_opportunities ?? "—"} <span className="text-muted-foreground">({meanText(r.day, "post_match_opportunities")})</span></>}
                         </>}
                       </span>
                       <span className="w-7 h-5 flex items-center justify-center" aria-hidden="true">

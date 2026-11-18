@@ -1,5 +1,11 @@
 # Roadmap: Mr.B. Sudoku
 
+## Yatzy-liknande loggning (2026-11-18)
+- [x] Logga relevanta inställnings-, statistik-, språk- och annonsintegritetshändelser med befintlig säker offlinekö.
+- [x] Räkna appålder, problemhändelser samt visade annonser/tillfällen efter spel enligt Yatzys regler; exkludera webb och testenheter.
+- [x] Koppla värdena till adminvyn och regressionstesta loggformat och beräkningar.
+- [x] 478 ordinarie tester, 12 isolerade databastester och byggkontroll godkända; autentiserad adminvy verifierad med befintligt annonstillfälle. Ingen publicering eller signering.
+
 ## K1: iOS-produktionspaket för MacinCloud/Xcode (2026-11-11)
 - [x] Native-importregressioner och 452 ordinarie + 5 isolerade datatester godkända; produktionspaket byggt och Capacitor iOS synkat.
 - [x] iOS-paketets 114 originalfiler jämförda, åtta Swift-plugins/resurser kontrollerade och fristående Xcode-överlämning förberedd. 455 + 5 tester godkända; lokalt pakets start/nivåval/81-rutorsspel utan extern trafik verifierat.

@@ -40,3 +40,15 @@ it('reads profiles beyond 10000 without truncating the app cohort', async () => 
   await adminOverviewAction({ context });
   expect(mocks.profileRange).toHaveBeenLastCalledWith(11000, 11999);
 });
+it('returns app age, issue and post-match metrics in the admin day rows', async () => {
+  const at = new Date().toISOString();
+  const base = { user_id: 'app-a', device_id: 'phone-a', platform: 'ios', created_at: at };
+  mocks.range.mockResolvedValue({ data: [
+    { ...base, kind: 'session', detail: { sid: 'visit-a', seconds: 60, v: '1.0.0 (1)' } },
+    { ...base, kind: 'error', detail: { v: '1.0.0 (1)' } },
+    { ...base, kind: 'ad', detail: { name: 'post_match_exit', matchKey: 'game-a', completed: true, result: 'clicked' } },
+    { ...base, kind: 'ad', detail: { name: 'post_match_exit', matchKey: 'game-a', completed: true, result: 'shown' } },
+  ], error: null });
+  const result = await adminOverviewAction({ context });
+  expect(result.days.at(-1)).toEqual(expect.objectContaining({ avgAppAgeDays: 0, issues: 1, issueDevices: 1, postMatchShown: 1, postMatchOpportunities: 1 }));
+});

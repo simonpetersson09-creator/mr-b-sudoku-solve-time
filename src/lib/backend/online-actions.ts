@@ -7,7 +7,7 @@ import { adminActivityEvents, adminPeriodStart, adminReportingDays, appPlayerIds
 import { appOpenDiagnosticsSince, isAppOpenDiagnostic } from "./ad-diagnostics";
 import { appRetention } from './retention';
 import { readEventPages } from './event-pages';
-import { adminDayMetrics } from './admin-day-metrics';
+import { adminDayMetrics, adminDiagnosticsByDay } from './admin-day-metrics';
 
 // The service-role client is only loaded inside handlers, after the caller is authenticated.
 const admin = async () => (await import("@/integrations/supabase/client.server")).supabaseAdmin;
@@ -119,13 +119,15 @@ export const adminOverviewAction = async ({ context }: { context: OnlineContext 
   const activeNowUsers = appPlayerIds(allActivity, new Date(Math.max(periodStart, now - 2 * 60_000)).toISOString());
   const reportDays = adminReportingDays(now, periodStart);
   const metrics = adminDayMetrics(adminActivityEvents(visitRows, exclusions.data ?? []), reportDays);
+  const diagnosticMetrics = adminDiagnosticsByDay(adminActivityEvents(ev, exclusions.data ?? []), reportDays);
   const byDay = activityByDay(adminActivityEvents(visitRows as (ActivityEvent & { user_id: string | null })[], exclusions.data ?? []), reportDays);
   const days = reportDays.map((d) => {
     const a = byDay.get(d);
     if (!a) throw new Error("err:bad_action");
     const metric = metrics.get(d);
-    if (!metric) throw new Error('err:bad_action');
-    return { date: d, appSessions: a.appSessions, avgMinutes: a.avgMinutes, started: a.localStarted, finished: a.localFinished, appDevices: a.appDevices, ...metric };
+    const diagnostic = diagnosticMetrics.get(d);
+    if (!metric || !diagnostic) throw new Error('err:bad_action');
+    return { date: d, appSessions: a.appSessions, avgMinutes: a.avgMinutes, started: a.localStarted, finished: a.localFinished, appDevices: a.appDevices, ...metric, ...diagnostic };
   });
   // Full app cohort, including users who never returned; last_seen is NOT day-specific evidence.
   const retention = appRetention(adminActivityEvents(visitRows as (ActivityEvent & { user_id: string | null })[], exclusions.data ?? []), new Set(profiles.map(p => p.id)), now);

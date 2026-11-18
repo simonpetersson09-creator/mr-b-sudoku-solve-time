@@ -44,3 +44,10 @@ it('stores a delayed game finish on its original day, not receipt day', async ()
 it.each(['invalid', '2099-01-01T00:00:00Z', '1900-01-01T00:00:00Z'])('rejects unsafe original game timestamp %s', occurredAt => {
   expect(() => logEventInput({ kind: 'local_game', platform: 'android', detail: { gid: 'g', phase: 'finish', level: 'easy', occurredAt } })).toThrow('err:bad_action');
 });
+it('accepts only allowlisted app events and their language code', () => {
+  expect(logEventInput({ kind: 'app', platform: 'ios', detail: { name: 'language_changed', language: 'pt-BR', extra: 'discard' } }).detail)
+    .toEqual({ name: 'language_changed', language: 'pt-BR' });
+  expect(logEventInput({ kind: 'app', platform: 'android', detail: { name: 'settings_opened' } }).detail).toEqual({ name: 'settings_opened' });
+  expect(() => logEventInput({ kind: 'app', platform: 'ios', detail: { name: 'made_up' } })).toThrow('err:bad_action');
+  expect(() => logEventInput({ kind: 'app', platform: 'ios', detail: { name: 'language_changed', language: 'not a language' } })).toThrow('err:bad_action');
+});

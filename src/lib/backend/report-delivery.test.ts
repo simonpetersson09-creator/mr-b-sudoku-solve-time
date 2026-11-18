@@ -32,3 +32,10 @@ it('delivers the original finish time after a month boundary', async () => {
   expect(mocks.log.mock.calls[0][0].data.detail.occurredAt).toBe('2026-10-31T22:30:00.000Z');
   expect(localStorage.getItem(key)).toBeNull();
 });
+it('delivers allowlisted app events through the existing acknowledged queue', async () => {
+  mocks.log.mockResolvedValue({ ok: true });
+  const m = await import('./report');
+  m.reportAppEvent('language_changed', { language: 'pt-BR' });
+  await vi.waitFor(() => expect(mocks.log).toHaveBeenCalledWith({ data: expect.objectContaining({ kind: 'app', platform: 'android', detail: expect.objectContaining({ name: 'language_changed', language: 'pt-BR' }) }) }));
+  expect(localStorage.getItem(key)).toBeNull();
+});
