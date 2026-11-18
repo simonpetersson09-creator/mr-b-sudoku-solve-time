@@ -15,10 +15,10 @@ describe("phone language preferences", () => {
     vi.spyOn(navigator, "languages", "get").mockReturnValue(["zh-CN", "fi-FI", "en-US"]);
     expect(detectDeviceLanguage()).toBe("fi");
   });
-  it("keeps the existing Swedish fallback for unsupported phone languages", () => {
+  it("falls back to English for unsupported phone languages", () => {
     vi.spyOn(navigator, "languages", "get").mockReturnValue(["zh-CN"]);
     vi.spyOn(navigator, "language", "get").mockReturnValue("zh-CN");
-    expect(detectDeviceLanguage()).toBe("sv");
+    expect(detectDeviceLanguage()).toBe("en");
   });
   it("persists a manual choice across subsequent startup reads", () => {
     setLanguage("ja");

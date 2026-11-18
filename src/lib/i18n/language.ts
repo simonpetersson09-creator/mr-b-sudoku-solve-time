@@ -107,7 +107,7 @@ export function mapTagToLanguage(tag: string): Language | null {
   }
 }
 
-/** Device/system preferred language, Swedish fallback if unsupported. */
+/** Device/system preferred language, English fallback if unsupported. */
 export function detectDeviceLanguage(): Language {
   try {
     const tags = [
@@ -121,7 +121,7 @@ export function detectDeviceLanguage(): Language {
   } catch {
     /* ignore */
   }
-  return "sv";
+  return "en";
 }
 
 export function getLanguage(): Language {
