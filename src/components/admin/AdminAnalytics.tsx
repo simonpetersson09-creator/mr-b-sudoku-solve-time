@@ -4,7 +4,7 @@ import { ArrowLeft, ChartLine, ChevronLeft, ChevronRight, RefreshCw } from "luci
 import { Button } from "@/components/ui/button";
 import AdminAdDiagnostics from "@/components/AdminAdDiagnostics";
 import AdminLineChart from "./AdminLineChart";
-import { adminRecordIndexes, adminReturningShare, adminValueIncomplete, buildRibbon, type AdminColumnKey, type AdminDayRow as DayRow, type StarPoint } from "@/lib/backend/admin-records";
+import { adminRecordIndexes, adminReturningShare, adminRollingMean, adminValueIncomplete, buildRibbon, type AdminColumnKey, type AdminDayRow as DayRow, type StarPoint } from "@/lib/backend/admin-records";
 import type { adminOverview } from "@/lib/backend/online.functions";
 
 const COLUMNS: { key: AdminColumnKey; label: string }[] = [
@@ -31,6 +31,13 @@ export default function AdminAnalytics({ data, loading, onRefresh }: { data: Awa
   const [diagram, setDiagram] = useState(false);
   const rows = useMemo<DayRow[]>(() => [...data.days].reverse().map((r) => ({ day: r.date, devices: r.appDevices, ios: r.ios ?? null, android: r.android ?? null, played: r.played ?? null, new_players: r.newPlayers, returning_played: r.returningPlayed, total: r.finished, cpu_finished: null, online_finished: null, forfeits: null, issues: 0, incomplete_columns: ["issues", "avg_app_age_days", "post_match_shown", "post_match_opportunities"] })), [data.days]);
   const [collapsedColumns, setCollapsedColumns] = useState<AdminColumnKey[]>([]);
+  const means = useMemo(() => Object.fromEntries(rows.map((row) => [row.day,
+    Object.fromEntries([...COLUMNS.map((column) => column.key), "android" as const].map((key) => [key, adminRollingMean(rows, row.day, key)])),
+  ])), [rows]);
+  const meanText = (day: string, key: AdminColumnKey) => {
+    const value = means[day]?.[key];
+    return value == null ? "—" : value.toLocaleString("sv-SE", { maximumFractionDigits: 1 });
+  };
   const records = useMemo(() => adminRecordIndexes(rows, COLUMNS.map((c) => c.key)), [rows]);
   const wrapRef = useRef<HTMLDivElement>(null);
   const [lines, setLines] = useState<{ gold: StarPoint[]; red: StarPoint[]; w: number; h: number }>({
@@ -92,7 +99,7 @@ export default function AdminAnalytics({ data, loading, onRefresh }: { data: Awa
         <div>
           <h1 className="text-xl font-semibold">{diagram ? "Linjediagram" : "Statistik per dag"}{data.days[0] ? ` – från ${fmtDay(data.days[0].date)}` : ""}</h1>
           <p className="text-sm text-muted-foreground">
-            Bara appen (iOS/Android). Datum enligt Stockholmstid. Dagens rad är inte komplett. — när ett helt underlag saknas.
+            Svensk tid, bara appen (iPhone/Android). Dagens rad är inte komplett. Parentes: dagsmedel för 30 dagar till och med radens datum; — när ett helt underlag saknas.
           </p>
         </div>
         <div className="flex gap-2">
@@ -106,7 +113,6 @@ export default function AdminAnalytics({ data, loading, onRefresh }: { data: Awa
         </div>
       </div>
       <AdminAdDiagnostics />
-      <p className="my-3 text-sm text-muted-foreground">Senaste 30 dagarna, begränsat av eventuell nollställning. Saknat underlag visas som —.</p>
       {diagram ? <AdminLineChart rows={rows} /> : <>
       <div ref={wrapRef} className="relative overflow-x-auto rounded-lg border border-border">
         <svg
@@ -174,8 +180,9 @@ export default function AdminAnalytics({ data, loading, onRefresh }: { data: Awa
                     {!collapsedColumns.includes(c.key) &&
                     <span className="flex items-baseline justify-end gap-1 tabular-nums">
                       <span className="text-right">
-                        {c.key === "ios" ? <>{r.ios ?? "—"} / {r.android ?? "—"}</> : <>
+                        {c.key === "ios" ? <>{r.ios ?? "—"} <span className="text-muted-foreground">({meanText(r.day, "ios")})</span> / {r.android ?? "—"} <span className="text-muted-foreground">({meanText(r.day, "android")})</span></> : <>
                           {c.key === "avg_app_age_days" ? r[c.key] == null ? "—" : Number(r[c.key]).toLocaleString("sv-SE", { maximumFractionDigits: 0 }) : c.key === "total" ? r.total : adminValueIncomplete(r, c.key) ? "—" : r[c.key] ?? "—"}
+                          {" "}<span className="text-muted-foreground">({meanText(r.day, c.key)})</span>
                           {c.key === "issues" && <><br /><span className="text-muted-foreground">{r.issue_devices ?? "—"} enheter</span></>}
                           {c.key === "returning_played" && <><br /><span className="text-muted-foreground">{adminReturningShare(r) == null ? "—" : `${adminReturningShare(r)?.toLocaleString("sv-SE", { maximumFractionDigits: 1 })} %`} av {r.played ?? "—"}</span></>}
                           {c.key === "post_match_shown" && <> / {r.post_match_opportunities ?? "—"}</>}
@@ -217,7 +224,17 @@ export default function AdminAnalytics({ data, loading, onRefresh }: { data: Awa
           </tfoot>
         </table>
       </div>
-      <p className="text-xs text-muted-foreground mt-3">★ = högsta kända värdet i visad period. Avhopp och problem markeras med röd stjärna. Enheter summeras inte mellan dagar.</p>
+      <p className="text-xs text-muted-foreground mt-3">
+        Appålder: dagar sedan första registrerade appaktiviteten för dagens unika aktiva enhets-ID:n, inte verifierad nedladdningsdag. Ominstallation kan ge ett nytt ID.
+      </p>
+      <p className="text-xs text-muted-foreground mt-3">
+        Nya spelare: första registrerade spel per appenhet i tillgänglig historik, inte verifierade nya personer. Annonser efter spel: bekräftad visning / tillfällen; saknade telefonloggar kan ge lägre antal. Problemens enheter använder samma två senaste versioner som händelserna och summeras inte mellan dagar.
+      </p>
+      <p className="text-xs text-muted-foreground mt-3">
+        ★ = högsta värdet i kolumnen i visad period. För Problemhändelser är röd stjärna den sämsta dagen.
+        Linjerna binder samman stjärnorna kolumn för kolumn från vänster till höger: guldlinje för rekord, röd linje för problem.
+        Enhetssummor visas inte eftersom samma enhet spelar flera dagar.
+      </p>
       </>}
     </section>
   );
