@@ -13,6 +13,7 @@
 import { execFileSync } from "child_process";
 import { existsSync, mkdirSync, rmSync, writeFileSync } from "fs";
 import { dirname, join, resolve } from "path";
+import { adaptiveIconArgs } from "./android-icon-layout.mjs";
 
 const ROOT = process.cwd();
 const MASTER = join(ROOT, "resources", "icon.png");
@@ -41,6 +42,17 @@ function splash(out, w, h) {
   run(["-size", `${w}x${h}`, `xc:${BG}`, "(", MASTER, "-resize", `${s}x${s}`, ")", "-gravity", "center", "-composite", "-alpha", "off", "-depth", "8", out]);
 }
 
+// Targeted regeneration must not rewrite iOS, web icons or splash assets.
+const adaptiveOnly = process.argv.includes('--android-adaptive-only');
+if (adaptiveOnly) {
+  for (const [dpi, scale] of [['mdpi', 1], ['hdpi', 1.5], ['xhdpi', 2], ['xxhdpi', 3], ['xxxhdpi', 4]]) {
+    const out = join(ANDROID_RES, `mipmap-${dpi}`, 'ic_launcher_foreground.png');
+    mkdirSync(dirname(out), { recursive: true });
+    run(adaptiveIconArgs(MASTER, out, scale));
+  }
+  console.log('[icons] Android adaptive foregrounds regenerated only.');
+  process.exit(0);
+}
 const source = process.argv[2];
 if (source) {
   mkdirSync(dirname(MASTER), { recursive: true });
@@ -55,7 +67,7 @@ for (const [dpi, size, scale] of DENSITIES) {
   const dir = join(ANDROID_RES, `mipmap-${dpi}`);
   render(MASTER, join(dir, "ic_launcher.png"), size);
   render(MASTER, join(dir, "ic_launcher_round.png"), size, { circle: true, alpha: true });
-  render(MASTER, join(dir, "ic_launcher_foreground.png"), Math.round(size * 2.25), { alpha: true });
+  run(adaptiveIconArgs(MASTER, join(dir, "ic_launcher_foreground.png"), scale));
   splash(join(ANDROID_RES, `drawable-port-${dpi}`, "splash.png"), Math.round(320 * scale), Math.round(480 * scale));
   splash(join(ANDROID_RES, `drawable-land-${dpi}`, "splash.png"), Math.round(480 * scale), Math.round(320 * scale));
 }
