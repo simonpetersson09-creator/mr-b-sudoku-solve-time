@@ -13,7 +13,7 @@
 import { execFileSync } from "child_process";
 import { existsSync, mkdirSync, rmSync, writeFileSync } from "fs";
 import { dirname, join, resolve } from "path";
-import { adaptiveIconArgs } from "./android-icon-layout.mjs";
+import { adaptiveIconArgs, ADAPTIVE_EDGE_BG } from "./android-icon-layout.mjs";
 
 const ROOT = process.cwd();
 const MASTER = join(ROOT, "resources", "icon.png");
@@ -76,7 +76,7 @@ for (const [dpi, size, scale] of DENSITIES) {
 splash(join(ANDROID_RES, "drawable", "splash.png"), 480, 320);
 mkdirSync(join(ANDROID_RES, "values"), { recursive: true });
 writeFileSync(join(ANDROID_RES, "values", "ic_launcher_background.xml"),
-  `<?xml version="1.0" encoding="utf-8"?>\n<resources>\n    <color name="ic_launcher_background">${BG}</color>\n</resources>\n`);
+    `<?xml version="1.0" encoding="utf-8"?>\n<resources>\n    <color name="ic_launcher_background">${ADAPTIVE_EDGE_BG}</color>\n</resources>\n`);
 
 // iOS icons (same table as Yatzy)
 const SET = join(IOS, "AppIcon.appiconset");
