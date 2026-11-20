@@ -2,13 +2,11 @@ import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { expect, it } from 'vitest';
 
-// The adaptive foreground is a full-bleed 108dp layer filled with the
-// artwork's edge teal (#002431), with the circular artwork centred at 60dp.
-// Outside the 66dp safe circle every pixel must be that exact edge colour,
-// so the launcher mask never reveals a seam or lighter ring.
-const EDGE = '#002431';
+// The adaptive foreground is a full-bleed 108dp layer carrying the original
+// icon's own background gradient, with the artwork inside the 66dp safe
+// circle, so the launcher mask never reveals artwork cut-off or a seam.
 
-it('Android foreground is seamless edge teal outside the 66dp safe circle at every density', () => {
+it('Android foreground keeps only dark background outside the 66dp safe circle at every density', () => {
   for (const [density, scale] of [['mdpi', 1], ['hdpi', 1.5], ['xhdpi', 2], ['xxhdpi', 3], ['xxxhdpi', 4]] as const) {
     const source = `resources/android/res/mipmap-${density}/ic_launcher_foreground.png`;
     const native = `android/app/src/main/res/mipmap-${density}/ic_launcher_foreground.png`;

@@ -1,25 +1,16 @@
 // Android adaptive layers are 108dp; the guaranteed safe circle is 66dp.
-// Keep the entire existing circular artwork at 60dp, including animation margin.
+// The foreground is a committed full-bleed master (resources/android/adaptive-foreground.png,
+// built by scripts/make-android-adaptive-icon.py): the original icon's own background
+// gradient covers the whole layer and the artwork sits inside the safe circle,
+// so no launcher mask can reveal an edge, ring or lighter border.
+import { join } from 'path';
 export const ADAPTIVE_LAYER_DP = 108;
-export const ADAPTIVE_ARTWORK_DP = 60;
-// The layer is filled with the artwork's own edge teal, and the circular
-// artwork's edge is feathered over several dp, so its gradient fades
-// gradually into the background — no hard line, no lighter ring.
-export const ADAPTIVE_EDGE_BG = '#002431';
+export const ADAPTIVE_FOREGROUND = join(process.cwd(), 'resources', 'android', 'adaptive-foreground.png');
+// Matches the master's outer edge; only visible if a launcher ignores the foreground.
+export const ADAPTIVE_EDGE_BG = '#012734';
 
-export function adaptiveIconArgs(source, output, scale) {
+export function adaptiveIconArgs(_source, output, scale) {
   const layer = Math.round(ADAPTIVE_LAYER_DP * scale);
-  const artwork = Math.round(ADAPTIVE_ARTWORK_DP * scale);
-  const center = artwork / 2;
-  const feather = Math.max(4, Math.round(6 * scale));
-  return [
-    '-size', `${layer}x${layer}`, `xc:${ADAPTIVE_EDGE_BG}`,
-    '(', source, '-colorspace', 'sRGB', '-resize', `${artwork}x${artwork}`,
-    '(', '-size', `${artwork}x${artwork}`, 'xc:none', '-fill', 'white',
-    '-draw', `circle ${center},${center} ${center},0`,
-    '-blur', `0x${feather}`, ')',
-    '-alpha', 'set', '-compose', 'DstIn', '-composite', ')',
-    '-gravity', 'center', '-compose', 'Over', '-composite',
-    '-alpha', 'off', '-depth', '8', output,
-  ];
+  return [ADAPTIVE_FOREGROUND, '-colorspace', 'sRGB', '-filter', 'Lanczos',
+    '-resize', `${layer}x${layer}!`, '-alpha', 'off', '-depth', '8', output];
 }
