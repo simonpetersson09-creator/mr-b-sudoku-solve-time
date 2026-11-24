@@ -90,6 +90,11 @@ export const adminAdDiagnosticsAction = async ({ context }: { context: OnlineCon
 
 export const adminOverviewAction = async ({ context }: { context: OnlineContext }) => {
   await requireAdmin(context);
+  return adminOverviewData();
+};
+
+/** Same numbers for every verified admin path (PIN session or MrB. Admin hub token). Caller must authorize first. */
+export const adminOverviewData = async () => {
   const db = await admin();
   const day = 86_400_000;
   const now = Date.now();
