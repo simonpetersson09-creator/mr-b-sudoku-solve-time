@@ -33,3 +33,8 @@ it("does not turn a download-page visitor into a player", () => {
   expect(isDownloadOnlyVisitor({ hostname: "mrbsudoku.lovable.app", isNative: true })).toBe(false);
   expect(isPreviewHost("localhost")).toBe(true);
 });
+
+it("server function calls are never sent to the download page, but pages still are", () => {
+  expect(webPlayBlocked({ hostname: "mrbsudoku.lovable.app", pathname: "/_serverFn/abc" })).toBe(false);
+  expect(webPlayBlocked({ hostname: "mrbsudoku.lovable.app", pathname: "/" })).toBe(true);
+});
