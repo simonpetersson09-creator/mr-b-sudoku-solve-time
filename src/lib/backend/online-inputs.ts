@@ -25,13 +25,14 @@ export const logEventInput = (d: { kind: string; deviceId?: string; platform?: s
     const raw = d.detail ?? {};
     if (typeof raw !== "object" || Array.isArray(raw) || JSON.stringify(raw).length > 4000) throw new Error("err:bad_action");
     const v = typeof raw["v"] === "string" ? { v: raw["v"].slice(0, 30) } : {};
+    const testFlight = platform === "ios" && raw["testFlight"] === true ? { testFlight: true as const } : {};
     let detail: Record<string, unknown>;
     if (kind === "session" || kind === "heartbeat" || kind === "session_end") {
       // Visit reports keep only a visit id, whole foreground seconds (max 4 h) and the app version.
       const secs = Math.round(Number(raw["seconds"]));
       if (kind === "session_end" && !(secs >= 5 && secs <= 4 * 3600)) throw new Error("err:missing");
       const sid = typeof raw["sid"] === "string" && /^[A-Za-z0-9-]{1,40}$/.test(raw["sid"]) ? { sid: raw["sid"] } : {};
-      detail = { ...sid, ...(Number.isFinite(secs) && secs >= 0 ? { seconds: Math.min(secs, 4 * 3600) } : {}), ...v };
+      detail = { ...sid, ...(Number.isFinite(secs) && secs >= 0 ? { seconds: Math.min(secs, 4 * 3600) } : {}), ...v, ...testFlight };
     } else if (kind === "local_game") {
       if (!(LEVELS as readonly string[]).includes(String(raw["level"])) || !["start", "finish"].includes(String(raw["phase"]))
         || typeof raw["gid"] !== "string" || !/^[A-Za-z0-9_-]{1,40}$/.test(raw["gid"]) || platform === "web") throw new Error("err:bad_action");
@@ -44,11 +45,11 @@ export const logEventInput = (d: { kind: string; deviceId?: string; platform?: s
         if (!Number.isFinite(at) || at < Date.UTC(2020, 0, 1) || at > Date.now() + 5 * 60_000) throw new Error('err:bad_action');
         occurredAt = new Date(Math.min(at, Date.now())).toISOString();
       }
-      detail = { phase: raw["phase"] === "finish" ? "finish" : "start", level, ...gid, ...v, ...(occurredAt ? { occurredAt } : {}) };
+      detail = { phase: raw["phase"] === "finish" ? "finish" : "start", level, ...gid, ...v, ...testFlight, ...(occurredAt ? { occurredAt } : {}) };
     } else if (kind === "app") {
       const name = raw["name"];
       if (!isAppEventName(name)) throw new Error("err:bad_action");
-      detail = { name, ...v };
+      detail = { name, ...v, ...testFlight };
       if (name === "language_changed") {
         const language = raw["language"];
         if (typeof language !== "string" || !/^[a-z]{2,3}(?:-[A-Z]{2})?$/.test(language)) throw new Error("err:bad_action");
@@ -62,6 +63,7 @@ export const logEventInput = (d: { kind: string; deviceId?: string; platform?: s
         else if (typeof value === "boolean" || (typeof value === "number" && Number.isFinite(value))) detail[key.slice(0, 40)] = value;
       }
     }
+    if (platform !== "ios" || raw["testFlight"] !== true) delete detail["testFlight"];
     return { kind, platform, deviceId: String(d.deviceId ?? "").slice(0, 64) || null, detail };
   };
 export const deleteDataInput = (_d?: unknown) => ({ confirm: true as const });

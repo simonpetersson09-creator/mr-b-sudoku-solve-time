@@ -8,6 +8,7 @@ import { randomId } from "@/lib/random-id";
 import { logEvent } from "./online.functions";
 import { deviceId, platform } from "./telemetry";
 import { appVersion } from "./report";
+import { isTestFlight, testFlightDetail } from '@/lib/native/app-environment';
 import { PAUSE_EVENT, RESUME_EVENT } from '@/lib/native/runtime';
 
 export const HEARTBEAT_MS = 60_000;
@@ -27,8 +28,8 @@ export function startActivityTracking() {
   const send = async (kind: "session" | "heartbeat" | "session_end") => {
     if (!sid) return;
     const visit = sid, elapsed = seconds();
-    const v = await appVersion();
-    await logEvent({ data: { kind, deviceId: deviceId(), platform: platform(), detail: { sid: visit, seconds: elapsed, v } } });
+    const [v, testFlight] = await Promise.all([appVersion(), isTestFlight()]);
+    await logEvent({ data: { kind, deviceId: deviceId(), platform: platform(), detail: { sid: visit, seconds: elapsed, v, ...testFlightDetail(testFlight) } } });
   };
   const begin = () => { sid = randomId(); activeMs = 0; visibleSince = Date.now(); started = false; };
   const sendStart = () => { if (started || !sid || startPending) return; const visit = sid; startPending = true; send("session").then(() => { if (sid === visit) started = true; }).catch(() => {}).finally(() => { startPending = false; }); };

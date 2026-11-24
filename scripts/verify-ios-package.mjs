@@ -11,11 +11,13 @@ export function verifyIosPackage(root = ".") {
   }
   const plist = read("ios/App/App/Info.plist");
   if (!plist.includes("ca-app-pub-7448540924654868~5197213597")) throw new Error("Wrong iOS AdMob App ID");
-  const plugins = ["AdMobPlugin", "InAppReviewPlugin", "AppPlugin", "HapticsPlugin", "CAPNetworkPlugin", "SharePlugin", "StatusBarPlugin", "SecureStoragePlugin"];
+  const plugins = ["AdMobPlugin", "InAppReviewPlugin", "AppPlugin", "HapticsPlugin", "CAPNetworkPlugin", "SharePlugin", "StatusBarPlugin", "SecureStoragePlugin", "AppEnvironmentPlugin"];
   if (JSON.stringify([...config.packageClassList].sort()) !== JSON.stringify(plugins.sort())) throw new Error("Missing or unexpected iOS plugin");
-  for (const file of ["AppDelegate.swift", "SceneDelegate.swift", "App.entitlements", "PrivacyInfo.xcprivacy", "Base.lproj/Main.storyboard", "Base.lproj/LaunchScreen.storyboard"]) {
+  for (const file of ["AppDelegate.swift", "SceneDelegate.swift", "AppEnvironmentPlugin.swift", "App.entitlements", "PrivacyInfo.xcprivacy", "Base.lproj/Main.storyboard", "Base.lproj/LaunchScreen.storyboard"]) {
     if (!existsSync(join(root, "ios/App/App", file))) throw new Error(`Missing iOS file: ${file}`);
   }
+  const environment = read("ios/App/App/AppEnvironmentPlugin.swift");
+  if (!environment.includes('lastPathComponent == "sandboxReceipt"') || !project.includes("AppEnvironmentPlugin.swift in Sources")) throw new Error("TestFlight detection is not included in the iOS target");
   const walk = (path) => readdirSync(join(root, path), { withFileTypes: true }).flatMap(entry => entry.isDirectory() ? walk(`${path}/${entry.name}`) : [`${path}/${entry.name}`]);
   const files = walk("dist-native");
   for (const path of files) {
@@ -29,7 +31,7 @@ export function verifyIosPackage(root = ".") {
   if (/supabaseAdmin|SUPABASE_SERVICE_ROLE_KEY|sb_secret_[A-Za-z0-9_-]{12,}/.test(js)) throw new Error("Privileged code in iOS bundle");
   if (!js.includes("https://mr-b-sudoku-solve-time.lovable.app")) throw new Error("Sudoku service origin missing");
   if (!files.some(path => path.endsWith(".woff2")) || !files.some(path => /generation.*\.js$/.test(path))) throw new Error("Fonts or Sudoku worker missing");
-  console.log(`iOS production package verified: ${files.length} identical bundled files, identity/version, eight plugins, own ad IDs and service origin. Xcode compilation NOT verified.`);
+  console.log(`iOS production package verified: ${files.length} identical bundled files, identity/version, nine plugins including TestFlight detection, own ad IDs and service origin. Xcode compilation NOT verified.`);
 }
 
 if (process.argv[1]?.endsWith("verify-ios-package.mjs")) verifyIosPackage();

@@ -1,5 +1,11 @@
 # Roadmap: Mr.B. Sudoku
 
+## TestFlight och ägarens tester i admin (2026-11-24)
+- [x] Exkludera TestFlight-rapporter och ägarens bekräftade konto/telefon från samtliga adminberäkningar utan att radera insamlade data.
+- [x] Märk TestFlight automatiskt i kommande iOS-paket och regressionstesta spel, aktivitet, annonser och felrapporter.
+- [x] 487 ordinära tester (ett ikontest omprovat isolerat efter tidsgräns), 12 databastester, byggkontroll och iOS-källpaketskontroll godkända. Admin läser nu noll iPhone-enheter och fem Android-enheter efter testundantag.
+- [ ] Automatisk spärr för nya TestFlight-enheter kräver publicerad serverändring och en ny iOS-build; faktisk TestFlight-installation och Xcode-kompilering återstår.
+
 ## Yatzy-liknande loggning (2026-11-18)
 - [x] Logga relevanta inställnings-, statistik-, språk- och annonsintegritetshändelser med befintlig säker offlinekö.
 - [x] Räkna appålder, problemhändelser samt visade annonser/tillfällen efter spel enligt Yatzys regler; exkludera webb och testenheter.

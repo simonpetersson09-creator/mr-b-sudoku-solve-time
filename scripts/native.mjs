@@ -20,7 +20,7 @@ try {
     }
     run("bunx", ["vite", "build", "--config", "vite.native.config.ts"]);
   } else if (action === "verify") {
-    requireFiles(["bun.lock", "android/gradlew", "android/gradlew.bat", "android/gradle/wrapper/gradle-wrapper.jar", "android/gradle/wrapper/gradle-wrapper.properties", "android/settings.gradle", "android/capacitor.settings.gradle", "android/app/capacitor.build.gradle", "android/app/src/main/java/se/shiningdays/mrbsudoku/MainActivity.java", "android/app/src/main/res/xml/locales_config.xml", "ios/App/App/AppDelegate.swift", "ios/App/App/SceneDelegate.swift", "ios/App/App/Info.plist", "ios/App/App/App.entitlements", "ios/App/App/Base.lproj/Main.storyboard", "ios/App/App/Base.lproj/LaunchScreen.storyboard", "ios/App/CapApp-SPM/Package.swift", "ios/debug.xcconfig"]);
+    requireFiles(["bun.lock", "android/gradlew", "android/gradlew.bat", "android/gradle/wrapper/gradle-wrapper.jar", "android/gradle/wrapper/gradle-wrapper.properties", "android/settings.gradle", "android/capacitor.settings.gradle", "android/app/capacitor.build.gradle", "android/app/src/main/java/se/shiningdays/mrbsudoku/MainActivity.java", "android/app/src/main/res/xml/locales_config.xml", "ios/App/App/AppDelegate.swift", "ios/App/App/SceneDelegate.swift", "ios/App/App/AppEnvironmentPlugin.swift", "ios/App/App/Info.plist", "ios/App/App/App.entitlements", "ios/App/App/Base.lproj/Main.storyboard", "ios/App/App/Base.lproj/LaunchScreen.storyboard", "ios/App/CapApp-SPM/Package.swift", "ios/debug.xcconfig"]);
     const capacitorPackages = ["core", "cli", "android", "ios"].map(name => JSON.parse(readFileSync(`node_modules/@capacitor/${name}/package.json`, "utf8")).version);
     if (new Set(capacitorPackages).size !== 1 || capacitorPackages[0] !== "8.6.0") throw new Error("Capacitor core/CLI/platform version mismatch; use bun install --frozen-lockfile");
     const spm = readFileSync("ios/App/CapApp-SPM/Package.swift", "utf8");
@@ -44,6 +44,7 @@ try {
     const ios = readFileSync("ios/App/App.xcodeproj/project.pbxproj", "utf8");
     const plist = readFileSync("ios/App/App/Info.plist", "utf8");
     const strings = readFileSync("android/app/src/main/res/values/strings.xml", "utf8");
+    if (!ios.includes("AppEnvironmentPlugin.swift in Sources") || !readFileSync("ios/App/App/AppEnvironmentPlugin.swift", "utf8").includes('lastPathComponent == "sandboxReceipt"')) throw new Error("TestFlight detection missing from iOS target");
     if (!config.includes('appName: "Mr B Sudoku"') || !plist.includes('<string>Mr B Sudoku</string>') || !strings.includes('<string name="app_name">Mr B Sudoku</string>')) throw new Error("Native display names differ");
     if (!gradle.includes('namespace = "se.shiningdays.mrbsudoku"') || !readFileSync("android/app/src/main/java/se/shiningdays/mrbsudoku/MainActivity.java", "utf8").includes('package se.shiningdays.mrbsudoku;')) throw new Error("Android namespace/package differs");
     if (/android\.permission\.(CAMERA|POST_NOTIFICATIONS)|android\.hardware\.camera/.test(android) || config.includes("PushNotifications") || plist.includes("NSCameraUsageDescription")) throw new Error("Unused camera/push configuration must stay off");
@@ -87,6 +88,7 @@ try {
     for (const p of patches) { const [file, ...args] = p.split(" "); run("node", [`scripts/${file}`, ...args]); }
     run("node", ["scripts/verify-admob-patches.js", platform]);
     run("bunx", ["cap", "sync", platform]);
+    if (platform === "ios") run("node", ["scripts/register-ios-app-plugins.js"]);
     run("node", ["scripts/verify-admob-patches.js", platform]);
     run("node", [platform === "ios" ? "scripts/set-ios-admob-plist.js" : "scripts/set-android-admob-manifest.js"]);
     if (platform === "ios") {

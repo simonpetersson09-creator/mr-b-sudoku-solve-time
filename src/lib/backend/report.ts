@@ -9,6 +9,7 @@ import { enqueue, parseQueue, type QueuedReport } from "./report-queue";
 import { randomId } from '../random-id';
 import { redactSensitive } from "./redact";
 import type { AppEventName } from "./app-events";
+import { isTestFlight, testFlightDetail } from "@/lib/native/app-environment";
 
 const MAX_PER_SESSION = { error: 10, ad: 60, app: 60 } as const;
 const QUEUE_KEY = "mrb-sudoku:v1:report-queue";
@@ -42,9 +43,9 @@ const readQueue = (): QueuedReport[] => { try { return parseQueue(localStorage.g
 const writeQueue = (q: QueuedReport[]) => { try { if (q.length) localStorage.setItem(QUEUE_KEY, JSON.stringify(q)); else localStorage.removeItem(QUEUE_KEY); } catch { /* full */ } };
 
 async function deliver(item: QueuedReport): Promise<void> {
-  const [{ logEvent }, { deviceId, platform }, v] = await Promise.all([import("./online.functions"), import("./telemetry"), appVersion()]);
+  const [{ logEvent }, { deviceId, platform }, v, testFlight] = await Promise.all([import("./online.functions"), import("./telemetry"), appVersion(), isTestFlight()]);
   const late = Date.now() - item.at > 60_000;
-  await logEvent({ data: { kind: item.kind, deviceId: deviceId(), platform: platform(), detail: { ...item.detail, v,
+  await logEvent({ data: { kind: item.kind, deviceId: deviceId(), platform: platform(), detail: { ...item.detail, v, ...testFlightDetail(testFlight),
     ...(item.kind === 'local_game' ? { occurredAt: new Date(item.at).toISOString() } : late ? { queued: new Date(item.at).toISOString() } : {}) } } });
 }
 

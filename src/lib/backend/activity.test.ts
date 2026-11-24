@@ -3,6 +3,7 @@ const calls = vi.hoisted(() => ({ log: vi.fn().mockResolvedValue({ ok: true }) }
 vi.mock('./online.functions', () => ({ logEvent: calls.log }));
 vi.mock('./telemetry', () => ({ deviceId: () => 'phone', platform: () => 'ios' }));
 vi.mock('./report', () => ({ appVersion: async () => '1.0 (1)' }));
+vi.mock('@/lib/native/app-environment', () => ({ isTestFlight: async () => true, testFlightDetail: (value: boolean) => value ? { testFlight: true } : {} }));
 import { startActivityTracking } from './activity';
 afterEach(() => { vi.useRealTimers(); calls.log.mockClear(); });
 it('native pause while document remains visible excludes background and duplicates', async () => {
@@ -14,4 +15,5 @@ it('native pause while document remains visible excludes background and duplicat
   window.dispatchEvent(new Event('mrb-sudoku:resume'));await vi.advanceTimersByTimeAsync(6000);
   tracker.stop();await vi.advanceTimersByTimeAsync(0);
   expect(calls.log.mock.calls.at(-1)?.[0].data.detail.seconds).toBe(12);
+  expect(calls.log.mock.calls.at(-1)?.[0].data.detail.testFlight).toBe(true);
 });

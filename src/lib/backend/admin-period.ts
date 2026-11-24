@@ -1,11 +1,15 @@
 import { stockholmDays } from "./activity-stats";
 /** Filter reporting only, never delete collected diagnostics or affect player results. */
-export function adminActivityEvents<T extends { user_id: string | null; device_id: string | null }>(
+export function adminActivityEvents<T extends { user_id: string | null; device_id: string | null; platform?: string | null; detail?: unknown }>(
   events: T[], exclusions: { user_id: string; device_id: string | null }[],
 ): T[] {
   const users = new Set(exclusions.map((e) => e.user_id));
   const devices = new Set(exclusions.flatMap((e) => e.device_id ? [e.device_id] : []));
-  return events.filter((e) => !(e.user_id && users.has(e.user_id)) && !(e.device_id && devices.has(e.device_id)));
+  return events.filter((e) => {
+    const detail = e.detail && typeof e.detail === "object" ? e.detail as Record<string, unknown> : {};
+    const testFlight = e.platform === "ios" && detail["testFlight"] === true;
+    return !testFlight && !(e.user_id && users.has(e.user_id)) && !(e.device_id && devices.has(e.device_id));
+  });
 }
 
 /** A statistics reset starts a new reporting period without erasing game data or diagnostics. */

@@ -21,6 +21,7 @@ import { ensurePlayerSession } from "@/lib/auth/player";
 import { startNativeRuntime, RESUME_EVENT } from "@/lib/native/runtime";
 import { logEvent } from "@/lib/backend/online.functions";
 import { deviceId, platform } from "@/lib/backend/telemetry";
+import { isTestFlight, testFlightDetail } from "@/lib/native/app-environment";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -184,7 +185,11 @@ function RootComponent() {
     // A plain browser on the published site is a visitor, not a player: no identity, no usage log.
     if (isDownloadOnlyVisitor({ hostname: window.location.hostname, isNative: isNativeWindow(), isDev: import.meta.env.DEV })) return;
     setPlayer(true);
-    const ping = () => { void syncProfileName(); return logEvent({ data: { kind: "session", deviceId: deviceId(), platform: platform() } }).catch(() => {}); };
+    const ping = async () => {
+      void syncProfileName();
+      const testFlight = await isTestFlight();
+      return logEvent({ data: { kind: "session", deviceId: deviceId(), platform: platform(), detail: testFlightDetail(testFlight) } }).catch(() => {});
+    };
     // Admin login has its own credentials; ordinary app launch creates a player automatically.
     if (window.location.pathname !== "/admin-login") ensurePlayerSession().then(ping).catch(() => {});
     let dispose: (() => void) | undefined;
