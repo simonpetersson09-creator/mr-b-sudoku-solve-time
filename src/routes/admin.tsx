@@ -3,25 +3,24 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { adminOverview } from "@/lib/backend/online.functions";
 import { hubAdminOverview } from "@/lib/backend/hub.functions";
 import { supabase } from "@/lib/auth/client";
+import { getHubToken, setHubToken } from "@/lib/backend/hub-session";
 import { useTranslation } from "@/lib/i18n";
 import AdminAnalytics from "@/components/admin/AdminAnalytics";
 import { startAdminRefresh } from "@/lib/backend/admin-refresh";
 
-// Hub token lives in memory only (iframe on another domain may block cookies/storage); sent to the server on every call.
-let hubToken: string | null = null;
 
 export const Route = createFileRoute("/admin")({
   ssr: false,
   beforeLoad: async ({ location }) => {
     const raw = new URLSearchParams(location.searchStr ?? "").get("hub_token");
     if (raw) {
-      hubToken = raw;
+      setHubToken(raw);
       if (typeof window !== "undefined") {
         const url = new URL(window.location.href); url.searchParams.delete("hub_token");
         window.history.replaceState(window.history.state, "", url.toString());
       }
     }
-    if (hubToken) return;
+    if (getHubToken()) return;
     // Normal login unchanged: same local session check as the _authenticated layout.
     const { data } = await supabase.auth.getSession();
     if (!data.session?.user) throw redirect({ to: "/auth", search: { redirect: location.href } });
@@ -52,7 +51,8 @@ function AdminPage() {
     if (pending.current || !active.current) return;
     pending.current = true;
     setLoading(true); setErr(null);
-    try { const next = hubToken ? await hubAdminOverview({ data: { token: hubToken } }) : await adminOverview(); if (active.current) setD(next); }
+    try { const hubToken = getHubToken();
+      const next = hubToken ? await hubAdminOverview({ data: { token: hubToken } }) : await adminOverview(); if (active.current) setD(next); }
     catch (error) { if (active.current) setErr(error instanceof Error && error.message === "err:forbidden" ? "noAdmin" : "genericError"); }
     finally { pending.current = false; if (active.current) setLoading(false); }
   }, []);
@@ -65,7 +65,7 @@ function AdminPage() {
   return (
     <main className="admin-screen min-h-screen max-h-screen overflow-y-auto overscroll-contain bg-background p-4 text-foreground md:p-8">
       <div className="w-full">
-        {err && <><p role="alert" className="text-sm text-destructive">{t(err === "noAdmin" ? "noAdmin" : "genericError")}</p>{err === "noAdmin" && !hubToken && <Link to="/admin-login" className="home-action">{t("signIn")}</Link>}</>}
+        {err && <><p role="alert" className="text-sm text-destructive">{t(err === "noAdmin" ? "noAdmin" : "genericError")}</p>{err === "noAdmin" && !getHubToken() && <Link to="/admin-login" className="home-action">{t("signIn")}</Link>}</>}
         {!d && !err && <p className="text-sm text-muted-foreground">{t("loading")}</p>}
         {d && (<>
           <AdminAnalytics data={d} loading={loading} onRefresh={load} />
