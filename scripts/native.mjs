@@ -47,7 +47,8 @@ try {
     if (!ios.includes("AppEnvironmentPlugin.swift in Sources") || !readFileSync("ios/App/App/AppEnvironmentPlugin.swift", "utf8").includes('lastPathComponent == "sandboxReceipt"')) throw new Error("TestFlight detection missing from iOS target");
     if (!config.includes('appName: "Mr B Sudoku"') || !plist.includes('<string>Mr B Sudoku</string>') || !strings.includes('<string name="app_name">Mr B Sudoku</string>')) throw new Error("Native display names differ");
     if (!gradle.includes('namespace = "se.shiningdays.mrbsudoku"') || !readFileSync("android/app/src/main/java/se/shiningdays/mrbsudoku/MainActivity.java", "utf8").includes('package se.shiningdays.mrbsudoku;')) throw new Error("Android namespace/package differs");
-    if (/android\.permission\.(CAMERA|POST_NOTIFICATIONS)|android\.hardware\.camera/.test(android) || config.includes("PushNotifications") || plist.includes("NSCameraUsageDescription")) throw new Error("Unused camera/push configuration must stay off");
+    if (/android\.permission\.(CAMERA|POST_NOTIFICATIONS)|android\.hardware\.camera/.test(android) || config.includes("PushNotifications")) throw new Error("Unused camera/push configuration must stay off");
+    if (!plist.includes("NSCameraUsageDescription")) throw new Error("iOS profile photo camera explanation is missing");
     for (const [source, destination] of [["resources/ios/AppIcon.appiconset", "ios/App/App/Assets.xcassets/AppIcon.appiconset"], ["resources/ios/Splash.imageset", "ios/App/App/Assets.xcassets/Splash.imageset"], ["resources/android/res", "android/app/src/main/res"]]) {
       for (const relative of readdirSync(source, { recursive: true })) {
         if (!/\.(png|json|xml)$/.test(relative)) continue;

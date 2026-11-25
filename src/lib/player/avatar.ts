@@ -9,18 +9,19 @@ const CHANGED = "mrb-sudoku-avatar-changed";
 
 /** Center-crop a picked photo to a small square JPEG, the same way Yatzy does. */
 export async function fileToAvatarDataUrl(file: File, maxSize = 256): Promise<string> {
-  const dataUrl = await new Promise<string>((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-  const img = await new Promise<HTMLImageElement>((resolve, reject) => {
-    const i = new Image();
-    i.onload = () => resolve(i);
-    i.onerror = reject;
-    i.src = dataUrl;
-  });
+  // Object URLs avoid a multi-megabyte base64 copy of fresh camera photos.
+  const url = URL.createObjectURL(file);
+  let img: HTMLImageElement;
+  try {
+    img = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const i = new Image();
+      i.onload = () => resolve(i);
+      i.onerror = reject;
+      i.src = url;
+    });
+  } finally {
+    URL.revokeObjectURL(url);
+  }
   const size = Math.min(maxSize, Math.min(img.width, img.height));
   const canvas = document.createElement("canvas");
   canvas.width = size;
