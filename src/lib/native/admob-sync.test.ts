@@ -49,7 +49,7 @@ describe.each(['ios', 'android'] as const)('%s App ID safety', platform => {
   it('reads the actual platform config, not the earlier test-ID block', () => {
     expect(configuredAppId(readFileSync('src/lib/ads/admob.ts', 'utf8'), platform)).toBe(platform === 'ios' ? 'ca-app-pub-7448540924654868~5197213597' : 'ca-app-pub-7448540924654868~3905854247');
   });
-  it('runs the actual sync script twice without overwriting production or restoring camera permission', () => {
+  it('runs the actual sync script twice without overwriting production and with the profile camera explanation', () => {
     const dir = mkdtempSync(join(tmpdir(), 'sudoku-admob-sync-'));
     try {
       cpSync('scripts', join(dir, 'scripts'), { recursive: true });
@@ -68,7 +68,8 @@ describe.each(['ios', 'android'] as const)('%s App ID safety', platform => {
       const result = readFileSync(join(dir, file), 'utf8');
       expect(result).toContain(production);
       expect(result).not.toContain(SAMPLE_APP_IDS[platform]);
-      expect(result).not.toContain('NSCameraUsageDescription');
+      if (platform === 'ios') expect(result).toContain('The camera is used only when you choose to take a profile picture.');
+      expect(result).not.toContain('Old QR camera');
       expect(run().status).toBe(0);
       expect(readFileSync(join(dir, file), 'utf8')).toBe(result);
     } finally { rmSync(dir, { recursive: true, force: true }); }

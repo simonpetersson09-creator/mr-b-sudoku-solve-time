@@ -47,7 +47,7 @@
 - Admin refresh polls only visible online pages and catches up on foreground/network return, without overlapping requests; activity pagination has no silent cutoff and duplicate game phases count once per identity.
 - Home preloads only public local content routes; protected pages and authentication are not part of background navigation warming.
 - Native permission copy lives in `scripts/ios-permission-copy.js`; iOS sync regenerates and registers all 40 `InfoPlist.strings` resources so system prompts follow iOS language preferences independently of the in-game language.
-- Profile images use the existing HTML file picker and canvas conversion, not a camera plugin or photo-library capability; only the chosen file is read and the existing local/server avatar flow is retained.
+- Profile images use the existing HTML file picker and canvas conversion, no camera plugin; iOS needs camera+photo usage text (picker offers Take Photo, else crash).
 - Cache bounded puzzle uniqueness checks so autosave never repeats solving.
 - Queue games before sending; remove acknowledged IDs only, preserve original dates and avoid diagnostic eviction.
 - Retention uses full app cohorts and exact Stockholm return days, including nonreturners.

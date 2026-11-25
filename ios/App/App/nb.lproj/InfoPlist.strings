@@ -1,2 +1,3 @@
 "NSUserTrackingUsageDescription" = "Valget ditt brukes bare til å vise annonser som passer bedre for deg. Annonsene gjør spillet gratis.";
 "NSPhotoLibraryUsageDescription" = "Bildebiblioteket brukes bare hvis du vil velge ditt eget profilbilde.";
+"NSCameraUsageDescription" = "Kameraet brukes bare hvis du vil ta ditt eget profilbilde.";

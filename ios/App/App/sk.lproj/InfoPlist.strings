@@ -1,2 +1,3 @@
 "NSUserTrackingUsageDescription" = "Vaša voľba slúži iba na zobrazovanie reklám, ktoré sú pre vás vhodnejšie. Vďaka reklamám zostáva hra zadarmo.";
 "NSPhotoLibraryUsageDescription" = "Knižnica fotografií sa používa iba vtedy, ak si chcete vybrať vlastný profilový obrázok.";
+"NSCameraUsageDescription" = "Fotoaparát sa používa iba vtedy, ak si chcete odfotiť vlastný profilový obrázok.";

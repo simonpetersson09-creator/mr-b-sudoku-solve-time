@@ -1,2 +1,3 @@
 "NSUserTrackingUsageDescription" = "Alegerea ta este folosită doar pentru a afișa reclame mai relevante pentru tine. Reclamele mențin jocul gratuit.";
 "NSPhotoLibraryUsageDescription" = "Biblioteca foto este folosită doar dacă vrei să alegi propria fotografie de profil.";
+"NSCameraUsageDescription" = "Camera este folosită doar dacă vrei să faci propria fotografie de profil.";

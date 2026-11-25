@@ -7,11 +7,11 @@ import { permissionCopy, permissionKeys } from "../../../scripts/ios-permission-
 import { iosLocale, stringsFile, registerPermissionResources } from "../../../scripts/ios-permission-localizations.js";
 
 describe("localized iOS permission resources", () => {
-  it("ships tracking and photo explanations for all 40 app languages", () => {
+  it("ships tracking, photo and camera explanations for all 40 app languages", () => {
     expect(Object.keys(permissionCopy).sort()).toEqual(LANGUAGES.map(l => l.code).sort());
-    expect(permissionKeys).toEqual(["NSUserTrackingUsageDescription", "NSPhotoLibraryUsageDescription"]);
+    expect(permissionKeys).toEqual(["NSUserTrackingUsageDescription", "NSPhotoLibraryUsageDescription", "NSCameraUsageDescription"]);
     for (const [lang, copy] of Object.entries(permissionCopy)) {
-      expect(copy).toHaveLength(2);
+      expect(copy).toHaveLength(3);
       expect(readFileSync(`ios/App/App/${iosLocale(lang)}.lproj/InfoPlist.strings`, "utf8")).toBe(stringsFile(copy));
     }
   });

@@ -18,6 +18,8 @@ const PLIST_PATH = resolve(process.cwd(), 'ios/App/App/Info.plist');
 
 /** key → string value that must be present in Info.plist. */
 const REQUIRED_STRING_KEYS = {
+  NSCameraUsageDescription:
+    'The camera is used only when you choose to take a profile picture.',
   NSPhotoLibraryUsageDescription:
     'Your photo library is used only when you choose a profile picture.',
   NSUserTrackingUsageDescription:
@@ -138,7 +140,6 @@ async function main() {
   const existing = content.match(/<key>GADApplicationIdentifier<\/key>\s*<string>([^<]*)<\/string>/)?.[1];
   const appId = selectAppId('ios', configuredAppId(source, 'ios'), existing);
   content = upsertStringKey(content, 'GADApplicationIdentifier', appId);
-  content = content.replace(/\s*<key>NSCameraUsageDescription<\/key>\s*<string>[^<]*<\/string>/g, '');
   for (const [key, value] of Object.entries(REQUIRED_STRING_KEYS)) {
     content = upsertStringKey(content, key, value);
   }

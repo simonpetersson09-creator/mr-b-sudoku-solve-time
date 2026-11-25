@@ -4,6 +4,8 @@
 <dict>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>NSCameraUsageDescription</key>
+	<string>The camera is used only when you choose to take a profile picture.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Your photo library is used only when you choose a profile picture.</string>
 	<key>NSUserTrackingUsageDescription</key>

@@ -1,2 +1,3 @@
 "NSUserTrackingUsageDescription" = "Pilihan Anda hanya digunakan untuk menampilkan iklan yang lebih sesuai untuk Anda. Iklan membuat permainan tetap gratis.";
 "NSPhotoLibraryUsageDescription" = "Perpustakaan foto hanya digunakan jika Anda ingin memilih foto profil sendiri.";
+"NSCameraUsageDescription" = "Kamera hanya digunakan jika Anda ingin mengambil foto profil sendiri.";

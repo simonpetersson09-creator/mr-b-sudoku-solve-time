@@ -49,9 +49,9 @@ describe("approved native configuration", () => {
     expect(read("ios/App/App/Info.plist")).not.toContain("UIBackgroundModes");
     expect(read("ios/App/App.xcodeproj/project.pbxproj")).not.toContain("com.apple.Push");
   });
-  it("chooses profile photos without a camera plugin or camera permission", () => {
+  it("chooses profile photos without a camera plugin but explains the iOS camera option", () => {
     expect(read("package.json")).not.toContain('"@capacitor/camera"');
-    expect(read("ios/App/App/Info.plist")).not.toContain("NSCameraUsageDescription");
+    expect(read("ios/App/App/Info.plist")).toContain("NSCameraUsageDescription");
     expect(read("android/app/src/main/AndroidManifest.xml")).not.toContain("android.permission.CAMERA");
   });
 });

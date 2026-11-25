@@ -1,2 +1,3 @@
 "NSUserTrackingUsageDescription" = "Lựa chọn của bạn chỉ được dùng để hiển thị quảng cáo phù hợp hơn với bạn. Quảng cáo giúp trò chơi miễn phí.";
 "NSPhotoLibraryUsageDescription" = "Thư viện ảnh chỉ được dùng nếu bạn muốn chọn ảnh đại diện của riêng mình.";
+"NSCameraUsageDescription" = "Máy ảnh chỉ được dùng nếu bạn muốn chụp ảnh đại diện của riêng mình.";

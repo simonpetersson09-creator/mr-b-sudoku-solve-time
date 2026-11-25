@@ -1,2 +1,3 @@
 "NSUserTrackingUsageDescription" = "Valintaasi käytetään vain sinulle sopivampien mainosten näyttämiseen. Mainosten ansiosta peli on ilmainen.";
 "NSPhotoLibraryUsageDescription" = "Kuvakirjastoa käytetään vain, jos haluat valita oman profiilikuvan.";
+"NSCameraUsageDescription" = "Kameraa käytetään vain, jos haluat ottaa oman profiilikuvan.";

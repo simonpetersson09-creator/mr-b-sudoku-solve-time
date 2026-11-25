@@ -1,2 +1,3 @@
 "NSUserTrackingUsageDescription" = "Vaš se odabir koristi samo za prikaz oglasa koji vam bolje odgovaraju. Zahvaljujući oglasima igra je besplatna.";
 "NSPhotoLibraryUsageDescription" = "Biblioteka fotografija koristi se samo ako želite odabrati vlastitu profilnu sliku.";
+"NSCameraUsageDescription" = "Kamera se koristi samo ako želite snimiti vlastitu profilnu sliku.";

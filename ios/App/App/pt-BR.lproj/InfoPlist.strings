@@ -1,2 +1,3 @@
 "NSUserTrackingUsageDescription" = "Sua escolha é usada apenas para mostrar anúncios mais relevantes para você. Os anúncios mantêm o jogo gratuito.";
 "NSPhotoLibraryUsageDescription" = "A biblioteca de fotos é usada apenas se você quiser escolher sua própria foto de perfil.";
+"NSCameraUsageDescription" = "A câmera é usada apenas se você quiser tirar sua própria foto de perfil.";
