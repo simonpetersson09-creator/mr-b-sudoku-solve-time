@@ -1,5 +1,10 @@
 # Roadmap: Mr.B. Sudoku
 
+## Xcode CAPBridgedPlugin-kompilering (2026-11-26)
+- [x] Capacitor 8.6.0:s obligatoriska identifier tillagd; regressionstester täcker identifier, jsName och pluginMethods samt metodregistrering och implementation.
+- [x] iOS-synk, native-kontroll, verklig iOS-paketkontroll och 502 ordinära tester godkända; inga andra appägda CAPBridgedPlugin-klasser finns.
+- [ ] Verklig Swift-kompilering återstår i Xcode på Mac; Linux-miljön saknar xcodebuild. Ingen signering eller publicering.
+
 ## Native-byggets serverimports (2026-11-26)
 - [x] Reproducera felet och identifiera den nya hub-serverfunktionen som saknades i native-importspärren.
 - [x] Ersätt samtliga backendfunktionsmoduler med native-klienten och spegla hub-adminanropet utan serverkod i klientpaketet.

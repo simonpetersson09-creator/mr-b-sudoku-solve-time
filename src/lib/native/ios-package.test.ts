@@ -1,4 +1,4 @@
-import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
+import { mkdtempSync, mkdirSync, readFileSync, writeFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
@@ -13,7 +13,19 @@ function fixture() {
   put("ios/App/App.xcodeproj/project.pbxproj", ['PRODUCT_BUNDLE_IDENTIFIER = se.shiningdays.mrbsudoku;', 'MARKETING_VERSION = 1.0.0;', 'CURRENT_PROJECT_VERSION = 2;', 'DEVELOPMENT_TEAM = "";', 'AppEnvironmentPlugin.swift in Sources'].join("\n").repeat(2));
   put("ios/App/App/Info.plist", "ca-app-pub-7448540924654868~5197213597");
   for (const file of ["AppDelegate.swift", "SceneDelegate.swift", "App.entitlements", "PrivacyInfo.xcprivacy", "Base.lproj/Main.storyboard", "Base.lproj/LaunchScreen.storyboard"]) put(`ios/App/App/${file}`, "fixture");
-  put("ios/App/App/AppEnvironmentPlugin.swift", 'lastPathComponent == "sandboxReceipt"');
+  put("ios/App/App/AppEnvironmentPlugin.swift", `import Capacitor
+@objc(AppEnvironmentPlugin)
+public class AppEnvironmentPlugin: CAPPlugin, CAPBridgedPlugin {
+    public let identifier = "AppEnvironmentPlugin"
+    public let jsName = "AppEnvironment"
+    public let pluginMethods: [CAPPluginMethod] = [
+        CAPPluginMethod(name: "isTestFlight", returnType: CAPPluginReturnPromise)
+    ]
+    @objc func isTestFlight(_ call: CAPPluginCall) {
+        let testFlight = Bundle.main.appStoreReceiptURL?.lastPathComponent == "sandboxReceipt"
+        call.resolve(["testFlight": testFlight])
+    }
+}`);
   for (const dir of ["dist-native", "ios/App/App/public"]) {
     put(`${dir}/index.html`, "packaged game");
     put(`${dir}/assets/font.woff2`, "font");
@@ -25,6 +37,17 @@ function fixture() {
 afterEach(() => { roots.splice(0).forEach(root => rmSync(root, { recursive: true, force: true })); });
 describe("iOS-only packaged build verification", () => {
   it("accepts a synchronized iOS package without Android output", () => { expect(() => verifyIosPackage(fixture().root)).not.toThrow(); });
+  it.each([
+    ["identifier", '    public let identifier = "AppEnvironmentPlugin"\n'],
+    ["jsName", '    public let jsName = "AppEnvironment"\n'],
+    ["pluginMethods", "    public let pluginMethods: [CAPPluginMethod] = [\n"],
+  ])("rejects an AppEnvironmentPlugin without CAPBridgedPlugin %s", (requirement, declaration) => {
+    const { root, put } = fixture();
+    const path = "ios/App/App/AppEnvironmentPlugin.swift";
+    const source = readFileSync(join(root, path), "utf8");
+    put(path, source.replace(declaration, ""));
+    expect(() => verifyIosPackage(root)).toThrow(`CAPBridgedPlugin ${requirement}`);
+  });
   it("rejects stale copied game files", () => { const { root, put } = fixture(); put("ios/App/App/public/index.html", "old game"); expect(() => verifyIosPackage(root)).toThrow("Stale iOS asset"); });
   it("rejects a different bundle identity", () => { const { root, put } = fixture(); put("ios/App/App/capacitor.config.json", JSON.stringify({ appId: "wrong" })); expect(() => verifyIosPackage(root)).toThrow("Wrong iOS identity"); });
 });

@@ -17,6 +17,17 @@ export function verifyIosPackage(root = ".") {
     if (!existsSync(join(root, "ios/App/App", file))) throw new Error(`Missing iOS file: ${file}`);
   }
   const environment = read("ios/App/App/AppEnvironmentPlugin.swift");
+  const bridgedPluginRequirements = [
+    [/public\s+class\s+AppEnvironmentPlugin\s*:\s*CAPPlugin\s*,\s*CAPBridgedPlugin\b/, "CAPPlugin and CAPBridgedPlugin conformance"],
+    [/public\s+let\s+identifier\s*=\s*"AppEnvironmentPlugin"/, "CAPBridgedPlugin identifier"],
+    [/public\s+let\s+jsName\s*=\s*"AppEnvironment"/, "CAPBridgedPlugin jsName"],
+    [/public\s+let\s+pluginMethods\s*:\s*\[CAPPluginMethod\]/, "CAPBridgedPlugin pluginMethods"],
+    [/CAPPluginMethod\(name:\s*"isTestFlight",\s*returnType:\s*CAPPluginReturnPromise\)/, "isTestFlight promise registration"],
+    [/@objc\s+func\s+isTestFlight\(_\s+call:\s*CAPPluginCall\)/, "isTestFlight implementation"],
+  ];
+  for (const [pattern, requirement] of bridgedPluginRequirements) {
+    if (!pattern.test(environment)) throw new Error(`Invalid AppEnvironmentPlugin: missing ${requirement}`);
+  }
   if (!environment.includes('lastPathComponent == "sandboxReceipt"') || !project.includes("AppEnvironmentPlugin.swift in Sources")) throw new Error("TestFlight detection is not included in the iOS target");
   const walk = (path) => readdirSync(join(root, path), { withFileTypes: true }).flatMap(entry => entry.isDirectory() ? walk(`${path}/${entry.name}`) : [`${path}/${entry.name}`]);
   const files = walk("dist-native");
