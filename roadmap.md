@@ -1,5 +1,11 @@
 # Roadmap: Mr.B. Sudoku
 
+## Native-byggets serverimports (2026-11-26)
+- [x] Reproducera felet och identifiera den nya hub-serverfunktionen som saknades i native-importspärren.
+- [x] Ersätt samtliga backendfunktionsmoduler med native-klienten och spegla hub-adminanropet utan serverkod i klientpaketet.
+- [x] Native webbpaket, iOS-/Android-synk, paketverifiering och ordinärt webbbygge godkända; 499 ordinära tester och 12 isolerade databastester passerade.
+- [ ] Faktisk Xcode-/Android-kompilering återstår: miljön saknar Xcode, Java och Android SDK. Ingen signering eller publicering.
+
 ## TestFlight och ägarens tester i admin (2026-11-24)
 - [x] Exkludera TestFlight-rapporter och ägarens bekräftade konto/telefon från samtliga adminberäkningar utan att radera insamlade data.
 - [x] Märk TestFlight automatiskt i kommande iOS-paket och regressionstesta spel, aktivitet, annonser och felrapporter.

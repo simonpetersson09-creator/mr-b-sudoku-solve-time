@@ -39,6 +39,12 @@ export const Route = createFileRoute("/api/public/native")({ server: { handlers:
         case "updateProfile": return reply(await timed("updateProfile", () => actions.updateProfileAction({ data: inputs.updateProfileInput(body.data as Parameters<typeof inputs.updateProfileInput>[0]), context })));
         case "logEvent": return reply(await timed("logEvent", () => actions.logEventAction({ data: inputs.logEventInput(body.data as Parameters<typeof inputs.logEventInput>[0]), context })));
         case "adminOverview": return reply(await timed("adminOverview", () => actions.adminOverviewAction({ context })));
+        case "hubAdminOverview": {
+          const token = body.data && typeof body.data === "object" && "token" in body.data ? body.data.token : undefined;
+          const { verifyHubToken } = await import("@/lib/backend/hub-token");
+          if (!(await verifyHubToken(token, process.env["HUB_SHARED_SECRET"]))) throw new Error("err:forbidden");
+          return reply(await timed("adminOverview", () => actions.adminOverviewData()));
+        }
         case "adminAdDiagnostics": return reply(await actions.adminAdDiagnosticsAction({ context }));
         case "adminPinLogin": return reply(await timed("adminPinLogin", () => actions.adminPinLoginAction({ data: inputs.adminPinInput(body.data as Parameters<typeof inputs.adminPinInput>[0]), context })));
         case "getMonthlyMostActive": {

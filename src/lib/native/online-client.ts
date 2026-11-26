@@ -1,8 +1,9 @@
 import { ensurePlayerSession } from "@/lib/auth/player";
 import { nativeOnlineOrigin } from "./origin";
 import type * as ServerFunctions from "@/lib/backend/online.functions";
+import type * as HubFunctions from "@/lib/backend/hub.functions";
 
-type Functions = typeof ServerFunctions;
+type Functions = typeof ServerFunctions & typeof HubFunctions;
 type Operation = keyof Functions;
 const NATIVE_REQUEST_TIMEOUT_MS = 20_000;
 
@@ -48,5 +49,6 @@ export const logEvent = (options: Parameters<Functions["logEvent"]>[0]) => reque
 export const deletePlayerData = (options: Parameters<Functions["deletePlayerData"]>[0]) => request("deletePlayerData", options?.data);
 export const adminPinLogin = (options: Parameters<Functions["adminPinLogin"]>[0]) => request("adminPinLogin", options.data);
 export const adminOverview = () => request("adminOverview");
+export const hubAdminOverview = (options: Parameters<Functions["hubAdminOverview"]>[0]) => request("hubAdminOverview", options?.data);
 export const adminAdDiagnostics = () => request("adminAdDiagnostics");
 export const getMonthlyMostActive = () => request("getMonthlyMostActive");

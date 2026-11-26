@@ -9,13 +9,17 @@ export const nativeModules: Plugin = {
   resolveId(source, importer) {
     if (source === "./routes/__root" && importer?.endsWith("routeTree.gen.ts")) return resolve("src/native/root.tsx");
     if (source === "./routes/_authenticated/route" && importer?.endsWith("routeTree.gen.ts")) return resolve("src/native/player-gate.tsx");
-    // Match every spelling (alias, absolute or relative such as report.ts' "./online.functions") so server functions never enter the package.
+    // Match every backend server-function module and import spelling (alias, absolute or relative).
+    // Native has no Start compiler plugin, so importing createServerFn would pull server entries into the client.
     const normalized = source.replaceAll("\\", "/").split("?")[0];
-    const backendFunctions = resolve("src/lib/backend/online.functions").replaceAll("\\", "/");
+    const backendDirectory = resolve("src/lib/backend").replaceAll("\\", "/");
     const relativePath = importer && normalized.startsWith(".")
       ? resolve(importer.split("?")[0].replaceAll("\\", "/"), "..", normalized).replaceAll("\\", "/")
-      : normalized;
-    if (normalized === "@/lib/backend/online.functions" || normalized === "@/lib/backend/online.functions.ts" || relativePath === backendFunctions || relativePath === `${backendFunctions}.ts`) return resolve("src/lib/native/online-client.ts");
+      : normalized.startsWith("@/")
+        ? resolve("src", normalized.slice(2)).replaceAll("\\", "/")
+        : normalized;
+    const withoutExtension = relativePath.replace(/\.ts$/, "");
+    if (withoutExtension.startsWith(`${backendDirectory}/`) && /^[^/]+\.functions$/.test(withoutExtension.slice(backendDirectory.length + 1))) return resolve("src/lib/native/online-client.ts");
     // Each server route gets its own stub module: routeTree.gen mutates every Route via update(), so they must not share one object.
     if (source.startsWith("./routes/api/") && importer?.endsWith("routeTree.gen.ts")) return `\0sudoku-native-api:${source}`;
     return null;

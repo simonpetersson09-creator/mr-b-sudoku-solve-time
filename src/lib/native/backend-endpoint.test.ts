@@ -1,10 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const mocks = vi.hoisted(() => ({ getUser: vi.fn(), rpc: vi.fn(), getMe: vi.fn(), profile: vi.fn(), avatar: vi.fn(), report: vi.fn(), remove: vi.fn(), admin: vi.fn(), diagnostics: vi.fn(), pin: vi.fn() }));
+const mocks = vi.hoisted(() => ({ getUser: vi.fn(), rpc: vi.fn(), getMe: vi.fn(), profile: vi.fn(), avatar: vi.fn(), report: vi.fn(), remove: vi.fn(), admin: vi.fn(), hubAdmin: vi.fn(), hubToken: vi.fn(), diagnostics: vi.fn(), pin: vi.fn() }));
 vi.mock("@supabase/supabase-js", () => ({ createClient: () => ({ auth: { getUser: mocks.getUser }, rpc: mocks.rpc }) }));
 vi.mock("@tanstack/react-router", () => ({ createFileRoute: () => (options: unknown) => options }));
 vi.mock("@/lib/backend/server-timing", () => ({ timed: (_name: string, fn: () => unknown) => fn() }));
-vi.mock("@/lib/backend/online-actions", () => ({ getMeAction: mocks.getMe, updateProfileAction: mocks.profile, setAvatarAction: mocks.avatar, logEventAction: mocks.report, deletePlayerDataAction: mocks.remove, adminOverviewAction: mocks.admin, adminAdDiagnosticsAction: mocks.diagnostics, adminPinLoginAction: mocks.pin }));
+vi.mock("@/lib/backend/online-actions", () => ({ getMeAction: mocks.getMe, updateProfileAction: mocks.profile, setAvatarAction: mocks.avatar, logEventAction: mocks.report, deletePlayerDataAction: mocks.remove, adminOverviewAction: mocks.admin, adminOverviewData: mocks.hubAdmin, adminAdDiagnosticsAction: mocks.diagnostics, adminPinLoginAction: mocks.pin }));
+vi.mock("@/lib/backend/hub-token", () => ({ verifyHubToken: mocks.hubToken }));
 import { Route } from "@/routes/api/public/native";
 const handlers = (Route as unknown as { server: { handlers: { POST: (args: { request: Request }) => Promise<Response> } } }).server.handlers;
 const post = (operation: string, data?: unknown, bearer = true, origin = "capacitor://localhost") => handlers.POST({ request: new Request("https://mr-b-sudoku-solve-time.lovable.app/api/public/native", { method: "POST", headers: { Origin: origin, ...(bearer ? { Authorization: "Bearer test-player-token" } : {}) }, body: JSON.stringify({ operation, data }) }) });
@@ -12,10 +13,11 @@ beforeEach(() => {
   vi.clearAllMocks();
   mocks.getUser.mockResolvedValue({ data: { user: { id: "player-a" } }, error: null });
   mocks.rpc.mockResolvedValue({ data: [], error: null });
-  for (const action of [mocks.getMe, mocks.profile, mocks.avatar, mocks.report, mocks.remove, mocks.admin, mocks.diagnostics, mocks.pin]) action.mockResolvedValue({ ok: true });
+  for (const action of [mocks.getMe, mocks.profile, mocks.avatar, mocks.report, mocks.remove, mocks.admin, mocks.hubAdmin, mocks.diagnostics, mocks.pin]) action.mockResolvedValue({ ok: true });
+  mocks.hubToken.mockResolvedValue(true);
 });
 describe("native endpoint authentication and dispatch", () => {
-  it.each(["getMe", "updateProfile", "setAvatar", "logEvent", "deletePlayerData", "adminOverview", "adminAdDiagnostics", "adminPinLogin", "getMonthlyMostActive"])("rejects unauthenticated %s before any action", async (operation) => {
+  it.each(["getMe", "updateProfile", "setAvatar", "logEvent", "deletePlayerData", "adminOverview", "hubAdminOverview", "adminAdDiagnostics", "adminPinLogin", "getMonthlyMostActive"])("rejects unauthenticated %s before any action", async (operation) => {
     expect((await post(operation, {}, false)).status).toBe(401);
     expect(mocks.getUser).not.toHaveBeenCalled();
     expect(mocks.remove).not.toHaveBeenCalled();
@@ -50,6 +52,21 @@ describe("native endpoint authentication and dispatch", () => {
     const response = await post("adminOverview");
     expect(response.status).toBe(403);
     expect(await response.json()).toEqual({ error: "err:forbidden" });
+  });
+  it("mirrors hub admin overview only after verifying the hub token", async () => {
+    const response = await post("hubAdminOverview", { token: "valid-hub-token" });
+    expect(response.status).toBe(200);
+    expect(mocks.hubToken).toHaveBeenCalledTimes(1);
+    expect(mocks.hubToken.mock.calls[0]?.[0]).toBe("valid-hub-token");
+    expect(mocks.hubAdmin).toHaveBeenCalledTimes(1);
+    expect(mocks.admin).not.toHaveBeenCalled();
+  });
+  it("rejects an invalid hub token without reading admin data", async () => {
+    mocks.hubToken.mockResolvedValue(false);
+    const response = await post("hubAdminOverview", { token: "wrong-hub-token" });
+    expect(response.status).toBe(403);
+    expect(await response.json()).toEqual({ error: "err:forbidden" });
+    expect(mocks.hubAdmin).not.toHaveBeenCalled();
   });
   it("mirrors the monthly server operation", async () => {
     const response = await post("getMonthlyMostActive");

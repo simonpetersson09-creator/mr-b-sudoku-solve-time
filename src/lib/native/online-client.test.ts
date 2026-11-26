@@ -24,6 +24,7 @@ describe("native backend transport", () => {
     ["deletePlayerData", () => client.deletePlayerData({ data: {} }), {}],
     ["adminPinLogin", () => client.adminPinLogin({ data: { pin: "1234" } }), { pin: "1234" }],
     ["adminOverview", () => client.adminOverview(), undefined],
+    ["hubAdminOverview", () => client.hubAdminOverview({ data: { token: "123.signature" } }), { token: "123.signature" }],
     ["adminAdDiagnostics", () => client.adminAdDiagnostics(), undefined],
     ["getMonthlyMostActive", () => client.getMonthlyMostActive(), undefined],
   ] as const;
